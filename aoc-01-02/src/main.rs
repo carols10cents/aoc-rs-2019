@@ -6,7 +6,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let answer: i32 = input
         .lines()
         .map(|line| {
-            fuel(
+            fuel_for_mass_and_fuel(
                 line.parse()
                     .expect("input should have been parsed as a number"),
             )
@@ -21,7 +21,15 @@ fn fuel(mass: i32) -> i32 {
 }
 
 fn fuel_for_mass_and_fuel(mass: i32) -> i32 {
-    fuel(mass)
+    let mut total_fuel = 0;
+
+    let mut fuel_for_mass = fuel(mass);
+    while fuel_for_mass > 0 {
+        total_fuel += fuel_for_mass;
+        fuel_for_mass = fuel(fuel_for_mass);
+    }
+
+    total_fuel
 }
 
 #[cfg(test)]
