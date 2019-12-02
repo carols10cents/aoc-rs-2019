@@ -1,5 +1,19 @@
-fn main() {
-    println!("Hello, world!");
+use std::error::Error;
+use std::fs;
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let input = fs::read_to_string("input")?;
+    let answer: i32 = input
+        .lines()
+        .map(|line| {
+            fuel(
+                line.parse()
+                    .expect("input should have been parsed as a number"),
+            )
+        })
+        .sum();
+    println!("the answer is {}", answer);
+    Ok(())
 }
 
 fn fuel(mass: i32) -> i32 {
