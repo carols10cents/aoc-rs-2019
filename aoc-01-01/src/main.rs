@@ -3,7 +3,7 @@ fn main() {
 }
 
 fn fuel(mass: i32) -> i32 {
-    mass
+    mass / 3 - 2
 }
 
 #[cfg(test)]
