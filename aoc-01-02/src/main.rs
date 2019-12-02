@@ -21,12 +21,23 @@ fn fuel(mass: i32) -> i32 {
 }
 
 fn fuel_for_mass_and_fuel(mass: i32) -> i32 {
-    let fuel_for_mass = fuel(mass);
+    FuelAccumulator { current_mass: mass }.sum()
+}
 
-    if fuel_for_mass <= 0 {
-        0
-    } else {
-        fuel_for_mass + fuel_for_mass_and_fuel(fuel_for_mass)
+struct FuelAccumulator {
+    current_mass: i32,
+}
+
+impl Iterator for FuelAccumulator {
+    type Item = i32;
+
+    fn next(&mut self) -> Option<Self::Item> {
+        self.current_mass = fuel(self.current_mass);
+        if self.current_mass > 0 {
+            Some(self.current_mass)
+        } else {
+            None
+        }
     }
 }
 
