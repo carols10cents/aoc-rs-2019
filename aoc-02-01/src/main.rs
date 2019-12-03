@@ -2,12 +2,20 @@ fn main() {
     println!("Hello, world!");
 }
 
-fn run_intcode(program: Vec<i32>) -> Vec<i32> {
+fn run_intcode(mut program: Vec<i32>) -> Vec<i32> {
     let mut current_position = 0;
     let current_opcode = program[current_position];
 
     while current_opcode != 99 {
-        panic!("Unknown opcode: {}", current_opcode);
+        match current_opcode {
+            1 => {
+                program[program[current_position + 3]] =
+                    program[current_position + 1] + program[current_position + 2]
+            }
+            other => panic!("Unknown opcode: {}", other),
+        }
+        current_position += 4;
+        current_opcode = program[current_position];
     }
 
     program
