@@ -15,6 +15,13 @@ fn run_intcode(mut program: Vec<i32>) -> Vec<i32> {
                 let answer = program[input_position_1] + program[input_position_2];
                 program[output_position] = answer;
             }
+            2 => {
+                let output_position = program[current_position + 3] as usize;
+                let input_position_1 = program[current_position + 1] as usize;
+                let input_position_2 = program[current_position + 2] as usize;
+                let answer = program[input_position_1] * program[input_position_2];
+                program[output_position] = answer;
+            }
             other => panic!("Unknown opcode: {}", other),
         }
         current_position += 4;
