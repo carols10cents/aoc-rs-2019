@@ -3,12 +3,13 @@ use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>>{
     let input = fs::read_to_string("input")?;
-    let program = input
+    let program: Vec<_> = input
         .split(",")
-        .map(|n| n.parse().expect("input should have been a number"))
+        // .map(|n| n.parse().expect("input should have been a number"))
         .collect();
-    let answer = run_intcode(program);
-    println!("{:?}", answer);
+    // let answer = run_intcode(program);
+    // println!("{:?}", answer);
+    println!("{:?}", program);
     Ok(())
 }
 
