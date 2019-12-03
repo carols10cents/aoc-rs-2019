@@ -1,13 +1,15 @@
 use std::fs;
+use std::error::Error;
 
-fn main() {
-    let input = fs::read_to_string("input");
+fn main() -> Result<(), Box<dyn Error>>{
+    let input = fs::read_to_string("input")?;
     let program = input
         .split(",")
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
     let answer = run_intcode(program);
     println!("{:?}", answer);
+    Ok(())
 }
 
 fn run_intcode(mut program: Vec<i32>) -> Vec<i32> {
