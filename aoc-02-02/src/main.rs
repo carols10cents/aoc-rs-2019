@@ -8,8 +8,21 @@ fn main() -> Result<(), Box<dyn Error>>{
         .split(",")
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
-    let answer = run_intcode(program);
-    println!("{:?}", answer);
+
+    for noun in 0..=99 {
+        for verb in 0..=99 {
+            let modified_program = program.clone();
+            modified_program[1] = noun;
+            modified_program[2] = verb;
+            let answer = run_intcode(modified_program);
+
+            if answer[0] == 19690720 {
+                println!("noun = {}, verb = {}, answer = {}", noun, verb, 100 * noun + verb);
+                break;
+            }
+        }
+    }
+
     Ok(())
 }
 
