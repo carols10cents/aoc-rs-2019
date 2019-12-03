@@ -4,7 +4,7 @@ fn main() {
 
 fn run_intcode(mut program: Vec<i32>) -> Vec<i32> {
     let mut current_position = 0;
-    let current_opcode = program[current_position];
+    let mut current_opcode = program[current_position];
 
     while current_opcode != 99 {
         match current_opcode {
