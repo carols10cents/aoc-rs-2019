@@ -57,6 +57,20 @@ mod tests {
     }
 
     #[test]
+    fn multiply_and_store_after_program() {
+        let program = vec![2, 4, 4, 5, 99, 0];
+        let answer = run_intcode(program);
+        assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
+    }
+
+    #[test]
+    fn program_keeps_going_if_an_instruction_changes() {
+        let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
+        let answer = run_intcode(program);
+        assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
+    }
+
+    #[test]
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
