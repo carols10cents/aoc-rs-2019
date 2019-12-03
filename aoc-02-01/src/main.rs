@@ -9,7 +9,7 @@ fn run_intcode(mut program: Vec<i32>) -> Vec<i32> {
     while current_opcode != 99 {
         match current_opcode {
             1 => {
-                program[program[current_position + 3]] =
+                program[program[current_position + 3] as usize] =
                     program[current_position + 1] + program[current_position + 2]
             }
             other => panic!("Unknown opcode: {}", other),
