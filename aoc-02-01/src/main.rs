@@ -4,6 +4,7 @@ use std::error::Error;
 fn main() -> Result<(), Box<dyn Error>>{
     let input = fs::read_to_string("input")?;
     let program: Vec<_> = input
+        .trim()
         .split(",")
         // .map(|n| n.parse().expect("input should have been a number"))
         .collect();
