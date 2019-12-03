@@ -11,7 +11,7 @@ fn main() -> Result<(), Box<dyn Error>>{
 
     for noun in 0..=99 {
         for verb in 0..=99 {
-            let modified_program = program.clone();
+            let mut modified_program = program.clone();
             modified_program[1] = noun;
             modified_program[2] = verb;
             let answer = run_intcode(modified_program);
