@@ -6,11 +6,10 @@ fn main() -> Result<(), Box<dyn Error>>{
     let program: Vec<_> = input
         .trim()
         .split(",")
-        // .map(|n| n.parse().expect("input should have been a number"))
+        .map(|n| n.parse().expect("input should have been a number"))
         .collect();
-    // let answer = run_intcode(program);
-    // println!("{:?}", answer);
-    println!("{:?}", program);
+    let answer = run_intcode(program);
+    println!("{:?}", answer);
     Ok(())
 }
 
