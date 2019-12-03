@@ -43,6 +43,13 @@ mod tests {
     }
 
     #[test]
+    fn opcode_2_multiplies() {
+        let program = vec![2, 3, 0, 3, 99];
+        let answer = run_intcode(program);
+        assert_eq!(answer, vec![2, 3, 0, 6, 99]);
+    }
+
+    #[test]
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
