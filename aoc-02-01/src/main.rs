@@ -6,10 +6,11 @@ fn run_intcode(program: Vec<i32>) -> Vec<i32> {
     let mut current_position = 0;
     let current_opcode = program[current_position];
 
-    match current_opcode {
-        99 => program,
-        other => panic!("Unknown opcode: {}", other),
+    while current_opcode != 99 {
+        panic!("Unknown opcode: {}", current_opcode);
     }
+
+    program
 }
 
 #[cfg(test)]
