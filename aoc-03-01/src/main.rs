@@ -98,7 +98,10 @@ mod tests {
         let wire1_locations = locations_from_path(wire1_path);
         let wire2_locations = locations_from_path(wire2_path);
 
-        let intersections: HashSet<_> = wire1_locations.intersection(&wire2_locations).collect();
+        let intersections: HashSet<_> = wire1_locations
+            .intersection(&wire2_locations)
+            .cloned()
+            .collect();
         let expected: HashSet<_> = [(3, 3), (6, 5)].iter().cloned().collect();
         assert_eq!(intersections, expected);
     }
