@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 fn main() {
     println!("Hello, world!");
 }
