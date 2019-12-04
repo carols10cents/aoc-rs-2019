@@ -90,15 +90,16 @@ mod tests {
         assert_eq!(locations, expected);
     }
 
-    // #[test]
-    // fn example_from_problem_description() {
-    //     let wire1_path = vec![X(8), Y(5), X(-5), Y(-3)];
-    //     let wire2_path = vec![Y(7), X(6), Y(-4), X(-4)];
-    //
-    //     let wire1_locations = locations_from_path(wire1_path);
-    //     let wire2_locations = locations_from_path(wire2_path);
-    //
-    //     let intersections =
-    //     assert_eq!(intersections, vec![(3, 3), (6, 5)]);
-    // }
+    #[test]
+    fn example_from_problem_description() {
+        let wire1_path = vec![X(8), Y(5), X(-5), Y(-3)];
+        let wire2_path = vec![Y(7), X(6), Y(-4), X(-4)];
+
+        let wire1_locations = locations_from_path(wire1_path);
+        let wire2_locations = locations_from_path(wire2_path);
+
+        let intersections = wire1_locations.intersect(&wire2_locations);
+        let expected: HashSet<_> = [(3, 3), (6, 5)].iter().cloned().collect();
+        assert_eq!(intersections, expected);
+    }
 }
