@@ -28,7 +28,7 @@ use PathPart::{X, Y};
 
 fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
     let mut current_location = (0, 0);
-    let mut locations = vec![];
+    let mut locations = HashSet::new();
 
     for part in path {
         match part {
