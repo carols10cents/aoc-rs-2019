@@ -37,7 +37,7 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
 
                 for _ in range {
                     current_location = (current_location.0 + amount, current_location.1);
-                    locations.push(current_location);
+                    locations.insert(current_location);
                 }
             }
             Y(y) => {
@@ -45,7 +45,7 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
 
                 for _ in range {
                     current_location = (current_location.0, current_location.1 + amount);
-                    locations.push(current_location);
+                    locations.insert(current_location);
                 }
             }
         }
