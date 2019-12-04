@@ -42,7 +42,18 @@ fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
                     locations.push(current_location);
                 }
             }
-            Y(y) => unimplemented!(),
+            Y(y) => {
+                let (range, amount) = if y > 0 {
+                    (0..y, 1)
+                } else {
+                    (y..0, -1)
+                };
+
+                for _ in range {
+                    current_location = (current_location.0, current_location.1 + amount);
+                    locations.push(current_location);
+                }
+            }
         }
     }
 
