@@ -66,4 +66,18 @@ mod tests {
         let locations = locations_from_path(path);
         assert_eq!(locations, vec![(-1, 0)]);
     }
+
+    #[test]
+    fn up() {
+        let path = vec![Y(1)];
+        let locations = locations_from_path(path);
+        assert_eq!(locations, vec![(0, 1)]);
+    }
+
+    #[test]
+    fn down() {
+        let path = vec![Y(-1)];
+        let locations = locations_from_path(path);
+        assert_eq!(locations, vec![(0, -1)]);
+    }
 }
