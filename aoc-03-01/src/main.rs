@@ -31,7 +31,13 @@ fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
     for part in path {
         match part {
             X(x) => {
-                for _ in 0..x {
+                let range = if x > 0 {
+                    0..x
+                } else {
+                    x..0
+                };
+
+                for _ in range {
                     current_location = (current_location.0 + 1, current_location.1);
                     locations.push(current_location);
                 }
