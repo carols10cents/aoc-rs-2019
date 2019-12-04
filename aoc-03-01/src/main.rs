@@ -19,10 +19,21 @@ fn main() {
 // - Sort the intersection points by Manhattan distance and take the min
 
 enum PathPart {
-    XDirection(i32),
-    YDirection(i32),
+    X(i32),
+    Y(i32),
 }
+use PathPart::{X, Y};
 
 fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
     vec![]
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn right() {
+        let path = vec![X(1)];
+        let locations = locations_from_path(path);
+        assert_eq!(locations, vec![(1, 0)]);
+    }
 }
