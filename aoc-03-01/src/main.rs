@@ -25,7 +25,22 @@ enum PathPart {
 use PathPart::{X, Y};
 
 fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
-    vec![]
+    let mut current_location = (0, 0);
+    let mut locations = vec![];
+
+    for part in path {
+        match part {
+            X(x) => {
+                for _ in 0..=x {
+                    current_location = (current_location.0 + 1, current_location.1);
+                    locations.push(current_location);
+                }
+            }
+            Y(y) => unimplemented!(),
+        }
+    }
+
+    locations
 }
 
 #[cfg(test)]
