@@ -24,7 +24,7 @@ enum PathPart {
 }
 use PathPart::{X, Y};
 
-fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
+fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
     let mut current_location = (0, 0);
     let mut locations = vec![];
 
@@ -84,15 +84,15 @@ mod tests {
         assert_eq!(locations, vec![(0, -1)]);
     }
 
-    #[test]
-    fn example_from_problem_description() {
-        let wire1_path = vec![X(8), Y(5), X(-5), Y(-3)];
-        let wire2_path = vec![Y(7), X(6), Y(-4), X(-4)];
-
-        let wire1_locations = locations_from_path(wire1_path);
-        let wire2_locations = locations_from_path(wire2_path);
-
-        let intersections =
-        assert_eq!(intersections, vec![(3, 3), (6, 5)]);
-    }
+    // #[test]
+    // fn example_from_problem_description() {
+    //     let wire1_path = vec![X(8), Y(5), X(-5), Y(-3)];
+    //     let wire2_path = vec![Y(7), X(6), Y(-4), X(-4)];
+    //
+    //     let wire1_locations = locations_from_path(wire1_path);
+    //     let wire2_locations = locations_from_path(wire2_path);
+    //
+    //     let intersections =
+    //     assert_eq!(intersections, vec![(3, 3), (6, 5)]);
+    // }
 }
