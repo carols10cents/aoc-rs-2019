@@ -30,6 +30,8 @@ fn locations_from_path(path: Vec<PathPart>) -> Vec<(i32, i32)> {
 
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn right() {
         let path = vec![X(1)];
