@@ -70,21 +70,24 @@ mod tests {
     fn left() {
         let path = vec![X(-1)];
         let locations = locations_from_path(path);
-        assert_eq!(locations, vec![(-1, 0)]);
+        let expected: HashSet<_> = [(-1, 0)].iter().cloned().collect();
+        assert_eq!(locations, expected);
     }
 
     #[test]
     fn up() {
         let path = vec![Y(1)];
         let locations = locations_from_path(path);
-        assert_eq!(locations, vec![(0, 1)]);
+        let expected: HashSet<_> = [(0, 1)].iter().cloned().collect();
+        assert_eq!(locations, expected);
     }
 
     #[test]
     fn down() {
         let path = vec![Y(-1)];
         let locations = locations_from_path(path);
-        assert_eq!(locations, vec![(0, -1)]);
+        let expected: HashSet<_> = [(0, -1)].iter().cloned().collect();
+        assert_eq!(locations, expected);
     }
 
     // #[test]
