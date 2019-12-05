@@ -53,6 +53,15 @@ struct Location {
     // steps: i32 TODO
 }
 
+impl From<(i32, i32)> for Location {
+    fn from(f: (i32, i32)) -> Location {
+        Location {
+            x: f.0,
+            y: f.1,
+        }
+    }
+}
+
 fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
     let mut current_location = Location { x: 0, y: 0 };
     let mut locations = HashSet::new();
@@ -140,7 +149,7 @@ mod tests {
     fn right() {
         let path = vec![X(1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(1, 0)].iter().cloned().collect();
+        let expected: HashSet<_> = [(1, 0).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -148,7 +157,7 @@ mod tests {
     fn left() {
         let path = vec![X(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(-1, 0)].iter().cloned().collect();
+        let expected: HashSet<_> = [(-1, 0).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -156,7 +165,7 @@ mod tests {
     fn up() {
         let path = vec![Y(1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, 1)].iter().cloned().collect();
+        let expected: HashSet<_> = [(0, 1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -164,7 +173,7 @@ mod tests {
     fn down() {
         let path = vec![Y(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, -1)].iter().cloned().collect();
+        let expected: HashSet<_> = [(0, -1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -186,7 +195,7 @@ mod tests {
             .intersection(&wire2_locations)
             .cloned()
             .collect();
-        let expected: HashSet<_> = [(3, 3), (6, 5)].iter().cloned().collect();
+        let expected: HashSet<_> = [(3, 3).into(), (6, 5).into()].iter().cloned().collect();
         assert_eq!(intersections, expected);
 
         assert_eq!(min_manhattan_distance(&intersections), 6);
