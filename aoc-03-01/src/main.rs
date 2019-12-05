@@ -64,7 +64,28 @@ fn min_manhattan_distance(points: &HashSet<(i32, i32)>) -> i32 {
 }
 
 fn parse_path(path_str: &str) -> Vec<PathPart> {
-    vec![]
+    path_str
+        .split(",")
+        .map(|segment| {
+            let chars = segment.chars();
+            let direction = chars.next().expect(format!(
+                "Segment should have had a direction char: [{}]",
+                segment
+            ));
+            let magnitude: i32 = chars.collect().join("").parse().expect(format!(
+                "Segment after direction char should have parsed as an i32: [{}]",
+                segment
+            ));
+
+            match direction {
+                'R' => X(magnitude),
+                'L' => X(-magnitude),
+                'U' => Y(magnitude),
+                'D' => Y(magnitude),
+                _ => panic!("Unknown direction: [{}]", direction),
+            }
+        })
+        .collect()
 }
 
 #[cfg(test)]
