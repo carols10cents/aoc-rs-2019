@@ -46,6 +46,7 @@ enum PathPart {
 }
 use PathPart::{X, Y};
 
+#[derive(PartialEq, Eq, Hash, Debug, Clone)]
 struct Location {
     x: i32,
     y: i32,
