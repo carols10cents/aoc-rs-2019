@@ -50,7 +50,7 @@ use PathPart::{X, Y};
 struct Location {
     x: i32,
     y: i32,
-    // steps: i32 TODO
+    steps: i32,
 }
 
 impl From<(i32, i32)> for Location {
@@ -58,12 +58,13 @@ impl From<(i32, i32)> for Location {
         Location {
             x: f.0,
             y: f.1,
+            steps: 0,
         }
     }
 }
 
 fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
-    let mut current_location = Location { x: 0, y: 0 };
+    let mut current_location = Location { x: 0, y: 0, steps: 0 };
     let mut locations = HashSet::new();
 
     for part in path {
@@ -74,6 +75,7 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
                 for _ in range {
                     current_location = Location {
                         x: current_location.x + amount,
+                        steps: current_location.steps + 1,
                         ..current_location
                     };
                     locations.insert(current_location);
@@ -85,6 +87,7 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
                 for _ in range {
                     current_location = Location {
                         y: current_location.y + amount,
+                        steps: current_location.steps + 1,
                         ..current_location
                     };
                     locations.insert(current_location);
