@@ -146,6 +146,14 @@ fn closest_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
     min_manhattan_distance(&intersections)
 }
 
+fn min_steps(intersections: HashSet<Location>, loc_steps1: HashMap<Location, i32>, loc_steps2: HashMap<Location, i32>) -> i32 {
+    intersections.iter().map(|i| {
+        let steps1 = loc_steps1.get(&i).expect("Intersection must be in path1");
+        let steps2 = loc_steps2.get(&i).expect("Intersection must be in path2");
+        steps1 + steps2
+    }).min().expect("Must be at least 1 intersection")
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -207,6 +215,7 @@ mod tests {
         assert_eq!(intersections, expected);
 
         assert_eq!(min_manhattan_distance(&intersections), 6);
+        assert_eq!(min_steps(&intersections, &locations1_with_steps, &locations2_with_steps), 30);
     }
 
     #[test]
