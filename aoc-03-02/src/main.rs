@@ -155,7 +155,7 @@ mod tests {
         let path = vec![X(1)];
         let locations = locations_from_path(path);
         assert_eq!(locations.len(), 1);
-        assert_eq!(locations.get(&(1, 0).into()), Some(1));
+        assert_eq!(locations.get(&(1, 0).into()), Some(&1));
     }
 
     #[test]
