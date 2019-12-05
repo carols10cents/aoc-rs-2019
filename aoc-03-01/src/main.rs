@@ -54,6 +54,10 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
     locations
 }
 
+fn min_manhattan_distance(points: &HashSet<(i32, i32)>) -> i32 {
+    0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -104,5 +108,7 @@ mod tests {
             .collect();
         let expected: HashSet<_> = [(3, 3), (6, 5)].iter().cloned().collect();
         assert_eq!(intersections, expected);
+
+        assert_eq!(min_manhattan_distance(&intersections), 6);
     }
 }
