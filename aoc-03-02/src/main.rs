@@ -154,6 +154,20 @@ fn min_steps(intersections: &HashSet<Location>, loc_steps1: &HashMap<Location, i
     }).min().expect("Must be at least 1 intersection")
 }
 
+fn min_steps_to_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
+    let path1 = parse_path(path_str1);
+    let path2 = parse_path(path_str2);
+
+    let locations1_with_steps = locations_from_path(path1);
+    let locations2_with_steps = locations_from_path(path2);
+
+    let locations1: HashSet<_> = locations1_with_steps.keys().cloned().collect();
+    let locations2: HashSet<_> = locations2_with_steps.keys().cloned().collect();
+
+    let intersections: HashSet<_> = locations1.intersection(&locations2).cloned().collect();
+    min_steps(&intersections, &locations1_with_steps, &locations2_with_steps)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -225,6 +239,9 @@ mod tests {
 
         let closest_crossed_wires = closest_crossed_wires(wire1_path_string, wire2_path_string);
         assert_eq!(closest_crossed_wires, 6);
+
+        let min_steps_to_crossed_wires = min_steps_to_crossed_wires(wire1_path_string, wire2_path_string);
+        assert_eq!(min_steps_to_crossed_wires, 30);
     }
 
     #[test]
