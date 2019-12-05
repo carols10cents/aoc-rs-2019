@@ -138,8 +138,8 @@ fn closest_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
     let locations1_with_steps = locations_from_path(path1);
     let locations2_with_steps = locations_from_path(path2);
 
-    let locations1: HashSet<_> = locations1_with_steps.keys().collect();
-    let locations2: HashSet<_> = locations2_with_steps.keys().collect();
+    let locations1: HashSet<_> = locations1_with_steps.keys().cloned().collect();
+    let locations2: HashSet<_> = locations2_with_steps.keys().cloned().collect();
 
     let intersections: HashSet<_> = locations1.intersection(&locations2).cloned().collect();
 
