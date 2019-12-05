@@ -20,6 +20,7 @@ fn main() {
 // - The Manhattan distance of any point to (0, 0) is x + y
 // - Sort the intersection points by Manhattan distance and take the min
 
+#[derive(Debug, PartialEq)]
 enum PathPart {
     X(i32),
     Y(i32),
