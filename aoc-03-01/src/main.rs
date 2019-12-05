@@ -55,7 +55,11 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
 }
 
 fn min_manhattan_distance(points: &HashSet<(i32, i32)>) -> i32 {
-    points.iter().map(|point| point.0.abs() + point.1.abs() ).min()
+    points
+        .iter()
+        .map(|point| point.0.abs() + point.1.abs())
+        .min()
+        .expect("List should have had items in it")
 }
 
 #[cfg(test)]
