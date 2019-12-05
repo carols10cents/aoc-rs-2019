@@ -62,6 +62,10 @@ fn min_manhattan_distance(points: &HashSet<(i32, i32)>) -> i32 {
         .expect("List should have had items in it")
 }
 
+fn parse_path(path_str: &str) -> Vec<PathPart> {
+    vec![]
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -100,8 +104,14 @@ mod tests {
 
     #[test]
     fn example_from_problem_description() {
-        let wire1_path = vec![X(8), Y(5), X(-5), Y(-3)];
-        let wire2_path = vec![Y(7), X(6), Y(-4), X(-4)];
+        let wire1_path_string = "R8,U5,L5,D3";
+        let wire2_path_string = "U7,R6,D4,L4";
+
+        let wire1_path = parse_path(wire1_path_string);
+        assert_eq!(wire1_path, vec![X(8), Y(5), X(-5), Y(-3)]);
+
+        let wire2_path = parse_path(wire2_path_string);
+        assert_eq!(wire2_path, vec![Y(7), X(6), Y(-4), X(-4)]);
 
         let wire1_locations = locations_from_path(wire1_path);
         let wire2_locations = locations_from_path(wire2_path);
