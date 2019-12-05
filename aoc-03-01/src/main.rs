@@ -68,11 +68,11 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
         .split(",")
         .map(|segment| {
             let chars = segment.chars();
-            let direction = chars.next().expect(format!(
+            let direction = chars.next().expect(&format!(
                 "Segment should have had a direction char: [{}]",
                 segment
             ));
-            let magnitude: i32 = chars.collect().join("").parse().expect(format!(
+            let magnitude: i32 = chars.collect().join("").parse().expect(&format!(
                 "Segment after direction char should have parsed as an i32: [{}]",
                 segment
             ));
