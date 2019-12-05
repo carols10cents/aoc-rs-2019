@@ -162,24 +162,24 @@ mod tests {
     fn left() {
         let path = vec![X(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(-1, 0).into()].iter().cloned().collect();
-        assert_eq!(locations, expected);
+        assert_eq!(locations.len(), 1);
+        assert_eq!(locations.get(&(-1, 0).into()), Some(&1));
     }
 
     #[test]
     fn up() {
         let path = vec![Y(1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, 1).into()].iter().cloned().collect();
-        assert_eq!(locations, expected);
+        assert_eq!(locations.len(), 1);
+        assert_eq!(locations.get(&(0, 1).into()), Some(&1));
     }
 
     #[test]
     fn down() {
         let path = vec![Y(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, -1).into()].iter().cloned().collect();
-        assert_eq!(locations, expected);
+        assert_eq!(locations.len(), 1);
+        assert_eq!(locations.get(&(0, -1).into()), Some(&1));
     }
 
     #[test]
@@ -193,8 +193,11 @@ mod tests {
         let wire2_path = parse_path(wire2_path_string);
         assert_eq!(wire2_path, vec![Y(7), X(6), Y(-4), X(-4)]);
 
-        let wire1_locations = locations_from_path(wire1_path);
-        let wire2_locations = locations_from_path(wire2_path);
+        let locations1_with_steps = locations_from_path(wire1_path);
+        let locations2_with_steps = locations_from_path(wire2_path);
+
+        let wire1_locations: HashSet<_> = locations1_with_steps.keys().cloned().collect();
+        let wire2_locations: HashSet<_> = locations2_with_steps.keys().cloned().collect();
 
         let intersections: HashSet<_> = wire1_locations
             .intersection(&wire2_locations)
