@@ -72,7 +72,7 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
                 "Segment should have had a direction char: [{}]",
                 segment
             ));
-            let magnitude: i32 = chars.collect().join("").parse().expect(&format!(
+            let magnitude: i32 = chars.collect::<Vec<_>>().join("").parse().expect(&format!(
                 "Segment after direction char should have parsed as an i32: [{}]",
                 segment
             ));
