@@ -1,5 +1,6 @@
 use std::collections::HashSet;
 use std::fs;
+use std::error::Error;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string("input")?;
