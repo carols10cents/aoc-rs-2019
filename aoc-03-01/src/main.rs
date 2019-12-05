@@ -89,7 +89,15 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
 }
 
 fn closest_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
-    0
+    let path1 = parse_path(path_str1);
+    let path2 = parse_path(path_str2);
+
+    let locations1 = locations_from_path(path1);
+    let locations2 = locations_from_path(path2);
+
+    let intersections: HashSet<_> = locations1.intersection(&locations2).cloned().collect();
+
+    min_manhattan_distance(&intersections)
 }
 
 #[cfg(test)]
