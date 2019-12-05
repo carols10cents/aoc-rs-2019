@@ -1,4 +1,4 @@
-use std::collections::{HashSet, HashMap};
+use std::collections::{HashMap, HashSet};
 use std::error::Error;
 use std::fs;
 
@@ -54,10 +54,7 @@ struct Location {
 
 impl From<(i32, i32)> for Location {
     fn from(f: (i32, i32)) -> Location {
-        Location {
-            x: f.0,
-            y: f.1,
-        }
+        Location { x: f.0, y: f.1 }
     }
 }
 
@@ -146,12 +143,20 @@ fn closest_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
     min_manhattan_distance(&intersections)
 }
 
-fn min_steps(intersections: &HashSet<Location>, loc_steps1: &HashMap<Location, i32>, loc_steps2: &HashMap<Location, i32>) -> i32 {
-    intersections.iter().map(|i| {
-        let steps1 = loc_steps1.get(&i).expect("Intersection must be in path1");
-        let steps2 = loc_steps2.get(&i).expect("Intersection must be in path2");
-        steps1 + steps2
-    }).min().expect("Must be at least 1 intersection")
+fn min_steps(
+    intersections: &HashSet<Location>,
+    loc_steps1: &HashMap<Location, i32>,
+    loc_steps2: &HashMap<Location, i32>,
+) -> i32 {
+    intersections
+        .iter()
+        .map(|i| {
+            let steps1 = loc_steps1.get(&i).expect("Intersection must be in path1");
+            let steps2 = loc_steps2.get(&i).expect("Intersection must be in path2");
+            steps1 + steps2
+        })
+        .min()
+        .expect("Must be at least 1 intersection")
 }
 
 fn min_steps_to_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
@@ -165,7 +170,11 @@ fn min_steps_to_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
     let locations2: HashSet<_> = locations2_with_steps.keys().cloned().collect();
 
     let intersections: HashSet<_> = locations1.intersection(&locations2).cloned().collect();
-    min_steps(&intersections, &locations1_with_steps, &locations2_with_steps)
+    min_steps(
+        &intersections,
+        &locations1_with_steps,
+        &locations2_with_steps,
+    )
 }
 
 #[cfg(test)]
@@ -229,7 +238,14 @@ mod tests {
         assert_eq!(intersections, expected);
 
         assert_eq!(min_manhattan_distance(&intersections), 6);
-        assert_eq!(min_steps(&intersections, &locations1_with_steps, &locations2_with_steps), 30);
+        assert_eq!(
+            min_steps(
+                &intersections,
+                &locations1_with_steps,
+                &locations2_with_steps
+            ),
+            30
+        );
     }
 
     #[test]
@@ -240,7 +256,8 @@ mod tests {
         let closest_crossed_wires = closest_crossed_wires(wire1_path_string, wire2_path_string);
         assert_eq!(closest_crossed_wires, 6);
 
-        let min_steps_to_crossed_wires = min_steps_to_crossed_wires(wire1_path_string, wire2_path_string);
+        let min_steps_to_crossed_wires =
+            min_steps_to_crossed_wires(wire1_path_string, wire2_path_string);
         assert_eq!(min_steps_to_crossed_wires, 30);
     }
 
