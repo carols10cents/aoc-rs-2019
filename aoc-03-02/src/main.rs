@@ -20,7 +20,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         closest_crossed_wires
     );
 
-    let min_steps = min_steps(&w1, &w2);
+    let min_steps = min_steps_to_crossed_wires(&w1, &w2);
 
     println!("Min steps to the closest crossed wires is {}", min_steps);
 
