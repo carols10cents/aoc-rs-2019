@@ -67,7 +67,7 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
     path_str
         .split(",")
         .map(|segment| {
-            let chars = segment.chars();
+            let mut chars = segment.chars();
             let direction = chars.next().expect(&format!(
                 "Segment should have had a direction char: [{}]",
                 segment
