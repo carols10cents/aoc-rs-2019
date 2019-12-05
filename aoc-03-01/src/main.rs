@@ -81,7 +81,7 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
                 'R' => X(magnitude),
                 'L' => X(-magnitude),
                 'U' => Y(magnitude),
-                'D' => Y(magnitude),
+                'D' => Y(-magnitude),
                 _ => panic!("Unknown direction: [{}]", direction),
             }
         })
