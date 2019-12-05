@@ -88,6 +88,10 @@ fn parse_path(path_str: &str) -> Vec<PathPart> {
         .collect()
 }
 
+fn closest_crossed_wires(path_str1: &str, path_str2: &str) -> i32 {
+    0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -146,5 +150,14 @@ mod tests {
         assert_eq!(intersections, expected);
 
         assert_eq!(min_manhattan_distance(&intersections), 6);
+    }
+
+    #[test]
+    fn example_from_problem_description_all_at_once() {
+        let wire1_path_string = "R8,U5,L5,D3";
+        let wire2_path_string = "U7,R6,D4,L4";
+
+        let closest_crossed_wires = closest_crossed_wires(wire1_path_string, wire2_path_string);
+        assert_eq!(closest_crossed_wires, 6);
     }
 }
