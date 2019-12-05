@@ -46,7 +46,13 @@ enum PathPart {
 }
 use PathPart::{X, Y};
 
-fn locations_from_path(path: Vec<PathPart>) -> HashSet<(i32, i32)> {
+struct Location {
+    x: i32,
+    y: i32,
+    // steps: i32 TODO
+}
+
+fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
     let mut current_location = (0, 0);
     let mut locations = HashSet::new();
 
