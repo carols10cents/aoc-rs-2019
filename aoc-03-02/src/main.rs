@@ -53,12 +53,12 @@ struct Location {
     steps: i32,
 }
 
-impl From<(i32, i32)> for Location {
-    fn from(f: (i32, i32)) -> Location {
+impl From<(i32, i32, i32)> for Location {
+    fn from(f: (i32, i32, i32)) -> Location {
         Location {
             x: f.0,
             y: f.1,
-            steps: 0,
+            steps: f.2,
         }
     }
 }
@@ -152,7 +152,7 @@ mod tests {
     fn right() {
         let path = vec![X(1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(1, 0).into()].iter().cloned().collect();
+        let expected: HashSet<_> = [(1, 0, 1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -160,7 +160,7 @@ mod tests {
     fn left() {
         let path = vec![X(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(-1, 0).into()].iter().cloned().collect();
+        let expected: HashSet<_> = [(-1, 0, 1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -168,7 +168,7 @@ mod tests {
     fn up() {
         let path = vec![Y(1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, 1).into()].iter().cloned().collect();
+        let expected: HashSet<_> = [(0, 1, 1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
@@ -176,7 +176,7 @@ mod tests {
     fn down() {
         let path = vec![Y(-1)];
         let locations = locations_from_path(path);
-        let expected: HashSet<_> = [(0, -1).into()].iter().cloned().collect();
+        let expected: HashSet<_> = [(0, -1, 1).into()].iter().cloned().collect();
         assert_eq!(locations, expected);
     }
 
