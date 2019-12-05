@@ -1,17 +1,24 @@
 use std::collections::HashSet;
-use std::fs;
 use std::error::Error;
+use std::fs;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string("input")?;
     let mut lines = input.lines();
 
-    let w1 = lines.next().expect("Should have been at least 1 line in the input");
-    let w2 = lines.next().expect("Should have been at least 2 lines in the input");
+    let w1 = lines
+        .next()
+        .expect("Should have been at least 1 line in the input");
+    let w2 = lines
+        .next()
+        .expect("Should have been at least 2 lines in the input");
 
     let closest_crossed_wires = closest_crossed_wires(&w1, &w2);
 
-    println!("Distance to the closest crossed wires is {}", closest_crossed_wires);
+    println!(
+        "Distance to the closest crossed wires is {}",
+        closest_crossed_wires
+    );
 
     Ok(())
 }
