@@ -61,7 +61,7 @@ impl From<(i32, i32)> for Location {
     }
 }
 
-fn locations_from_path(path: Vec<PathPart>) -> HashMap<Location> {
+fn locations_from_path(path: Vec<PathPart>) -> HashMap<Location, i32> {
     let mut current_location = Location { x: 0, y: 0 };
     let mut steps = 0;
     let mut locations = HashMap::new();
