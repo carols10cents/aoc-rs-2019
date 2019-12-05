@@ -53,7 +53,7 @@ struct Location {
 }
 
 fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
-    let mut current_location = (0, 0);
+    let mut current_location = Location { x: 0, y: 0 };
     let mut locations = HashSet::new();
 
     for part in path {
@@ -62,7 +62,10 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
                 let (range, amount) = if x > 0 { (0..x, 1) } else { (x..0, -1) };
 
                 for _ in range {
-                    current_location = (current_location.0 + amount, current_location.1);
+                    current_location = Location {
+                        x: current_location.x + amount,
+                        ..current_location
+                    };
                     locations.insert(current_location);
                 }
             }
@@ -70,7 +73,10 @@ fn locations_from_path(path: Vec<PathPart>) -> HashSet<Location> {
                 let (range, amount) = if y > 0 { (0..y, 1) } else { (y..0, -1) };
 
                 for _ in range {
-                    current_location = (current_location.0, current_location.1 + amount);
+                    current_location = Location {
+                        y: current_location.y + amount,
+                        ..current_location
+                    };
                     locations.insert(current_location);
                 }
             }
