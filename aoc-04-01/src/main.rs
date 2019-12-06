@@ -28,6 +28,10 @@ fn duplicate_digits(list: &[i32]) -> bool {
     digits.len() < list.len()
 }
 
+fn possible_password(num: i32) -> bool {
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -50,5 +54,12 @@ mod tests {
     fn can_tell_if_theres_duplicate_digits() {
         assert!(duplicate_digits(&[1, 1]));
         assert!(!duplicate_digits(&[1, 2]));
+    }
+
+    #[test]
+    fn can_tell_if_a_number_is_possibly_a_password() {
+        assert!(possible_password(111111));
+        assert!(!possible_password(223450));
+        assert!(!possible_password(123789));
     }
 }
