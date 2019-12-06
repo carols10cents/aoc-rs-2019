@@ -12,7 +12,7 @@ fn number_to_digits(mut num: i32) -> Vec<i32> {
         v.push(num % 10);
         num /= 10;
     }
-    v.iter().rev().collect()
+    v.into_iter().rev().collect()
 }
 
 #[cfg(test)]
