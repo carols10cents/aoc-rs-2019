@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 fn main() {
-    let possible_passwords: Vec<_> = (145852..=616942).into_iter().filter(|num| possible_password(num)).collect();
+    let possible_passwords: Vec<_> = (145852..=616942).into_iter().filter(|&num| possible_password(num)).collect();
     println!("There are {} passwords", possible_passwords.len());
 }
 
