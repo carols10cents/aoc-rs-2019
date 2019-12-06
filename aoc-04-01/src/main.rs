@@ -1,11 +1,8 @@
 use std::collections::HashSet;
 
 fn main() {
-    // for candidate in 145852..=616942 {
-        // turn number into vector of digits
-        // sort digits ascending and see if it's the same after
-        // if so, see if there are any duplicates by putting in a set and seeing if len < 6
-    // }
+    let possible_passwords: Vec<_> = 145852..=616942.iter().filter(|num| possible_password(num)).collect();
+    println!("There are {} passwords", possible_passwords.len());
 }
 
 fn number_to_digits(mut num: i32) -> Vec<i32> {
