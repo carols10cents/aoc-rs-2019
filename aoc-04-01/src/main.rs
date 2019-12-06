@@ -32,8 +32,8 @@ mod tests {
 
     #[test]
     fn can_tell_when_digits_never_decrease() {
-        assert!(never_decrease(vec![1, 2]));
-        assert!(never_decrease(vec![1, 1]));
-        assert!(!never_decrease(vec![2, 1]));
+        assert!(never_decrease(&[1, 2]));
+        assert!(never_decrease(&[1, 1]));
+        assert!(!never_decrease(&[2, 1]));
     }
 }
