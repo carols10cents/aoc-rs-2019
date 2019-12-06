@@ -21,6 +21,10 @@ fn never_decrease(list: &[i32]) -> bool {
     sorted == list
 }
 
+fn duplicate_digits(list: &[i32]) -> bool {
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -37,5 +41,11 @@ mod tests {
         assert!(never_decrease(&[1, 2]));
         assert!(never_decrease(&[1, 1]));
         assert!(!never_decrease(&[2, 1]));
+    }
+
+    #[test]
+    fn can_tell_if_theres_duplicate_digits() {
+        assert!(duplicate_digits(&[1, 1]));
+        assert!(!duplicate_digits(&[1, 2]));
     }
 }
