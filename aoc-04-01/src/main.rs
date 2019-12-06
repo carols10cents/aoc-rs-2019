@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 fn main() {
     // for candidate in 145852..=616942 {
         // turn number into vector of digits
@@ -22,7 +24,8 @@ fn never_decrease(list: &[i32]) -> bool {
 }
 
 fn duplicate_digits(list: &[i32]) -> bool {
-    false
+    let digits: HashSet<_> = list.into_iter().collect();
+    digits.len() < list.len()
 }
 
 #[cfg(test)]
