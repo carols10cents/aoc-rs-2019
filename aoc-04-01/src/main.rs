@@ -29,7 +29,8 @@ fn duplicate_digits(list: &[i32]) -> bool {
 }
 
 fn possible_password(num: i32) -> bool {
-    false
+    let digits = number_to_digits(num);
+    never_decrease(&digits) && duplicate_digits(&digits)
 }
 
 #[cfg(test)]
