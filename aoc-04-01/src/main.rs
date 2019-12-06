@@ -15,6 +15,10 @@ fn number_to_digits(mut num: i32) -> Vec<i32> {
     v.into_iter().rev().collect()
 }
 
+fn never_decrease(list: &[i32]) -> bool {
+    false
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -24,5 +28,12 @@ mod tests {
         let number = 145852;
         let digits = number_to_digits(number);
         assert_eq!(digits, vec![1, 4, 5, 8, 5, 2]);
+    }
+
+    #[test]
+    fn can_tell_when_digits_never_decrease() {
+        assert!(never_decrease(vec![1, 2]));
+        assert!(never_decrease(vec![1, 1]));
+        assert!(!never_decrease(vec![2, 1]));
     }
 }
