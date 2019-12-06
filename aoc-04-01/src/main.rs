@@ -16,7 +16,9 @@ fn number_to_digits(mut num: i32) -> Vec<i32> {
 }
 
 fn never_decrease(list: &[i32]) -> bool {
-    false
+    let mut sorted = list.clone();
+    sorted.sort();
+    list == sorted
 }
 
 #[cfg(test)]
