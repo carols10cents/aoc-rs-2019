@@ -6,8 +6,13 @@ fn main() {
     // }
 }
 
-fn number_to_digits(num: i32) -> Vec<i32> {
-    vec![]
+fn number_to_digits(mut num: i32) -> Vec<i32> {
+    let mut v = vec![];
+    while num > 0 {
+        v.push(num % 10);
+        num /= 10;
+    }
+    v.iter().rev().collect()
 }
 
 #[cfg(test)]
