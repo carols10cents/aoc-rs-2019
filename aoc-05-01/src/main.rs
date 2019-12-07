@@ -69,7 +69,8 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
 
 #[derive(Debug, PartialEq)]
 enum Mode {
-    Position
+    Position,
+    Immediate,
 }
 
 #[derive(Debug, PartialEq)]
