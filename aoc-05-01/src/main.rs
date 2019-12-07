@@ -222,8 +222,11 @@ mod tests {
 fn get_value(program: &[i32], instruction_pointer: usize, parameter_index: usize) -> i32 {
     let opcode = program[instruction_pointer];
     let inst = instruction(opcode);
+
+    let parameter_location = instruction_pointer + parameter_index + 1;
+
     match inst.mode(parameter_index) {
-        Mode::Position => program[program[instruction_pointer + parameter_index + 1] as usize],
-        Mode::Immediate => unimplemented!(),
+        Mode::Position => program[program[parameter_location] as usize],
+        Mode::Immediate => program[parameter_location],
     }
 }
