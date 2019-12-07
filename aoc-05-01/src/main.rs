@@ -2,31 +2,16 @@ use std::error::Error;
 use std::fs;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let input = fs::read_to_string("input")?;
+    let program_input = fs::read_to_string("input")?;
     let program: Vec<_> = input
         .trim()
         .split(",")
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    for noun in 0..=99 {
-        for verb in 0..=99 {
-            let mut modified_program = program.clone();
-            modified_program[1] = noun;
-            modified_program[2] = verb;
-            let (answer, _output) = run_intcode(modified_program, None);
-
-            if answer[0] == 19690720 {
-                println!(
-                    "noun = {}, verb = {}, answer = {}",
-                    noun,
-                    verb,
-                    100 * noun + verb
-                );
-                break;
-            }
-        }
-    }
+    let simulated_stdin = Some(1);
+    let (_answer, output) = run_intcode(program, simulated_stdin);
+    println!("{:?}", output);
 
     Ok(())
 }
