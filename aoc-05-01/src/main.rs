@@ -212,6 +212,15 @@ mod tests {
         let program = vec![1, 0, 0, 0, 99];
         let instruction_pointer = 0;
 
-        assert_eq!(get_value(program, instruction_pointer, 0), 1);
+        assert_eq!(get_value(&program, instruction_pointer, 0), 1);
+    }
+}
+
+fn get_value(program: &[i32], instruction_pointer: usize, parameter_index: usize) -> i32 {
+    let opcode = program[instruction_pointer];
+    let inst = instruction(opcode);
+    match inst.mode(parameter_index) {
+        Mode::Position => program[program[instruction_pointer + parameter_index + 1] as usize],
+        Mode::Immediate => unimplemented!(),
     }
 }
