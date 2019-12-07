@@ -177,6 +177,9 @@ mod tests {
         assert_eq!(inst.mode(0), Mode::Position);
         assert_eq!(inst.mode(1), Mode::Position);
         assert_eq!(inst.mode(2), Mode::Position);
+
+        let inst = instruction(99);
+        assert_eq!(inst.opcode, 99);
     }
 
     #[test]
@@ -184,5 +187,11 @@ mod tests {
         let inst = instruction(104);
         assert_eq!(inst.opcode, 4);
         assert_eq!(inst.mode(0), Mode::Immediate);
+
+        let inst = instruction(1002);
+        assert_eq!(inst.opcode, 2);
+        assert_eq!(inst.mode(0), Mode::Position);
+        assert_eq!(inst.mode(1), Mode::Immediate);
+        assert_eq!(inst.mode(2), Mode::Position);
     }
 }
