@@ -71,8 +71,23 @@ enum Mode {
     Position
 }
 
-fn instruction(full_opcode: i32) {
+struct Instruction {
+    opcode: i32,
+    modes: Vec<Mode>,
+}
 
+impl Instruction {
+    // parameter is 1 based counting!!!
+    fn mode(parameter: usize) -> Mode {
+        Mode::Position
+    }
+}
+
+fn instruction(full_opcode: i32) -> Instruction {
+    Instruction {
+        opcode: full_opcode,
+        modes: vec![],
+    }
 }
 
 #[cfg(test)]
