@@ -29,6 +29,7 @@ fn main() -> Result<(), Box<dyn Error>>{
 fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_opcode = program[current_position];
+    let mut output = vec![];
 
     while current_opcode != 99 {
         match current_opcode {
@@ -53,12 +54,17 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
                 program[output_position] = input.expect("Should have had input for opcode 3");
                 current_position += 2;
             }
+            4 => {
+                let printing_position = program[current_position + 1] as usize;
+                output.push(program[printing_position]);
+                current_position += 2;
+            }
             other => panic!("Unknown opcode: {}", other),
         }
         current_opcode = program[current_position];
     }
 
-    (program, vec![])
+    (program, output)
 }
 
 #[cfg(test)]
