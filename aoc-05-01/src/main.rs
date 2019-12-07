@@ -213,6 +213,9 @@ mod tests {
         let instruction_pointer = 0;
 
         assert_eq!(get_value(&program, instruction_pointer, 0), 1);
+
+        let program = vec![104, 18, 99];
+        assert_eq!(get_value(&program, instruction_pointer, 0), 18);
     }
 }
 
