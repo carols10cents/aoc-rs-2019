@@ -1,4 +1,4 @@
-use std::collections::HashSet;
+use std::collections::HashMap;
 
 fn main() {
     let possible_passwords: Vec<_> = (145852..=616942)
@@ -24,8 +24,12 @@ fn never_decrease(list: &[i32]) -> bool {
 }
 
 fn exactly_two(list: &[i32]) -> bool {
-    let digits: HashSet<_> = list.into_iter().collect();
-    digits.len() < list.len()
+    let mut digit_counts = HashMap::new();
+    for digit in list {
+        let count = digit_counts.entry(digit).insert_or(0);
+        *count += 1;
+    }
+    digit_counts.values().any(|value| value == 2)
 }
 
 fn possible_password(num: i32) -> bool {
