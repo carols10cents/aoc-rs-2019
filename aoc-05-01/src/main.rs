@@ -206,4 +206,12 @@ mod tests {
         let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![1002, 4, 3, 4, 99]);
     }
+
+    #[test]
+    fn get_value_helper_function() {
+        let program = vec![1, 0, 0, 0, 99];
+        let instruction_pointer = 0;
+
+        assert_eq!(get_value(program, instruction_pointer, 0), 1);
+    }
 }
