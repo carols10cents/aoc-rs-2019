@@ -3,7 +3,7 @@ use std::fs;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
-    let program: Vec<_> = input
+    let program: Vec<_> = program_input
         .trim()
         .split(",")
         .map(|n| n.parse().expect("input should have been a number"))
