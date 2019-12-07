@@ -67,10 +67,12 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
     (program, output)
 }
 
+#[derive(Debug, PartialEq)]
 enum Mode {
     Position
 }
 
+#[derive(Debug, PartialEq)]
 struct Instruction {
     opcode: i32,
     modes: Vec<Mode>,
