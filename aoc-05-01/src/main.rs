@@ -88,7 +88,7 @@ impl Instruction {
 
 fn instruction(full_opcode: i32) -> Instruction {
     Instruction {
-        opcode: full_opcode,
+        opcode: full_opcode % 100,
         modes: vec![],
     }
 }
