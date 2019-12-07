@@ -33,24 +33,24 @@ fn main() -> Result<(), Box<dyn Error>> {
 
 fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
-    let mut current_opcode = program[current_position];
+    let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
 
-    while current_opcode != 99 {
-        match current_opcode {
+    while current_inst.opcode != 99 {
+        match current_inst.opcode {
             1 => {
                 let output_position = program[current_position + 3] as usize;
-                let input_position_1 = program[current_position + 1] as usize;
-                let input_position_2 = program[current_position + 2] as usize;
-                let answer = program[input_position_1] + program[input_position_2];
+                let input1 = get_value(&program, current_position, &current_inst, 0);
+                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let answer = input1 + input2;
                 program[output_position] = answer;
                 current_position += 4;
             }
             2 => {
                 let output_position = program[current_position + 3] as usize;
-                let input_position_1 = program[current_position + 1] as usize;
-                let input_position_2 = program[current_position + 2] as usize;
-                let answer = program[input_position_1] * program[input_position_2];
+                let input1 = get_value(&program, current_position, &current_inst, 0);
+                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let answer = input1 * input2;
                 program[output_position] = answer;
                 current_position += 4;
             }
@@ -60,13 +60,13 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
                 current_position += 2;
             }
             4 => {
-                let printing_position = program[current_position + 1] as usize;
-                output.push(program[printing_position]);
+                let printing_value = get_value(&program, current_position, &current_inst, 0);
+                output.push(printing_value);
                 current_position += 2;
             }
             other => panic!("Unknown opcode: {}", other),
         }
-        current_opcode = program[current_position];
+        current_inst = instruction(program[current_position]);
     }
 
     (program, output)
