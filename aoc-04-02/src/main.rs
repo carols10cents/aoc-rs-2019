@@ -23,14 +23,14 @@ fn never_decrease(list: &[i32]) -> bool {
     sorted == list
 }
 
-fn duplicate_digits(list: &[i32]) -> bool {
+fn exactly_two(list: &[i32]) -> bool {
     let digits: HashSet<_> = list.into_iter().collect();
     digits.len() < list.len()
 }
 
 fn possible_password(num: i32) -> bool {
     let digits = number_to_digits(num);
-    never_decrease(&digits) && duplicate_digits(&digits)
+    never_decrease(&digits) && exactly_two(&digits)
 }
 
 #[cfg(test)]
@@ -52,9 +52,10 @@ mod tests {
     }
 
     #[test]
-    fn can_tell_if_theres_duplicate_digits() {
-        assert!(duplicate_digits(&[1, 1]));
-        assert!(!duplicate_digits(&[1, 2]));
+    fn can_tell_if_theres_some_group_of_exactly_two_digits() {
+        assert!(exactly_two(&[1, 1]));
+        assert!(!exactly_two(&[1, 2]));
+        assert!(!exactly_two(&[1, 1, 1]));
     }
 
     #[test]
