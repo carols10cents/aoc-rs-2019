@@ -210,19 +210,18 @@ mod tests {
     #[test]
     fn get_value_helper_function() {
         let program = vec![1, 0, 0, 0, 99];
+        let inst = instruction(program[0]);
         let instruction_pointer = 0;
 
-        assert_eq!(get_value(&program, instruction_pointer, 0), 1);
+        assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 1);
 
         let program = vec![104, 18, 99];
-        assert_eq!(get_value(&program, instruction_pointer, 0), 18);
+        let inst = instruction(program[0]);
+        assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 18);
     }
 }
 
-fn get_value(program: &[i32], instruction_pointer: usize, parameter_index: usize) -> i32 {
-    let opcode = program[instruction_pointer];
-    let inst = instruction(opcode);
-
+fn get_value(program: &[i32], instruction_pointer: usize, inst: &Instruction, parameter_index: usize) -> i32 {
     let parameter_location = instruction_pointer + parameter_index + 1;
 
     match inst.mode(parameter_index) {
