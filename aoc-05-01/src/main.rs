@@ -95,6 +95,13 @@ mod tests {
     }
 
     #[test]
+    fn opcode_3_takes_input() {
+        let program = vec![3, 0, 99];
+        let answer = run_intcode(program, 7);
+        assert_eq!(answer, vec![7, 0, 99]);
+    }
+
+    #[test]
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
