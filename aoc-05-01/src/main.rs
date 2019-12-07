@@ -67,6 +67,14 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
     (program, output)
 }
 
+enum Mode {
+    Position
+}
+
+fn instruction(full_opcode: i32) {
+
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
