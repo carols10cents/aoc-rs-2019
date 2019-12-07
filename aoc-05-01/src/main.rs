@@ -1,7 +1,7 @@
-use std::fs;
 use std::error::Error;
+use std::fs;
 
-fn main() -> Result<(), Box<dyn Error>>{
+fn main() -> Result<(), Box<dyn Error>> {
     let input = fs::read_to_string("input")?;
     let program: Vec<_> = input
         .trim()
@@ -17,7 +17,12 @@ fn main() -> Result<(), Box<dyn Error>>{
             let (answer, _output) = run_intcode(modified_program, None);
 
             if answer[0] == 19690720 {
-                println!("noun = {}, verb = {}, answer = {}", noun, verb, 100 * noun + verb);
+                println!(
+                    "noun = {}, verb = {}, answer = {}",
+                    noun,
+                    verb,
+                    100 * noun + verb
+                );
                 break;
             }
         }
@@ -193,5 +198,10 @@ mod tests {
         assert_eq!(inst.mode(0), Mode::Position);
         assert_eq!(inst.mode(1), Mode::Immediate);
         assert_eq!(inst.mode(2), Mode::Position);
+    }
+
+    #[test]
+    fn use_parameter_modes_in_programs() {
+        let program = vec![1002, 4, 3, 4, 33];
     }
 }
