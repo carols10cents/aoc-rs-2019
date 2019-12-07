@@ -80,17 +80,23 @@ struct Instruction {
 }
 
 impl Instruction {
-    // parameter is 1 based counting!!!
     fn mode(&self, parameter: usize) -> Mode {
-        Mode::Position
+        self.modes.get(parameter).unwrap_or(Mode::Position)
     }
 }
 
-fn instruction(full_opcode: i32) -> Instruction {
-    Instruction {
-        opcode: full_opcode % 100,
-        modes: vec![],
+fn instruction(mut full_opcode: i32) -> Instruction {
+    let opcode = full_opcode % 100;
+    full_opcode /= 100;
+
+    let mut modes = vec![];
+
+    while full_opcode > 0 {
+        modes.push(full_opcode % 10);
+        full_opcode /= 10;
     }
+
+    Instruction { opcode, modes }
 }
 
 #[cfg(test)]
@@ -157,21 +163,21 @@ mod tests {
     fn interpret_parameter_modes_all_position_mode() {
         let inst = instruction(2);
         assert_eq!(inst.opcode, 2);
+        assert_eq!(inst.mode(0), Mode::Position);
         assert_eq!(inst.mode(1), Mode::Position);
         assert_eq!(inst.mode(2), Mode::Position);
-        assert_eq!(inst.mode(3), Mode::Position);
 
         let inst = instruction(4);
         assert_eq!(inst.opcode, 4);
+        assert_eq!(inst.mode(0), Mode::Position);
         assert_eq!(inst.mode(1), Mode::Position);
         assert_eq!(inst.mode(2), Mode::Position);
-        assert_eq!(inst.mode(3), Mode::Position);
     }
 
     #[test]
     fn interpret_parameter_modes_that_have_some_immediate_mode() {
         let inst = instruction(104);
         assert_eq!(inst.opcode, 4);
-        assert_eq!(inst.mode(1), Mode::Immediate);
+        assert_eq!(inst.mode(0), Mode::Immediate);
     }
 }
