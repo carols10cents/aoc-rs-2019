@@ -59,38 +59,40 @@ fn run_intcode(mut program: Vec<i32>, input: i32) -> Vec<i32> {
 mod tests {
     use super::*;
 
+    const ARBITRARY_INPUT: i32 = 0;
+
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let answer = run_intcode(program);
+        let answer = run_intcode(program, ARBITRARY_INPUT);
         assert_eq!(answer, vec![99]);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let answer = run_intcode(program);
+        let answer = run_intcode(program, ARBITRARY_INPUT);
         assert_eq!(answer, vec![2, 0, 0, 0, 99]);
     }
 
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let answer = run_intcode(program);
+        let answer = run_intcode(program, ARBITRARY_INPUT);
         assert_eq!(answer, vec![2, 3, 0, 6, 99]);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let answer = run_intcode(program);
+        let answer = run_intcode(program, ARBITRARY_INPUT);
         assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let answer = run_intcode(program);
+        let answer = run_intcode(program, ARBITRARY_INPUT);
         assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
 
@@ -105,6 +107,6 @@ mod tests {
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
-        run_intcode(program);
+        run_intcode(program, ARBITRARY_INPUT);
     }
 }
