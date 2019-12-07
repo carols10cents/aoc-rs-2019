@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>>{
             let mut modified_program = program.clone();
             modified_program[1] = noun;
             modified_program[2] = verb;
-            let answer = run_intcode(modified_program);
+            let answer = run_intcode(modified_program, None);
 
             if answer[0] == 19690720 {
                 println!("noun = {}, verb = {}, answer = {}", noun, verb, 100 * noun + verb);
@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>>{
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, input: i32) -> Vec<i32> {
+fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> Vec<i32> {
     let mut current_position = 0;
     let mut current_opcode = program[current_position];
 
@@ -59,47 +59,45 @@ fn run_intcode(mut program: Vec<i32>, input: i32) -> Vec<i32> {
 mod tests {
     use super::*;
 
-    const ARBITRARY_INPUT: i32 = 0;
-
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let answer = run_intcode(program, ARBITRARY_INPUT);
+        let answer = run_intcode(program, None);
         assert_eq!(answer, vec![99]);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let answer = run_intcode(program, ARBITRARY_INPUT);
+        let answer = run_intcode(program, None);
         assert_eq!(answer, vec![2, 0, 0, 0, 99]);
     }
 
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let answer = run_intcode(program, ARBITRARY_INPUT);
+        let answer = run_intcode(program, None);
         assert_eq!(answer, vec![2, 3, 0, 6, 99]);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let answer = run_intcode(program, ARBITRARY_INPUT);
+        let answer = run_intcode(program, None);
         assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let answer = run_intcode(program, ARBITRARY_INPUT);
+        let answer = run_intcode(program, None);
         assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
 
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
-        let answer = run_intcode(program, 7);
+        let answer = run_intcode(program, Some(7));
         assert_eq!(answer, vec![7, 0, 99]);
     }
 
@@ -107,6 +105,6 @@ mod tests {
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
-        run_intcode(program, ARBITRARY_INPUT);
+        run_intcode(program, None);
     }
 }
