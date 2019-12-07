@@ -78,7 +78,7 @@ struct Instruction {
 
 impl Instruction {
     // parameter is 1 based counting!!!
-    fn mode(parameter: usize) -> Mode {
+    fn mode(&self, parameter: usize) -> Mode {
         Mode::Position
     }
 }
