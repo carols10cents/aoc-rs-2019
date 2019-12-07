@@ -67,7 +67,7 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
     (program, output)
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone, Copy)]
 enum Mode {
     Position,
     Immediate,
@@ -92,7 +92,12 @@ fn instruction(mut full_opcode: i32) -> Instruction {
     let mut modes = vec![];
 
     while full_opcode > 0 {
-        modes.push(full_opcode % 10);
+        let mode = match full_opcode % 10 {
+            0 => Mode::Position,
+            1 => Mode::Immediate,
+            other => panic!("Unexpected parameter mode: {}", other),
+        };
+        modes.push(mode);
         full_opcode /= 10;
     }
 
