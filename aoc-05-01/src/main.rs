@@ -38,6 +38,7 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> Vec<i32> {
                 let input_position_2 = program[current_position + 2] as usize;
                 let answer = program[input_position_1] + program[input_position_2];
                 program[output_position] = answer;
+                current_position += 4;
             }
             2 => {
                 let output_position = program[current_position + 3] as usize;
@@ -45,10 +46,15 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> Vec<i32> {
                 let input_position_2 = program[current_position + 2] as usize;
                 let answer = program[input_position_1] * program[input_position_2];
                 program[output_position] = answer;
+                current_position += 4;
+            }
+            3 => {
+                let output_position = program[current_position + 1] as usize;
+                program[output_position] = input.expect("Should have had input for opcode 3");
+                current_position += 2;
             }
             other => panic!("Unknown opcode: {}", other),
         }
-        current_position += 4;
         current_opcode = program[current_position];
     }
 
