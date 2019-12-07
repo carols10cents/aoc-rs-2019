@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>>{
             let mut modified_program = program.clone();
             modified_program[1] = noun;
             modified_program[2] = verb;
-            let answer = run_intcode(modified_program, None);
+            let (answer, _output) = run_intcode(modified_program, None);
 
             if answer[0] == 19690720 {
                 println!("noun = {}, verb = {}, answer = {}", noun, verb, 100 * noun + verb);
@@ -68,42 +68,42 @@ mod tests {
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let answer = run_intcode(program, None);
+        let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![99]);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let answer = run_intcode(program, None);
+        let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![2, 0, 0, 0, 99]);
     }
 
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let answer = run_intcode(program, None);
+        let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![2, 3, 0, 6, 99]);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let answer = run_intcode(program, None);
+        let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let answer = run_intcode(program, None);
+        let (answer, _output) = run_intcode(program, None);
         assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
 
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
-        let answer = run_intcode(program, Some(7));
+        let (answer, _output) = run_intcode(program, Some(7));
         assert_eq!(answer, vec![7, 0, 99]);
     }
 
