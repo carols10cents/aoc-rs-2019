@@ -26,7 +26,7 @@ fn never_decrease(list: &[i32]) -> bool {
 fn exactly_two(list: &[i32]) -> bool {
     let mut digit_counts = HashMap::new();
     for digit in list {
-        let count = digit_counts.entry(digit).insert_or(0);
+        let count = digit_counts.entry(digit).or_insert(0);
         *count += 1;
     }
     digit_counts.values().any(|value| value == 2)
