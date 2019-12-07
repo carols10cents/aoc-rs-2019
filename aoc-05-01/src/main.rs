@@ -203,5 +203,7 @@ mod tests {
     #[test]
     fn use_parameter_modes_in_programs() {
         let program = vec![1002, 4, 3, 4, 33];
+        let (answer, _output) = run_intcode(program, None);
+        assert_eq!(answer, vec![1002, 4, 3, 4, 99]);
     }
 }
