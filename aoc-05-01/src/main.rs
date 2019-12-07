@@ -26,7 +26,7 @@ fn main() -> Result<(), Box<dyn Error>>{
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> Vec<i32> {
+fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_opcode = program[current_position];
 
@@ -58,7 +58,7 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> Vec<i32> {
         current_opcode = program[current_position];
     }
 
-    program
+    (program, vec![])
 }
 
 #[cfg(test)]
