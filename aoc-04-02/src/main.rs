@@ -64,8 +64,12 @@ mod tests {
 
     #[test]
     fn can_tell_if_a_number_is_possibly_a_password() {
-        assert!(possible_password(111111));
+        assert!(!possible_password(111111));
         assert!(!possible_password(223450));
         assert!(!possible_password(123789));
+        assert!(!possible_password(123444));
+
+        assert!(possible_password(112233));
+        assert!(possible_password(111122));
     }
 }
