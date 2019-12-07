@@ -29,7 +29,7 @@ fn exactly_two(list: &[i32]) -> bool {
         let count = digit_counts.entry(digit).or_insert(0);
         *count += 1;
     }
-    digit_counts.values().any(|value| value == 2)
+    digit_counts.values().any(|&value| value == 2)
 }
 
 fn possible_password(num: i32) -> bool {
