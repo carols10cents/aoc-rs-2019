@@ -81,7 +81,7 @@ struct Instruction {
 
 impl Instruction {
     fn mode(&self, parameter: usize) -> Mode {
-        self.modes.get(parameter).to_owned().unwrap_or(Mode::Position)
+        self.modes.get(parameter).copied().unwrap_or(Mode::Position)
     }
 }
 
