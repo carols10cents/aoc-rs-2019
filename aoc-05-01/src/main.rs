@@ -166,4 +166,11 @@ mod tests {
         assert_eq!(inst.mode(2), Mode::Position);
         assert_eq!(inst.mode(3), Mode::Position);
     }
+
+    #[test]
+    fn interpret_parameter_modes_that_have_some_immediate_mode() {
+        let inst = instruction(104);
+        assert_eq!(inst.opcode, 4);
+        assert_eq!(inst.mode(1), Mode::Immediate);
+    }
 }
