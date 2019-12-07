@@ -126,4 +126,19 @@ mod tests {
         let program = vec![42];
         run_intcode(program, None);
     }
+
+    #[test]
+    fn interpret_parameter_modes_all_position_mode() {
+        let inst = instruction(2);
+        assert_eq!(inst.opcode, 2);
+        assert_eq!(inst.mode(1), Mode::Position);
+        assert_eq!(inst.mode(2), Mode::Position);
+        assert_eq!(inst.mode(3), Mode::Position);
+
+        let inst = instruction(4);
+        assert_eq!(inst.opcode, 4);
+        assert_eq!(inst.mode(1), Mode::Position);
+        assert_eq!(inst.mode(2), Mode::Position);
+        assert_eq!(inst.mode(3), Mode::Position);
+    }
 }
