@@ -97,6 +97,6 @@ fn inner_num_transfers_to_santa(orbits: &HashMap<&str, &str>, santa_orbiting: &s
     if currently_orbiting == santa_orbiting {
         0
     } else {
-        1 + inner_num_transfers_to_santa(orbits, santa_orbiting, orbits.get(currently_orbiting).expect("Recursive orbiting must orbit something"));
+        1 + inner_num_transfers_to_santa(orbits, santa_orbiting, orbits.get(currently_orbiting).expect("Recursive orbiting must orbit something"))
     }
 }
