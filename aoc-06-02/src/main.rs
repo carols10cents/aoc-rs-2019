@@ -68,4 +68,15 @@ K)L";
         let total = orbit_count(input);
         assert_eq!(total, 42);
     }
+
+    #[test]
+    fn you_orbiting_same_as_santa_is_0 {
+        let input = "COM)SAN\nCOM)YOU";
+        let total = num_transfers_to_santa(input);
+        assert_eq!(total, 0);
+    }
+}
+
+fn num_transfers_to_santa(input: &str) -> usize {
+    0
 }
