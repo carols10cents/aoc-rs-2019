@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let simulated_stdin = Some(1);
+    let simulated_stdin = Some(5);
     let (_answer, output) = run_intcode(program, simulated_stdin);
     println!("{:?}", output);
 
