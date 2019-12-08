@@ -85,5 +85,18 @@ K)L";
 }
 
 fn num_transfers_to_santa(input: &str) -> usize {
-    0
+    let orbits = orbit_graph(input);
+    let santa_orbiting = orbits.get("SAN").expect("SAN must be orbiting something");
+
+    let currently_orbiting = orbits.get("YOU").expect("YOU must be orbiting something");
+
+    inner_num_transfers_to_santa(&orbits, santa_orbiting, currently_orbiting);
+}
+
+fn inner_num_transfers_to_santa(orbits: HashMap<&str, &str>, santa_orbiting: &str, currently_orbiting: &str) -> usize {
+    if currently_orbiting == santa_orbiting {
+        0
+    } else {
+        1 + inner_num_transfers_to_santa(orbits, santa_orbiting, orbits.get(currently_orbiting).expect("Recursive orbiting must orbit something"));
+    }
 }
