@@ -58,6 +58,15 @@ fn run_intcode(mut program: Vec<i32>, input: Option<i32>) -> (Vec<i32>, Vec<i32>
                     current_position += 3;
                 }
             }
+            6 => { // jump-if-false
+                let test_value = get_value(&program, current_position, &current_inst, 0);
+                if test_value == 0 {
+                    let jump_location = get_value(&program, current_position, &current_inst, 1);
+                    current_position = jump_location as usize;
+                } else {
+                    current_position += 3;
+                }
+            }
             other => panic!("Unknown opcode: {}", other),
         }
         current_inst = instruction(program[current_position]);
