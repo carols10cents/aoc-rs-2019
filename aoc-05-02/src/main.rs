@@ -161,12 +161,12 @@ mod tests {
         // Test value is false; 42 gets printed
         let program = vec![5, 6, 5, 104, 42, 99, 0];
         let (_answer, output) = run_intcode(program, None);
-        assert_eq!(output, vec![]);
+        assert_eq!(output, vec![42]);
 
         // Test value is true; print gets jumped over
         let program = vec![5, 6, 5, 104, 42, 99, 3];
         let (_answer, output) = run_intcode(program, None);
-        assert_eq!(output, vec![42]);
+        assert_eq!(output, vec![]);
     }
 
     #[test]
