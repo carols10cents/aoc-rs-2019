@@ -37,4 +37,11 @@ mod tests {
         let total = orbit_count(input);
         assert_eq!(total, 1);
     }
+
+    #[test]
+    fn one_direct_and_one_indirect() {
+        let input = "COM)A\nA)B";
+        let total = orbit_count(input);
+        assert_eq!(total, 3);
+    }
 }
