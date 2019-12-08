@@ -5,7 +5,7 @@ fn main() {
     println!("{}", orbit_count(input));
 }
 
-fn orbit_count(input: &str) -> usize {
+fn orbit_graph(input: &str) -> HashMap<&str, &str> {
     let mut orbits = HashMap::new();
 
     for line in input.lines() {
@@ -16,6 +16,12 @@ fn orbit_count(input: &str) -> usize {
 
         orbits.insert(orbiting, orbited);
     }
+
+    orbits
+}
+
+fn orbit_count(input: &str) -> usize {
+    let mut orbits = orbit_graph(input);
 
     let mut total = 0;
     for body in orbits.keys() {
