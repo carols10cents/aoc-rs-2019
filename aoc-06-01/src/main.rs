@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
 fn main() {
-    println!("Hello, world!");
+    let input = include_str!("input");
+    println!("{}", orbit_count(input));
 }
 
 fn orbit_count(input: &str) -> usize {
