@@ -192,6 +192,17 @@ mod tests {
     }
 
     #[test]
+    fn opcode_7_less_than() {
+        let program = vec![1107, 4, 5, 3, 99];
+        let (answer, _output) = run_intcode(program, None);
+        assert_eq!(answer, vec![1107, 4, 5, 1, 99]);
+
+        let program = vec![1107, 5, 4, 3, 99];
+        let (answer, _output) = run_intcode(program, None);
+        assert_eq!(answer, vec![1107, 5, 4, 0, 99]);
+    }
+
+    #[test]
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
