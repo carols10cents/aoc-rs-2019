@@ -44,4 +44,21 @@ mod tests {
         let total = orbit_count(input);
         assert_eq!(total, 3);
     }
+
+    #[test]
+    fn orbits_specified_in_example() {
+        let input = "COM)B
+B)C
+C)D
+D)E
+E)F
+B)G
+G)H
+D)I
+E)J
+J)K
+K)L";
+        let total = orbit_count(input);
+        assert_eq!(total, 42);
+    }
 }
