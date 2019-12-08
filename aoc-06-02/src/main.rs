@@ -21,7 +21,7 @@ fn orbit_graph(input: &str) -> HashMap<&str, &str> {
 }
 
 fn orbit_count(input: &str) -> usize {
-    let mut orbits = orbit_graph(input);
+    let orbits = orbit_graph(input);
 
     let mut total = 0;
     for body in orbits.keys() {
