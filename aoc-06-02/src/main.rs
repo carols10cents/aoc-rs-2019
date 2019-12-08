@@ -93,7 +93,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
     inner_num_transfers_to_santa(&orbits, santa_orbiting, currently_orbiting);
 }
 
-fn inner_num_transfers_to_santa(orbits: HashMap<&str, &str>, santa_orbiting: &str, currently_orbiting: &str) -> usize {
+fn inner_num_transfers_to_santa(orbits: &HashMap<&str, &str>, santa_orbiting: &str, currently_orbiting: &str) -> usize {
     if currently_orbiting == santa_orbiting {
         0
     } else {
