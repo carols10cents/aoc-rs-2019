@@ -70,7 +70,7 @@ K)L";
     }
 
     #[test]
-    fn you_orbiting_same_as_santa_is_0 {
+    fn you_orbiting_same_as_santa_is_0() {
         let input = "COM)SAN\nCOM)YOU";
         let total = num_transfers_to_santa(input);
         assert_eq!(total, 0);
