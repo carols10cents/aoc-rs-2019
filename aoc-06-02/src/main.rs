@@ -75,6 +75,13 @@ K)L";
         let total = num_transfers_to_santa(input);
         assert_eq!(total, 0);
     }
+
+    #[test]
+    fn one_further_out_than_santa_is_1() {
+        let input = "COM)SAN\nCOM)A\nA)YOU";
+        let total = num_transfers_to_santa(input);
+        assert_eq!(total, 1);
+    }
 }
 
 fn num_transfers_to_santa(input: &str) -> usize {
