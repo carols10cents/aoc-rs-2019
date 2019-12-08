@@ -19,7 +19,7 @@ fn orbit_count(input: &str) -> usize {
     let mut total = 0;
     for body in orbits.keys() {
         let mut current = body;
-        while current != "COM" {
+        while *current != "COM" {
             total += 1;
             current = orbits.get(current).expect("Must be orbiting something");
         }
