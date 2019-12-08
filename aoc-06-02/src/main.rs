@@ -90,7 +90,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
 
     let currently_orbiting = orbits.get("YOU").expect("YOU must be orbiting something");
 
-    inner_num_transfers_to_santa(&orbits, santa_orbiting, currently_orbiting);
+    inner_num_transfers_to_santa(&orbits, santa_orbiting, currently_orbiting)
 }
 
 fn inner_num_transfers_to_santa(orbits: &HashMap<&str, &str>, santa_orbiting: &str, currently_orbiting: &str) -> usize {
