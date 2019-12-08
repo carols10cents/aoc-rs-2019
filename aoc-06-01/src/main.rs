@@ -8,7 +8,7 @@ fn orbit_count(input: &str) -> usize {
     let mut orbits = HashMap::new();
 
     for line in input.lines() {
-        let bodies = line.split(")");
+        let mut bodies = line.split(")");
 
         let orbited = bodies.next().expect("Must have a body being orbited");
         let orbiting = bodies.next().expect("Must have a body doing the orbiting");
