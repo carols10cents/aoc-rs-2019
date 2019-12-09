@@ -83,5 +83,6 @@ fn inner_num_transfers_to_santa(
             (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
         };
         println!("returning {}", returning);
+        returning
     }
 }
