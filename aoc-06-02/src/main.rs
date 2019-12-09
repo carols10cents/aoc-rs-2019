@@ -4,7 +4,7 @@ fn main() {
     let input = include_str!("../input");
 }
 
-fn orbit_graph(input: &str) -> HashMap<&str, &str> {
+fn orbit_graph(input: &str) -> HashMap<&str, Vec<&str>> {
     let mut orbits = HashMap::new();
 
     for line in input.lines() {
@@ -13,7 +13,8 @@ fn orbit_graph(input: &str) -> HashMap<&str, &str> {
         let orbited = bodies.next().expect("Must have a body being orbited");
         let orbiting = bodies.next().expect("Must have a body doing the orbiting");
 
-        orbits.insert(orbiting, orbited);
+        orbits.entry(orbiting).or_insert(Vec::new()).push(orbited);
+        orbits.entry(orbited).or_insert(Vec::new()).push(orbiting);
     }
 
     orbits
