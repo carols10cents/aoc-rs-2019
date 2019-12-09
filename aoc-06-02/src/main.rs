@@ -59,7 +59,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
     while !candidates.contains(&santa_orbiting) {
         num_transfers += 1;
 
-        let mut new_candidates = vec![];
+        let mut new_candidates = HashSet::new();
         for c in &candidates {
             visited.insert(c);
         }
