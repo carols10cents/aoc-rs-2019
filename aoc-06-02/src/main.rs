@@ -48,9 +48,9 @@ mod tests {
 
 fn num_transfers_to_santa(input: &str) -> usize {
     let orbits = orbit_graph(input);
-    let santa_orbiting = orbits.get("SAN").expect("SAN must be orbiting something");
+    let santa_orbiting = *orbits.get("SAN").expect("SAN must be orbiting something");
 
-    let mut candidates = vec![orbits.get("YOU").expect("YOU must be orbiting something")];
+    let mut candidates = vec![*orbits.get("YOU").expect("YOU must be orbiting something")];
     let mut num_transfers = 0;
     let mut visited = vec!["YOU"];
 
