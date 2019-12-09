@@ -66,7 +66,7 @@ fn inner_num_transfers_to_santa(
         let move_in = orbits.get(currently_orbiting);
         let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
 
-        let outward = orbits.iter().filter(|(_, &v)| v == currently_orbiting).map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
+        let outward = orbits.iter().filter(|(_, &v)| v == currently_orbiting && v != "YOU").map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
 
         1 + match (inward, outward) {
             (Some(i), Some(o)) => cmp::min(i, o),
