@@ -20,54 +20,9 @@ fn orbit_graph(input: &str) -> HashMap<&str, &str> {
     orbits
 }
 
-fn orbit_count(input: &str) -> usize {
-    let orbits = orbit_graph(input);
-
-    let mut total = 0;
-    for body in orbits.keys() {
-        let mut current = body;
-        while *current != "COM" {
-            total += 1;
-            current = orbits.get(current).expect("Must be orbiting something");
-        }
-    }
-    total
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn one_direct_orbit_only() {
-        let input = "COM)A";
-        let total = orbit_count(input);
-        assert_eq!(total, 1);
-    }
-
-    #[test]
-    fn one_direct_and_one_indirect() {
-        let input = "COM)A\nA)B";
-        let total = orbit_count(input);
-        assert_eq!(total, 3);
-    }
-
-    #[test]
-    fn orbits_specified_in_example() {
-        let input = "COM)B
-B)C
-C)D
-D)E
-E)F
-B)G
-G)H
-D)I
-E)J
-J)K
-K)L";
-        let total = orbit_count(input);
-        assert_eq!(total, 42);
-    }
 
     #[test]
     fn you_orbiting_same_as_santa_is_0() {
