@@ -51,40 +51,33 @@ fn num_transfers_to_santa(input: &str) -> usize {
     let orbits = orbit_graph(input);
     let santa_orbiting = orbits.get("SAN").expect("SAN must be orbiting something");
 
-    let currently_orbiting = orbits.get("YOU").expect("YOU must be orbiting something");
+    let mut candidates = vec![orbits.get("YOU").expect("YOU must be orbiting something")];
+    let mut num_transfers = 0;
+    let mut visited = vec!["YOU", currently_orbiting];
 
-    inner_num_transfers_to_santa(&orbits, santa_orbiting, currently_orbiting)
-}
+    while !candidates.contains(santa_orbiting) {
+        num_transfers += 1;
 
-fn inner_num_transfers_to_santa(
-    orbits: &HashMap<&str, &str>,
-    santa_orbiting: &str,
-    currently_orbiting: &str,
-) -> usize {
-    if currently_orbiting == santa_orbiting {
-        0
-    } else {
-        let move_in = orbits.get(currently_orbiting);
-        let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
-
-        if inward == Some(0) {
-            return 1;
+        let mut new_candidates = vec![];
+        for c in candidates {
+            visited.push(c);
         }
 
-        let outward_candidates: Vec<_> = orbits
-            .iter()
-            .filter(|(&k, &v)| v == currently_orbiting && k != "YOU")
-            .collect();
-        let outward = outward_candidates
-            .iter()
-            .map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body))
-            .min();
+        for c in candidates {
+            if let Some(inner) = orbits.get(c) {
+                if !visited.contains(inner) && !new_candidates.contains(inner) {
+                    new_candidates.push(inner);
+                }
+            }
 
-        1 + match (inward, outward) {
-            (Some(i), Some(o)) => cmp::min(i, o),
-            (Some(i), None) => i,
-            (None, Some(o)) => o,
-            (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
+            for (outer, _) in orbits
+                .iter()
+                .filter(|(&k, &v)| v == c && !visited.contains(k) && !new_candidates.contains(k)) {
+                new_candidates.push(outer);
+            }
         }
+
+        candidates = new_candidates;
     }
+    num_transfers
 }
