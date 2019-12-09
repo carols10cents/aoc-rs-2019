@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::cmp;
+use std::collections::HashMap;
 
 fn main() {
     let input = include_str!("../input");
@@ -71,8 +71,14 @@ fn inner_num_transfers_to_santa(
             return 1;
         }
 
-        let outward_candidates: Vec<_> = orbits.iter().filter(|(&k, &v)| v == currently_orbiting && k != "YOU").collect();
-        let outward = outward_candidates.iter().map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
+        let outward_candidates: Vec<_> = orbits
+            .iter()
+            .filter(|(&k, &v)| v == currently_orbiting && k != "YOU")
+            .collect();
+        let outward = outward_candidates
+            .iter()
+            .map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body))
+            .min();
 
         1 + match (inward, outward) {
             (Some(i), Some(o)) => cmp::min(i, o),
