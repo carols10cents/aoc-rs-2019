@@ -72,16 +72,16 @@ fn inner_num_transfers_to_santa(
 
         let outward_candidates: Vec<_> = orbits.iter().filter(|(&k, &v)| v == currently_orbiting && k != "YOU").collect();
         println!("outward_candidates = {:?}", outward_candidates);
-        7
-        // .map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
-        // println!("Outward is {:?}", outward);
-        //
-        // let returning = 1 + match (inward, outward) {
-        //     (Some(i), Some(o)) => cmp::min(i, o),
-        //     (Some(i), None) => i,
-        //     (None, Some(o)) => o,
-        //     (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
-        // };
-        // println!("returning {}", returning);
+
+        outward_candidates.iter().map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
+        println!("Outward is {:?}", outward);
+
+        let returning = 1 + match (inward, outward) {
+            (Some(i), Some(o)) => cmp::min(i, o),
+            (Some(i), None) => i,
+            (None, Some(o)) => o,
+            (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
+        };
+        println!("returning {}", returning);
     }
 }
