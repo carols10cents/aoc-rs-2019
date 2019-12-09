@@ -70,7 +70,7 @@ fn inner_num_transfers_to_santa(
         let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
         println!("Inward is {:?}", inward);
 
-        let outward_candidates: Vec<_> = orbits.iter().filter(|(_, &v)| v == currently_orbiting && v != "YOU").collect();
+        let outward_candidates: Vec<_> = orbits.iter().filter(|(&k, &v)| v == currently_orbiting && k != "YOU").collect();
         println!("outward_candidates = {:?}", outward_candidates);
         7
         // .map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
