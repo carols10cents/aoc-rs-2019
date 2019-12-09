@@ -2,7 +2,6 @@ use std::collections::HashMap;
 
 fn main() {
     let input = include_str!("../input");
-    println!("{}", orbit_count(input));
 }
 
 fn orbit_graph(input: &str) -> HashMap<&str, &str> {
