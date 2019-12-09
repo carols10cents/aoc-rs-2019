@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn main() {
     let input = include_str!("../input");
@@ -50,29 +50,31 @@ fn num_transfers_to_santa(input: &str) -> usize {
     let orbits = orbit_graph(input);
     let santa_orbiting = *orbits.get("SAN").expect("SAN must be orbiting something");
 
-    let mut candidates = vec![*orbits.get("YOU").expect("YOU must be orbiting something")];
+    let mut candidates = HashSet::new();
+    candidates.insert(*orbits.get("YOU").expect("YOU must be orbiting something"));
     let mut num_transfers = 0;
-    let mut visited = vec!["YOU"];
+    let mut visited = HashSet::new();
+    visited.insert("YOU");
 
     while !candidates.contains(&santa_orbiting) {
         num_transfers += 1;
 
         let mut new_candidates = vec![];
-        for c in candidates {
-            visited.push(c);
+        for c in &candidates {
+            visited.insert(c);
         }
 
         for c in candidates {
             if let Some(inner) = orbits.get(c) {
-                if !visited.contains(inner) && !new_candidates.contains(inner) {
-                    new_candidates.push(inner);
+                if !visited.contains(inner) {
+                    new_candidates.insert(inner);
                 }
             }
 
             for (outer, _) in orbits
                 .iter()
-                .filter(|(k, &v)| v == c && !visited.contains(k) && !new_candidates.contains(k)) {
-                new_candidates.push(outer);
+                .filter(|(k, &v)| v == c && !visited.contains(k)) {
+                new_candidates.insert(outer);
             }
         }
 
