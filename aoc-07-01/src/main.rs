@@ -1,6 +1,5 @@
 use std::error::Error;
 use std::fs;
-use std::collections::VecDeque;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -10,17 +9,18 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let simulated_stdin = vec![5].into();
+    let simulated_stdin = vec![5];
     let (_answer, output) = run_intcode(program, simulated_stdin);
     println!("{:?}", output);
 
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, mut input: VecDeque<i32>) -> (Vec<i32>, Vec<i32>) {
+fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
+    input = input.rev().collect();
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
@@ -136,49 +136,49 @@ mod tests {
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![99]);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![2, 0, 0, 0, 99]);
     }
 
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![2, 3, 0, 6, 99]);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
     }
 
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
-        let (answer, _output) = run_intcode(program, vec![7].into());
+        let (answer, _output) = run_intcode(program, vec![7]);
         assert_eq!(answer, vec![7, 0, 99]);
     }
 
     #[test]
     fn programs_can_have_arbitrary_numbers_of_opcode_3_with_enough_input() {
         let program = vec![3, 0, 3, 1, 99];
-        let (answer, _output) = run_intcode(program, vec![7, 8].into());
+        let (answer, _output) = run_intcode(program, vec![7, 8]);
         assert_eq!(answer, vec![7, 8, 3, 1, 99]);
     }
 
@@ -186,13 +186,13 @@ mod tests {
     #[should_panic(expected = "Should have had enough input for opcode 3")]
     fn programs_panics_if_opcode_3_doesnt_have_input() {
         let program = vec![3, 0, 3, 1, 99];
-        run_intcode(program, vec![7].into());
+        run_intcode(program, vec![7]);
     }
 
     #[test]
     fn opcode_4_returns_output() {
         let program = vec![4, 2, 99];
-        let (_answer, output) = run_intcode(program, vec![].into());
+        let (_answer, output) = run_intcode(program, vec![]);
         assert_eq!(output, vec![99]);
     }
 
@@ -200,12 +200,12 @@ mod tests {
     fn opcode_5_jumps_if_true() {
         // Test value is false; 42 gets printed
         let program = vec![1005, 6, 5, 104, 42, 99, 0];
-        let (_answer, output) = run_intcode(program, vec![].into());
+        let (_answer, output) = run_intcode(program, vec![]);
         assert_eq!(output, vec![42]);
 
         // Test value is true; print gets jumped over
         let program = vec![1005, 6, 5, 104, 42, 99, 3];
-        let (_answer, output) = run_intcode(program, vec![].into());
+        let (_answer, output) = run_intcode(program, vec![]);
         assert_eq!(output, vec![]);
     }
 
@@ -213,34 +213,34 @@ mod tests {
     fn opcode_6_jumps_if_false() {
         // Test value is false; print gets jumped over
         let program = vec![1006, 6, 5, 104, 42, 99, 0];
-        let (_answer, output) = run_intcode(program, vec![].into());
+        let (_answer, output) = run_intcode(program, vec![]);
         assert_eq!(output, vec![]);
 
         // Test value is true; 42 gets printed
         let program = vec![1006, 6, 5, 104, 42, 99, 3];
-        let (_answer, output) = run_intcode(program, vec![].into());
+        let (_answer, output) = run_intcode(program, vec![]);
         assert_eq!(output, vec![42]);
     }
 
     #[test]
     fn opcode_7_less_than() {
         let program = vec![1107, 4, 5, 3, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![1107, 4, 5, 1, 99]);
 
         let program = vec![1107, 5, 4, 3, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![1107, 5, 4, 0, 99]);
     }
 
     #[test]
     fn opcode_8_equals() {
         let program = vec![1108, 4, 4, 3, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![1108, 4, 4, 1, 99]);
 
         let program = vec![1108, 5, 4, 3, 99];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![1108, 5, 4, 0, 99]);
     }
 
@@ -248,7 +248,7 @@ mod tests {
     #[should_panic(expected = "Unknown opcode: 42")]
     fn unknown_opcode_panics() {
         let program = vec![42];
-        run_intcode(program, vec![].into());
+        run_intcode(program, vec![]);
     }
 
     #[test]
@@ -285,7 +285,7 @@ mod tests {
     #[test]
     fn use_parameter_modes_in_programs() {
         let program = vec![1002, 4, 3, 4, 33];
-        let (answer, _output) = run_intcode(program, vec![].into());
+        let (answer, _output) = run_intcode(program, vec![]);
         assert_eq!(answer, vec![1002, 4, 3, 4, 99]);
     }
 
