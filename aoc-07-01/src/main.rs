@@ -20,7 +20,7 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
-    input = input.iter().rev().collect();
+    input = input.into_iter().rev().collect();
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
