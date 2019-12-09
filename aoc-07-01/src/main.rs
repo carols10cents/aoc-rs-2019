@@ -183,6 +183,13 @@ mod tests {
     }
 
     #[test]
+    #[should_panic(expected = "Should have had enough input for opcode 3")]
+    fn programs_panics_if_opcode_3_doesnt_have_input() {
+        let program = vec![3, 0, 3, 1, 99];
+        run_intcode(program, vec![7].into());
+    }
+
+    #[test]
     fn opcode_4_returns_output() {
         let program = vec![4, 2, 99];
         let (_answer, output) = run_intcode(program, vec![].into());
