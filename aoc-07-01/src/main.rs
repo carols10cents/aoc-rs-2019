@@ -17,7 +17,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, input: VecDeque<i32>) -> (Vec<i32>, Vec<i32>) {
+fn run_intcode(mut program: Vec<i32>, mut input: VecDeque<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
