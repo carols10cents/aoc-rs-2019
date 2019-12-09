@@ -54,7 +54,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
     let mut num_transfers = 0;
     let mut visited = vec!["YOU"];
 
-    while !candidates.contains(santa_orbiting) {
+    while !candidates.contains(&santa_orbiting) {
         num_transfers += 1;
 
         let mut new_candidates = vec![];
@@ -71,7 +71,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
 
             for (outer, _) in orbits
                 .iter()
-                .filter(|(&k, &v)| v == c && !visited.contains(k) && !new_candidates.contains(k)) {
+                .filter(|(k, &v)| v == c && !visited.contains(k) && !new_candidates.contains(k)) {
                 new_candidates.push(outer);
             }
         }
