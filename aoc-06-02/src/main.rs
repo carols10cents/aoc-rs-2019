@@ -48,7 +48,7 @@ mod tests {
 
 fn num_transfers_to_santa(input: &str) -> usize {
     let orbits = orbit_graph(input);
-    let santa_orbiting = orbits.get("SAN").first().expect("SAN must be orbiting something");
+    let santa_orbiting = orbits.get("SAN").expect("SAN must be orbiting something");
 
     let currently_orbiting = orbits.get("YOU").expect("YOU must be orbiting something");
 
@@ -56,7 +56,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
 }
 
 fn inner_num_transfers_to_santa(
-    orbits: &HashMap<&str, Vec<&str>>,
+    orbits: &HashMap<&str, &str>,
     santa_orbiting: &str,
     currently_orbiting: &str,
 ) -> usize {
