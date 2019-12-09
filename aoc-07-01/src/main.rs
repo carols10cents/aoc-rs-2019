@@ -20,7 +20,7 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
-    input = input.rev().collect();
+    input = input.iter().rev().collect();
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
@@ -42,7 +42,7 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
             }
             3 => {
                 let output_position = program[current_position + 1] as usize;
-                program[output_position] = input.pop_front().expect("Should have had enough input for opcode 3");
+                program[output_position] = input.pop().expect("Should have had enough input for opcode 3");
                 current_position += 2;
             }
             4 => {
