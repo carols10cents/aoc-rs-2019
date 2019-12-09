@@ -67,6 +67,10 @@ fn inner_num_transfers_to_santa(
         let move_in = orbits.get(currently_orbiting);
         let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
 
+        if inward == Some(0) {
+            return 1;
+        }
+
         let outward_candidates: Vec<_> = orbits.iter().filter(|(&k, &v)| v == currently_orbiting && k != "YOU").collect();
         let outward = outward_candidates.iter().map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
 
