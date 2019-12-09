@@ -3,6 +3,7 @@ use std::cmp;
 
 fn main() {
     let input = include_str!("../input");
+    println!("{}", num_transfers_to_santa(input));
 }
 
 fn orbit_graph(input: &str) -> HashMap<&str, &str> {
