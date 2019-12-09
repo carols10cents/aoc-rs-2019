@@ -62,12 +62,16 @@ fn inner_num_transfers_to_santa(
     if currently_orbiting == santa_orbiting {
         0
     } else {
-        1 + inner_num_transfers_to_santa(
-            orbits,
-            santa_orbiting,
-            orbits
-                .get(currently_orbiting)
-                .expect("Recursive orbiting must orbit something"),
-        )
+        let move_in = orbits.get(currently_orbiting);
+        let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
+
+        let outward = orbits.iter().filter(|k, v| v == currently_orbiting).map(|body, _| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
+
+        1 + match (inward, outward) {
+            (Some(i), Some(o)) => cmp::min(i, o),
+            (Some(i), None) => i,
+            (None, Some(o)) => o,
+            (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
+        }
     }
 }
