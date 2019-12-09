@@ -52,7 +52,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
 
     let mut candidates = vec![orbits.get("YOU").expect("YOU must be orbiting something")];
     let mut num_transfers = 0;
-    let mut visited = vec!["YOU", currently_orbiting];
+    let mut visited = vec!["YOU"];
 
     while !candidates.contains(santa_orbiting) {
         num_transfers += 1;
