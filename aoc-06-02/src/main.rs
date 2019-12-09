@@ -61,18 +61,25 @@ fn inner_num_transfers_to_santa(
     currently_orbiting: &str,
 ) -> usize {
     if currently_orbiting == santa_orbiting {
+        println!("Found santa! Returning!");
         0
     } else {
+        println!("No santa here :( Currently orbiting: {}", currently_orbiting);
         let move_in = orbits.get(currently_orbiting);
+        println!("Further in is {:?}", move_in);
         let inward = move_in.map(|body| inner_num_transfers_to_santa(orbits, santa_orbiting, body));
+        println!("Inward is {:?}", inward);
 
         let outward = orbits.iter().filter(|(_, &v)| v == currently_orbiting && v != "YOU").map(|(body, _)| inner_num_transfers_to_santa(orbits, santa_orbiting, body)).min();
+        println!("Outward is {:?}", outward);
 
-        1 + match (inward, outward) {
+        let returning = 1 + match (inward, outward) {
             (Some(i), Some(o)) => cmp::min(i, o),
             (Some(i), None) => i,
             (None, Some(o)) => o,
             (None, None) => unreachable!("Nowhere to move, something has gone terribly wrong"),
-        }
+        };
+        println!("returning {}", returning);
+        returning
     }
 }
