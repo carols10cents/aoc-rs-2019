@@ -65,7 +65,7 @@ fn num_transfers_to_santa(input: &str) -> usize {
         }
 
         for c in candidates {
-            if let Some(inner) = orbits.get(c) {
+            if let Some(inner) = *orbits.get(c) {
                 if !visited.contains(inner) {
                     new_candidates.insert(inner);
                 }
