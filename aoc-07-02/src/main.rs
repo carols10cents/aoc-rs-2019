@@ -1,6 +1,7 @@
 use permute::permute;
 use std::error::Error;
 use std::fs;
+use std::sync::mpsc::{Sender, Receiver};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -13,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>, output: Vec<i32>) -> (Vec<i32>, Vec<i32>) {
+fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
