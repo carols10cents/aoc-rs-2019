@@ -1,6 +1,6 @@
+use permute::permute;
 use std::error::Error;
 use std::fs;
-use permute::permute;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -333,12 +333,27 @@ mod tests {
 
     #[test]
     fn max_value_from_all_phase_setting_orders() {
+        let phase_settings = [0, 1, 2, 3, 4];
+
         let program = vec![
             3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0,
         ];
-        let phase_settings = [0, 1, 2, 3, 4];
         let max = max_signal(&program, &phase_settings);
         assert_eq!(max, 43210);
+
+        let program = vec![
+            3, 23, 3, 24, 1002, 24, 10, 24, 1002, 23, -1, 23, 101, 5, 23, 23, 1, 24, 23, 23, 4, 23,
+            99, 0, 0,
+        ];
+        let max = max_signal(&program, &phase_settings);
+        assert_eq!(max, 54321);
+
+        let program = vec![
+            3, 31, 3, 32, 1002, 32, 10, 32, 1001, 31, -2, 31, 1007, 31, 0, 33, 1002, 33, 7, 33, 1,
+            33, 31, 31, 1, 32, 31, 31, 4, 31, 99, 0, 0, 0,
+        ];
+        let max = max_signal(&program, &phase_settings);
+        assert_eq!(max, 65210);
     }
 }
 
@@ -356,7 +371,9 @@ fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
 }
 
 fn max_signal(program: &[i32], phase_settings: &[i32]) -> i32 {
-    permute(phase_settings.to_owned()).iter().map(|setting_ordering| {
-        run_with_phase_settings(program, setting_ordering)
-    }).max().expect("Must have had orderings")
+    permute(phase_settings.to_owned())
+        .iter()
+        .map(|setting_ordering| run_with_phase_settings(program, setting_ordering))
+        .max()
+        .expect("Must have had orderings")
 }
