@@ -3,4 +3,14 @@
 [[package]]
 name = "aoc-02-01"
 version = "0.1.0"
+dependencies = [
+ "permute 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)",
+]
 
+[[package]]
+name = "permute"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[metadata]
+"checksum permute 0.1.0 (registry+https://github.com/rust-lang/crates.io-index)" = "add5cf6a6a9e572d398fc2e73500305c18b6eb66c46cc730ee3737025a4e9209"

@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fs;
+use permute::permute;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
