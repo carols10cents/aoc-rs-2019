@@ -325,9 +325,19 @@ mod tests {
     #[test]
     fn chain_intcode_runs() {
         let program = vec![3, 11, 3, 12, 1, 11, 12, 13, 4, 13, 99, -1, -2, -3];
-        let phase_settings = vec![20, 22, 24];
+        let phase_settings = [20, 22, 24];
         let output = run_with_phase_settings(&program, &phase_settings);
         assert_eq!(output, 66);
+    }
+
+    #[test]
+    fn max_value_from_all_phase_setting_orders() {
+        let program = vec![
+            3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0,
+        ];
+        let phase_settings = [0, 1, 2, 3, 4];
+        let max = max_signal(&program, &phase_settings);
+        assert_eq!(max, 43210);
     }
 }
 
@@ -342,4 +352,8 @@ fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
     }
 
     carried_input
+}
+
+fn max_signal(program: &[i32], phase_settings: &[i32]) -> i32 {
+    0
 }
