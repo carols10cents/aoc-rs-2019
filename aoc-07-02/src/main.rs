@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32>) {
+fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>, output: Vec<i32>) -> (Vec<i32>, Vec<i32>) {
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
@@ -149,5 +149,31 @@ fn get_value(
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::thread;
+    use std::sync::mpsc::channel;
 
+    #[test]
+    fn run_intcode_with_channels() {
+        let (send_input, receive_input) = channel();
+        let (send_output, receive_output) = channel();
+
+        thread::spawn(move ||  {
+            let program = vec![3, 12, 4, 12, 2, 12, 1, 12, 1005, 12, 2, 99, -1];
+            run_intcode(program, receive_input, send_output);
+        });
+
+        send_input.send(3).unwrap();
+
+        assert_eq!(receive_output.recv().unwrap(), 3);
+        assert_eq!(receive_output.recv().unwrap(), 2);
+        assert_eq!(receive_output.recv().unwrap(), 1);
+        assert!(receive_output.recv().is_err());
+
+        // Create a simple streaming channel
+        let (tx, rx) = channel();
+        thread::spawn(move|| {
+            tx.send(10).unwrap();
+        });
+        assert_eq!(rx.recv().unwrap(), 10);
+    }
 }
