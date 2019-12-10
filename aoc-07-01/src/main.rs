@@ -310,4 +310,16 @@ mod tests {
         let inst = instruction(program[0]);
         assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 18);
     }
+
+    #[test]
+    fn chain_intcode_runs() {
+        let program = vec![3, 11, 3, 12, 1, 11, 12, 13, 4, 13, 99, -1, -2, -3];
+        let phase_settings = vec![20, 22, 24];
+        let output = run_with_phase_settings(program, phase_settings);
+        assert_eq!(output, 66);
+    }
+}
+
+fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
+    0
 }
