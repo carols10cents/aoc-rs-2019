@@ -14,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i32>) -> (Vec<i32>, Vec<i32>) {
+fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i32>) {
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
 
@@ -90,8 +90,6 @@ fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i
         }
         current_inst = instruction(program[current_position]);
     }
-
-    (program, output)
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
