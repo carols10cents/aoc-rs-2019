@@ -18,7 +18,6 @@ fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
-    input = input.into_iter().rev().collect();
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
@@ -41,13 +40,13 @@ fn run_intcode(mut program: Vec<i32>, mut input: Receiver<i32>, output: Sender<i
             3 => {
                 let output_position = program[current_position + 1] as usize;
                 program[output_position] = input
-                    .pop()
+                    .recv()
                     .expect("Should have had enough input for opcode 3");
                 current_position += 2;
             }
             4 => {
                 let printing_value = get_value(&program, current_position, &current_inst, 0);
-                output.push(printing_value);
+                output.send(printing_value).expect("Sender shouldn't be closed");
                 current_position += 2;
             }
             5 => {
