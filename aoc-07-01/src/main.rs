@@ -356,7 +356,7 @@ fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
 }
 
 fn max_signal(program: &[i32], phase_settings: &[i32]) -> i32 {
-    permute(phase_settings.to_owned()).map(|setting_ordering| {
+    permute(phase_settings.to_owned()).iter().map(|setting_ordering| {
         run_with_phase_settings(program, setting_ordering)
     }).max().expect("Must have had orderings")
 }
