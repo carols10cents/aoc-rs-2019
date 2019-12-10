@@ -217,6 +217,9 @@ mod tests {
 
         // Run loop 3 times
         send_input1.send(3).unwrap();
+        // Because we pass through this number to the second incode computer, that one will pass
+        // it through to the end as well
+        assert_eq!(receive_output2.recv().unwrap(), 3);
 
         send_input1.send(5).unwrap();
         assert_eq!(receive_output2.recv().unwrap(), 20);
