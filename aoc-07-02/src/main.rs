@@ -165,12 +165,5 @@ mod tests {
         assert_eq!(receive_output.recv().unwrap(), 2);
         assert_eq!(receive_output.recv().unwrap(), 1);
         assert!(receive_output.recv().is_err());
-
-        // Create a simple streaming channel
-        let (tx, rx) = channel();
-        thread::spawn(move|| {
-            tx.send(10).unwrap();
-        });
-        assert_eq!(rx.recv().unwrap(), 10);
     }
 }
