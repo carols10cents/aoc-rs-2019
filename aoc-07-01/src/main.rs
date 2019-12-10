@@ -10,9 +10,10 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let simulated_stdin = vec![5];
-    let (_answer, output) = run_intcode(program, simulated_stdin);
-    println!("{:?}", output);
+    let phase_settings = [0, 1, 2, 3, 4];
+    let max = max_signal(&program, &phase_settings);
+
+    println!("{:?}", max);
 
     Ok(())
 }
