@@ -327,7 +327,7 @@ fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
         let inputs = vec![setting, carried_input];
 
         let (_answer, output) = run_intcode(program.to_owned(), inputs);
-        carried_input = output.first().expect("Program must return some output");
+        carried_input = *output.first().expect("Program must return some output");
     }
 
     carried_input
