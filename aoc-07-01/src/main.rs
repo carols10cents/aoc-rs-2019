@@ -42,7 +42,9 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
             }
             3 => {
                 let output_position = program[current_position + 1] as usize;
-                program[output_position] = input.pop().expect("Should have had enough input for opcode 3");
+                program[output_position] = input
+                    .pop()
+                    .expect("Should have had enough input for opcode 3");
                 current_position += 2;
             }
             4 => {
@@ -50,7 +52,8 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
                 output.push(printing_value);
                 current_position += 2;
             }
-            5 => { // jump-if-true
+            5 => {
+                // jump-if-true
                 let test_value = get_value(&program, current_position, &current_inst, 0);
                 if test_value != 0 {
                     let jump_location = get_value(&program, current_position, &current_inst, 1);
@@ -59,7 +62,8 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
                     current_position += 3;
                 }
             }
-            6 => { // jump-if-false
+            6 => {
+                // jump-if-false
                 let test_value = get_value(&program, current_position, &current_inst, 0);
                 if test_value == 0 {
                     let jump_location = get_value(&program, current_position, &current_inst, 1);
@@ -68,7 +72,8 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
                     current_position += 3;
                 }
             }
-            7 => { // less-than
+            7 => {
+                // less-than
                 let output_position = program[current_position + 3] as usize;
                 let input1 = get_value(&program, current_position, &current_inst, 0);
                 let input2 = get_value(&program, current_position, &current_inst, 1);
@@ -76,7 +81,8 @@ fn run_intcode(mut program: Vec<i32>, mut input: Vec<i32>) -> (Vec<i32>, Vec<i32
                 program[output_position] = answer;
                 current_position += 4;
             }
-            8 => { // equals
+            8 => {
+                // equals
                 let output_position = program[current_position + 3] as usize;
                 let input1 = get_value(&program, current_position, &current_inst, 0);
                 let input2 = get_value(&program, current_position, &current_inst, 1);
@@ -129,7 +135,12 @@ fn instruction(mut full_opcode: i32) -> Instruction {
     Instruction { opcode, modes }
 }
 
-fn get_value(program: &[i32], instruction_pointer: usize, inst: &Instruction, parameter_index: usize) -> i32 {
+fn get_value(
+    program: &[i32],
+    instruction_pointer: usize,
+    inst: &Instruction,
+    parameter_index: usize,
+) -> i32 {
     let parameter_location = instruction_pointer + parameter_index + 1;
 
     match inst.mode(parameter_index) {
