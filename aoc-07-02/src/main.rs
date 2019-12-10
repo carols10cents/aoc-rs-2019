@@ -155,7 +155,7 @@ mod tests {
         let (send_output, receive_output) = channel();
 
         thread::spawn(move ||  {
-            let program = vec![3, 12, 4, 12, 2, 12, 1, 12, 1005, 12, 2, 99, -1];
+            let program = vec![3, 12, 4, 12, 1001, 12, -1, 12, 1005, 12, 2, 99, -1];
             run_intcode(program, receive_input, send_output);
         });
 
