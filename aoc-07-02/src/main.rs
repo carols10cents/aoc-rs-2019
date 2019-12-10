@@ -1,7 +1,7 @@
 use permute::permute;
 use std::error::Error;
 use std::fs;
-use std::sync::mpsc::{Sender, Receiver};
+use std::sync::mpsc::{Receiver, Sender};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -45,7 +45,9 @@ fn run_intcode(mut program: Vec<i32>, input: Receiver<i32>, output: Sender<i32>)
             }
             4 => {
                 let printing_value = get_value(&program, current_position, &current_inst, 0);
-                output.send(printing_value).expect("Sender shouldn't be closed");
+                output
+                    .send(printing_value)
+                    .expect("Sender shouldn't be closed");
                 current_position += 2;
             }
             5 => {
@@ -146,15 +148,15 @@ fn get_value(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::thread;
     use std::sync::mpsc::channel;
+    use std::thread;
 
     #[test]
     fn run_intcode_with_channels() {
         let (send_input, receive_input) = channel();
         let (send_output, receive_output) = channel();
 
-        thread::spawn(move ||  {
+        thread::spawn(move || {
             let program = vec![3, 12, 4, 12, 1001, 12, -1, 12, 1005, 12, 2, 99, -1];
             run_intcode(program, receive_input, send_output);
         });
@@ -164,6 +166,33 @@ mod tests {
         assert_eq!(receive_output.recv().unwrap(), 3);
         assert_eq!(receive_output.recv().unwrap(), 2);
         assert_eq!(receive_output.recv().unwrap(), 1);
+        assert!(receive_output.recv().is_err());
+    }
+
+    #[test]
+    fn run_intcode_that_expects_multiple_inputs_and_sends_multiple_outputs() {
+        let (send_input, receive_input) = channel();
+        let (send_output, receive_output) = channel();
+
+        thread::spawn(move || {
+            let program = vec![
+                3, 18, 3, 19, 1002, 19, 2, 19, 4, 19, 1001, 18, -1, 18, 1005, 18, 2, 99, -1, -2,
+            ];
+            run_intcode(program, receive_input, send_output);
+        });
+
+        // Run loop 3 times
+        send_input.send(3).unwrap();
+
+        send_input.send(5).unwrap();
+        assert_eq!(receive_output.recv().unwrap(), 10);
+
+        send_input.send(25).unwrap();
+        assert_eq!(receive_output.recv().unwrap(), 50);
+
+        send_input.send(1).unwrap();
+        assert_eq!(receive_output.recv().unwrap(), 2);
+
         assert!(receive_output.recv().is_err());
     }
 }
