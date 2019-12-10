@@ -129,6 +129,15 @@ fn instruction(mut full_opcode: i32) -> Instruction {
     Instruction { opcode, modes }
 }
 
+fn get_value(program: &[i32], instruction_pointer: usize, inst: &Instruction, parameter_index: usize) -> i32 {
+    let parameter_location = instruction_pointer + parameter_index + 1;
+
+    match inst.mode(parameter_index) {
+        Mode::Position => program[program[parameter_location] as usize],
+        Mode::Immediate => program[parameter_location],
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -300,14 +309,5 @@ mod tests {
         let program = vec![104, 18, 99];
         let inst = instruction(program[0]);
         assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 18);
-    }
-}
-
-fn get_value(program: &[i32], instruction_pointer: usize, inst: &Instruction, parameter_index: usize) -> i32 {
-    let parameter_location = instruction_pointer + parameter_index + 1;
-
-    match inst.mode(parameter_index) {
-        Mode::Position => program[program[parameter_location] as usize],
-        Mode::Immediate => program[parameter_location],
     }
 }
