@@ -20,7 +20,13 @@ impl fmt::Display for SpaceImage {
             "{}",
             self.flatten()
                 .chunks(self.width)
-                .map(|row| row.iter().map(|pixel| pixel.to_string()).collect::<Vec<_>>().join(""))
+                .map(|row| row.iter().map(|&pixel| {
+                    match pixel {
+                        0 => " ",
+                        1 => "X",
+                        _ => panic!("unknown pixel"),
+                    }
+                }).collect::<Vec<_>>().join(""))
                 .collect::<Vec<_>>()
                 .join("\n")
         )
@@ -107,6 +113,6 @@ mod tests {
         let data = "0222112222120000";
         let sample = SpaceImage::new(2, 2, data);
 
-        assert_eq!(sample.to_string(), "01\n10");
+        assert_eq!(sample.to_string(), " X\nX ");
     }
 }
