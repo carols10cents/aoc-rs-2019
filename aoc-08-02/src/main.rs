@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::fmt;
 
 fn main() {
     let input = include_str!("../input");
@@ -20,6 +21,12 @@ fn main() {
 
 struct SpaceImage {
     layers: Vec<Vec<u32>>,
+}
+
+impl fmt::Display for SpaceImage {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "{}", self.flatten().chunks(width).map(|row| row.join("")).join("\n"))
+    }
 }
 
 impl SpaceImage {
