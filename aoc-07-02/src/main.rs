@@ -198,9 +198,9 @@ mod tests {
 
     #[test]
     fn run_chained_channel_intcode_computers() {
-        let (send_input1, receive_input1) = channel();
+        let (send_input_original, receive_input1) = channel();
         let (send_output1, receive_input2) = channel();
-        let (send_output2, receive_output2) = channel();
+        let (send_output2, receive_output_spy) = channel();
 
         let program1 = vec![
             3, 20, 4, 20, 3, 21, 1002, 21, 2, 21, 4, 21, 1001, 20, -1, 20, 1005, 20, 4, 99, -1, -2,
@@ -216,20 +216,20 @@ mod tests {
         });
 
         // Run loop 3 times
-        send_input1.send(3).unwrap();
+        send_input_original.send(3).unwrap();
         // Because we pass through this number to the second incode computer, that one will pass
         // it through to the end as well
-        assert_eq!(receive_output2.recv().unwrap(), 3);
+        assert_eq!(receive_output_spy.recv().unwrap(), 3);
 
-        send_input1.send(5).unwrap();
-        assert_eq!(receive_output2.recv().unwrap(), 20);
+        send_input_original.send(5).unwrap();
+        assert_eq!(receive_output_spy.recv().unwrap(), 20);
 
-        send_input1.send(25).unwrap();
-        assert_eq!(receive_output2.recv().unwrap(), 100);
+        send_input_original.send(25).unwrap();
+        assert_eq!(receive_output_spy.recv().unwrap(), 100);
 
-        send_input1.send(1).unwrap();
-        assert_eq!(receive_output2.recv().unwrap(), 4);
+        send_input_original.send(1).unwrap();
+        assert_eq!(receive_output_spy.recv().unwrap(), 4);
 
-        assert!(receive_output2.recv().is_err());
+        assert!(receive_output_spy.recv().is_err());
     }
 }
