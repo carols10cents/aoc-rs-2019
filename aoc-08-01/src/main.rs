@@ -13,7 +13,8 @@ fn main() {
 
     println!(
         "{}",
-        layer_with_fewest_0s.get(&1).unwrap_or(0) * layer_with_fewest_0s.get(&2).unwrap_or(0)
+        layer_with_fewest_0s.get(&1).copied().unwrap_or(0)
+            * layer_with_fewest_0s.get(&2).copied().unwrap_or(0)
     );
 }
 
