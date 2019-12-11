@@ -197,7 +197,7 @@ mod tests {
     }
 
     #[test]
-    fn run_chained_channel_intcode_computers() {
+    fn run_looped_channel_intcode_computers() {
         let (send_input_original, receive_input1) = channel();
         let (send_output1, receive_input2) = channel();
         let (send_output2, receive_output_spy) = channel();
@@ -219,17 +219,12 @@ mod tests {
         send_input_original.send(3).unwrap();
         // Because we pass through this number to the second incode computer, that one will pass
         // it through to the end as well
-        assert_eq!(receive_output_spy.recv().unwrap(), 3);
+        let final_value = while let Ok(received_value) = recieve_output_spy.recv() {
+            println!("got {}", received_value);
+            send_input_original.send(received_value).unwrap();
+            received_value
+        };
 
-        send_input_original.send(5).unwrap();
-        assert_eq!(receive_output_spy.recv().unwrap(), 20);
-
-        send_input_original.send(25).unwrap();
-        assert_eq!(receive_output_spy.recv().unwrap(), 100);
-
-        send_input_original.send(1).unwrap();
-        assert_eq!(receive_output_spy.recv().unwrap(), 4);
-
-        assert!(receive_output_spy.recv().is_err());
+        assert_eq!(final_value, 192);
     }
 }
