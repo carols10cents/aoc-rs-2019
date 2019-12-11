@@ -223,7 +223,7 @@ mod tests {
 
         while let Ok(received_value) = receive_output_spy.recv() {
             println!("got {}", received_value);
-            send_input_original.send(received_value).unwrap();
+            let _ = send_input_original.send(received_value);
             final_value = received_value;
         }
 
