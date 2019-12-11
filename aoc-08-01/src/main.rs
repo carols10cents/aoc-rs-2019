@@ -8,7 +8,7 @@ fn main() {
 
     let layer_with_fewest_0s = digits_per_layer
         .iter()
-        .min_by_key(|counts| counts.get(&0).unwrap_or(0))
+        .min_by_key(|counts| counts.get(&0).copied().unwrap_or(0))
         .expect("Image should not be empty");
 
     println!(
