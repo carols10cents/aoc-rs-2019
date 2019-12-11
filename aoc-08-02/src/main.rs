@@ -96,4 +96,12 @@ mod tests {
         let flat = sample.flatten();
         assert_eq!(flat, vec![0, 1, 1, 0]);
     }
+
+    #[test]
+    fn display_flattened_image_according_to_width_and_height() {
+        let data = "0222112222120000";
+        let sample = SpaceImage::new(2, 2, data);
+
+        assert_eq!(sample.to_string(), "01\n10");
+    }
 }
