@@ -215,10 +215,9 @@ mod tests {
             run_intcode(program2, receive_input2, send_output2);
         });
 
-        // Run loop 3 times
+        // Run loop 3 times, which also sends 3 around to be doubled
         send_input_original.send(3).unwrap();
-        // Because we pass through this number to the second incode computer, that one will pass
-        // it through to the end as well
+
         let mut final_value = -1;
 
         while let Ok(received_value) = receive_output_spy.recv() {
