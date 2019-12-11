@@ -235,11 +235,19 @@ mod tests {
             3, 26, 1001, 26, -4, 26, 3, 27, 1002, 27, 2, 27, 1, 27, 26, 27, 4, 27, 1001, 28, -1,
             28, 1005, 28, 6, 99, 0, 0, 5,
         ];
-        let phase_settings = [9, 8, 7, 6, 5];
-        let answer = run_with_phase_settings(&program, &phase_settings);
+        let phase_settings = [5, 6, 7, 8, 9];
+        let answer = max_signal(&program, &phase_settings);
 
         assert_eq!(answer, 139629729);
     }
+}
+
+fn max_signal(program: &[i32], phase_settings: &[i32]) -> i32 {
+    permute(phase_settings.to_owned())
+        .iter()
+        .map(|setting_ordering| run_with_phase_settings(program, setting_ordering))
+        .max()
+        .expect("Must have had orderings")
 }
 
 fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
