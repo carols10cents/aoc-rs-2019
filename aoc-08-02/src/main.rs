@@ -47,7 +47,7 @@ impl SpaceImage {
 
     fn flatten(&self) -> Vec<u32> {
         (0..self.layers[0].len()).into_iter().map(|i| {
-            self.layers.iter().map(|layer| layer[i]).skip_while(|pixel| pixel == 2).next().expect("All locations should have a color pixel in some layer")
+            self.layers.iter().map(|layer| layer[i]).skip_while(|&pixel| pixel == 2).next().expect("All locations should have a color pixel in some layer")
         }).collect()
     }
 }
