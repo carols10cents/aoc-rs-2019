@@ -1,7 +1,8 @@
 use permute::permute;
 use std::error::Error;
 use std::fs;
-use std::sync::mpsc::{Receiver, Sender};
+use std::sync::mpsc::{channel, Receiver, Sender};
+use std::thread;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -257,27 +258,27 @@ fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
     send_from_amp_d.send(phase_settings[4]).unwrap();
 
     // Set up threads
-    let program_a = program.clone();
+    let program_a = program.to_vec();
     thread::spawn(move || {
         run_intcode(program_a, receive_in_amp_a, send_from_amp_a);
     });
 
-    let program_b = program.clone();
+    let program_b = program.to_vec();
     thread::spawn(move || {
         run_intcode(program_b, receive_in_amp_b, send_from_amp_b);
     });
 
-    let program_c = program.clone();
+    let program_c = program.to_vec();
     thread::spawn(move || {
         run_intcode(program_c, receive_in_amp_c, send_from_amp_c);
     });
 
-    let program_d = program.clone();
+    let program_d = program.to_vec();
     thread::spawn(move || {
         run_intcode(program_d, receive_in_amp_d, send_from_amp_d);
     });
 
-    let program_e = program.clone();
+    let program_e = program.to_vec();
     thread::spawn(move || {
         run_intcode(program_e, receive_in_amp_e, send_from_amp_e);
     });
