@@ -12,6 +12,11 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
+    let phase_settings = [5, 6, 7, 8, 9];
+    let max = max_signal(&program, &phase_settings);
+
+    println!("{:?}", max);
+
     Ok(())
 }
 
