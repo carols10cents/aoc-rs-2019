@@ -4,6 +4,12 @@ fn main() {
 
 struct SpaceImage {}
 
+impl SpaceImage {
+    fn new(width: usize, height: usize, data: &str) -> SpaceImage {
+        SpaceImage {}
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
