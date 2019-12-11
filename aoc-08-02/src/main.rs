@@ -20,12 +20,13 @@ fn main() {
 }
 
 struct SpaceImage {
+    width: usize,
     layers: Vec<Vec<u32>>,
 }
 
 impl fmt::Display for SpaceImage {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.flatten().chunks(width).map(|row| row.join("")).join("\n"))
+        write!(f, "{}", self.flatten().chunks(self.width).map(|row| row.join("")).join("\n"))
     }
 }
 
@@ -38,7 +39,7 @@ impl SpaceImage {
             .collect();
         let layers: Vec<_> = digits.chunks(width * height).map(|s| s.to_vec()).collect();
 
-        SpaceImage { layers }
+        SpaceImage { width, layers }
     }
 
     fn digits_per_layer(&self) -> Vec<HashMap<u32, usize>> {
