@@ -222,7 +222,6 @@ mod tests {
         let mut final_value = -1;
 
         while let Ok(received_value) = receive_output_spy.recv() {
-            println!("got {}", received_value);
             let _ = send_input_original.send(received_value);
             final_value = received_value;
         }
