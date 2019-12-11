@@ -3,7 +3,7 @@ fn main() {
 }
 
 struct SpaceImage {
-    layers: Vec<Vec<i32>>,
+    layers: Vec<Vec<u32>>,
 }
 
 impl SpaceImage {
