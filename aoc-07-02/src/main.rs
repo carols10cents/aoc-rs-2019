@@ -219,7 +219,7 @@ mod tests {
         send_input_original.send(3).unwrap();
         // Because we pass through this number to the second incode computer, that one will pass
         // it through to the end as well
-        let mut final_value;
+        let mut final_value = -1;
 
         while let Ok(received_value) = receive_output_spy.recv() {
             println!("got {}", received_value);
