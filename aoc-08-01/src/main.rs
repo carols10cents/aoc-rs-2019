@@ -8,9 +8,10 @@ struct SpaceImage {
 
 impl SpaceImage {
     fn new(width: usize, height: usize, data: &str) -> SpaceImage {
-        SpaceImage {
-            layers: vec![],
-        }
+        let digits: Vec<_> = data.chars().map(|c| c.parse().unwrap()).collect();
+        let layers: Vec<_> = digits.chunks(width * height).collect();
+
+        SpaceImage { layers }
     }
 }
 
