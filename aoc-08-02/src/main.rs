@@ -26,7 +26,14 @@ struct SpaceImage {
 
 impl fmt::Display for SpaceImage {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{}", self.flatten().chunks(self.width).map(|row| row.join("")).join("\n"))
+        write!(
+            f,
+            "{}",
+            self.flatten()
+                .chunks(self.width)
+                .map(|row| row.iter().map(|pixel| pixel.to_string()).join(""))
+                .join("\n")
+        )
     }
 }
 
