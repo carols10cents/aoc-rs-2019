@@ -235,58 +235,63 @@ mod tests {
             28, 1005, 28, 6, 99, 0, 0, 5,
         ];
         let phase_settings = [9, 8, 7, 6, 5];
+        let answer = run_with_phase_settings(&program, &phase_settings);
 
-        let (send_from_main, receive_in_amp_a) = channel();
-        let (send_from_amp_a, receive_in_amp_b) = channel();
-        let (send_from_amp_b, receive_in_amp_c) = channel();
-        let (send_from_amp_c, receive_in_amp_d) = channel();
-        let (send_from_amp_d, receive_in_amp_e) = channel();
-        let (send_from_amp_e, receive_in_main) = channel();
-
-        // Send phase settings
-        send_from_main.send(phase_settings[0]).unwrap();
-        send_from_amp_a.send(phase_settings[1]).unwrap();
-        send_from_amp_b.send(phase_settings[2]).unwrap();
-        send_from_amp_c.send(phase_settings[3]).unwrap();
-        send_from_amp_d.send(phase_settings[4]).unwrap();
-
-        // Set up threads
-        let program_a = program.clone();
-        thread::spawn(move || {
-            run_intcode(program_a, receive_in_amp_a, send_from_amp_a);
-        });
-
-        let program_b = program.clone();
-        thread::spawn(move || {
-            run_intcode(program_b, receive_in_amp_b, send_from_amp_b);
-        });
-
-        let program_c = program.clone();
-        thread::spawn(move || {
-            run_intcode(program_c, receive_in_amp_c, send_from_amp_c);
-        });
-
-        let program_d = program.clone();
-        thread::spawn(move || {
-            run_intcode(program_d, receive_in_amp_d, send_from_amp_d);
-        });
-
-        let program_e = program.clone();
-        thread::spawn(move || {
-            run_intcode(program_e, receive_in_amp_e, send_from_amp_e);
-        });
-
-        // Send initial signal
-        send_from_main.send(0).unwrap();
-
-        // Loop until feedback stops
-        let mut final_value = -1;
-
-        while let Ok(received_value) = receive_in_main.recv() {
-            let _ = send_from_main.send(received_value);
-            final_value = received_value;
-        }
-
-        assert_eq!(final_value, 139629729);
+        assert_eq!(answer, 139629729);
     }
+}
+
+fn run_with_phase_settings(program: &[i32], phase_settings: &[i32]) -> i32 {
+    let (send_from_main, receive_in_amp_a) = channel();
+    let (send_from_amp_a, receive_in_amp_b) = channel();
+    let (send_from_amp_b, receive_in_amp_c) = channel();
+    let (send_from_amp_c, receive_in_amp_d) = channel();
+    let (send_from_amp_d, receive_in_amp_e) = channel();
+    let (send_from_amp_e, receive_in_main) = channel();
+
+    // Send phase settings
+    send_from_main.send(phase_settings[0]).unwrap();
+    send_from_amp_a.send(phase_settings[1]).unwrap();
+    send_from_amp_b.send(phase_settings[2]).unwrap();
+    send_from_amp_c.send(phase_settings[3]).unwrap();
+    send_from_amp_d.send(phase_settings[4]).unwrap();
+
+    // Set up threads
+    let program_a = program.clone();
+    thread::spawn(move || {
+        run_intcode(program_a, receive_in_amp_a, send_from_amp_a);
+    });
+
+    let program_b = program.clone();
+    thread::spawn(move || {
+        run_intcode(program_b, receive_in_amp_b, send_from_amp_b);
+    });
+
+    let program_c = program.clone();
+    thread::spawn(move || {
+        run_intcode(program_c, receive_in_amp_c, send_from_amp_c);
+    });
+
+    let program_d = program.clone();
+    thread::spawn(move || {
+        run_intcode(program_d, receive_in_amp_d, send_from_amp_d);
+    });
+
+    let program_e = program.clone();
+    thread::spawn(move || {
+        run_intcode(program_e, receive_in_amp_e, send_from_amp_e);
+    });
+
+    // Send initial signal
+    send_from_main.send(0).unwrap();
+
+    // Loop until feedback stops
+    let mut final_value = -1;
+
+    while let Ok(received_value) = receive_in_main.recv() {
+        let _ = send_from_main.send(received_value);
+        final_value = received_value;
+    }
+
+    final_value
 }
