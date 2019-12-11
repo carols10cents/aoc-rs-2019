@@ -17,7 +17,7 @@ impl SpaceImage {
     }
 
     fn digits_per_layer(&self) -> Vec<HashMap<u32, usize>> {
-        self.layers.map(|_| HashMap::new()).collect()
+        self.layers.iter().map(|_| HashMap::new()).collect()
     }
 }
 
