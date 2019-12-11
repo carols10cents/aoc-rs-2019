@@ -17,7 +17,15 @@ impl SpaceImage {
     }
 
     fn digits_per_layer(&self) -> Vec<HashMap<u32, usize>> {
-        self.layers.iter().map(|_| HashMap::new()).collect()
+        self.layers.iter().map(|layer| {
+            let mut counts = HashMap::new();
+
+            for &digit in layer {
+                *counts.entry(digit).or_insert(0) += 1;
+            }
+
+            counts
+        }).collect()
     }
 }
 
