@@ -1,7 +1,20 @@
 use std::collections::HashMap;
 
 fn main() {
-    println!("Hello, world!");
+    let input = include_str!("../input");
+    let image = SpaceImage::new(25, 6, input);
+
+    let digits_per_layer = image.digits_per_layer();
+
+    let layer_with_fewest_0s = digits_per_layer
+        .iter()
+        .min_by(|counts| counts.get(&0).unwrap_or(0))
+        .expect("Image should not be empty");
+
+    println!(
+        "{}",
+        layer_with_fewest_0s.get(&1).unwrap_or(0) * layer_with_fewest_0s.get(&2).unwrap_or(0)
+    );
 }
 
 struct SpaceImage {
