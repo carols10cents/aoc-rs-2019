@@ -28,4 +28,14 @@ mod tests {
         assert_eq!(sample.layers[0], vec![1, 2, 3, 4, 5, 6]);
         assert_eq!(sample.layers[1], vec![7, 8, 9, 0, 1, 2]);
     }
+
+    #[test]
+    fn counting_digits_per_layer() {
+        let data = "113456789012";
+        let sample = SpaceImage::new(3, 2, data);
+
+        let digits_per_layer = sample.digits_per_layer();
+        assert_eq!(digits_per_layer[0].get(1), Some(2));
+        assert_eq!(digits_per_layer[1].get(1), Some(1));
+    }
 }
