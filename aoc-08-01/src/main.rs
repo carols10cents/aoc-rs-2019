@@ -2,8 +2,12 @@ fn main() {
     println!("Hello, world!");
 }
 
+struct SpaceImage {}
+
 #[cfg(test)]
 mod tests {
+    use super::*;
+
     #[test]
     fn parsing_data_into_images() {
         let data = "123456789012";
