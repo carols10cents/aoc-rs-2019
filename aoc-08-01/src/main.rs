@@ -2,11 +2,15 @@ fn main() {
     println!("Hello, world!");
 }
 
-struct SpaceImage {}
+struct SpaceImage {
+    layers: Vec<Vec<i32>>,
+}
 
 impl SpaceImage {
     fn new(width: usize, height: usize, data: &str) -> SpaceImage {
-        SpaceImage {}
+        SpaceImage {
+            layers: vec![],
+        }
     }
 }
 
