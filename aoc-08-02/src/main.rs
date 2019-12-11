@@ -46,7 +46,7 @@ impl SpaceImage {
     }
 
     fn flatten(&self) -> Vec<u32> {
-        self.layers[0].cloned()
+        self.layers[0].to_vec()
     }
 }
 
