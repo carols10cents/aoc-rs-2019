@@ -31,7 +31,7 @@ impl fmt::Display for SpaceImage {
             "{}",
             self.flatten()
                 .chunks(self.width)
-                .map(|row| row.iter().map(|pixel| pixel.to_string()).join(""))
+                .map(|row| row.iter().map(|pixel| pixel.to_string()).collect::<Vec<_>>().join(""))
                 .join("\n")
         )
     }
