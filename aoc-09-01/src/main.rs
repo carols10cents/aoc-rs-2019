@@ -16,90 +16,111 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
-fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>) {
-    let mut current_position = 0;
-    let mut current_inst = instruction(program[current_position]);
-    let mut output = vec![];
-    let mut relative_base = 0;
+struct Computer {
+    program: Vec<i64>,
+    output: Vec<i64>,
+    current_position: usize,
+    relative_base: usize,
+}
+
+impl Computer {
+    fn current_instruction(&self) -> Instruction {
+        instruction(self.program[self.current_position])
+    }
+
+    fn get_value(&self, parameter_index: usize) -> i64 {
+        get_value(&self.program, self.current_position, &self.current_instruction(), parameter_index, self.relative_base)
+    }
+}
+
+fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>) {
+    let mut computer = Computer {
+        program,
+        output: vec![],
+        current_position: 0,
+        relative_base: 0,
+    };
+
+    let mut current_inst = computer.current_instruction();
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
             1 => {
-                let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
-                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
+                let output_position = computer.program[computer.current_position + 3] as usize;
+                let input1 = computer.get_value(0);
+                let input2 = computer.get_value(1);
                 let answer = input1 + input2;
-                program[output_position] = answer;
-                current_position += 4;
+                computer.program[output_position] = answer;
+                computer.current_position += 4;
             }
             2 => {
-                let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
-                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
+                let output_position = computer.program[computer.current_position + 3] as usize;
+                let input1 = computer.get_value(0);
+                let input2 = computer.get_value(1);
                 let answer = input1 * input2;
-                program[output_position] = answer;
-                current_position += 4;
+                computer.program[output_position] = answer;
+                computer.current_position += 4;
             }
             3 => {
-                let output_position = program[current_position + 1] as usize;
-                program[output_position] = input.expect("Should have had input for opcode 3");
-                current_position += 2;
+                let output_position = computer.program[computer.current_position + 1] as usize;
+                computer.program[output_position] = input.expect("Should have had input for opcode 3");
+                computer.current_position += 2;
             }
             4 => {
-                let printing_value = get_value(&program, current_position, &current_inst, 0, relative_base);
-                output.push(printing_value);
-                current_position += 2;
+                let printing_value = computer.get_value(0);
+                computer.output.push(printing_value);
+                computer.current_position += 2;
             }
             5 => {
                 // jump-if-true
-                let test_value = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let test_value = computer.get_value(0);
                 if test_value != 0 {
-                    let jump_location = get_value(&program, current_position, &current_inst, 1, relative_base);
-                    current_position = jump_location as usize;
+                    let jump_location = computer.get_value(1);
+                    computer.current_position = jump_location as usize;
                 } else {
-                    current_position += 3;
+                    computer.current_position += 3;
                 }
             }
             6 => {
                 // jump-if-false
-                let test_value = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let test_value = computer.get_value(0);
                 if test_value == 0 {
-                    let jump_location = get_value(&program, current_position, &current_inst, 1, relative_base);
-                    current_position = jump_location as usize;
+                    let jump_location = computer.get_value(1);
+                    computer.current_position = jump_location as usize;
                 } else {
-                    current_position += 3;
+                    computer.current_position += 3;
                 }
             }
             7 => {
                 // less-than
-                let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
-                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
+                let output_position = computer.program[computer.current_position + 3] as usize;
+                let input1 = computer.get_value(0);
+                let input2 = computer.get_value(1);
                 let answer = if input1 < input2 { 1 } else { 0 };
-                program[output_position] = answer;
-                current_position += 4;
+                computer.program[output_position] = answer;
+                computer.current_position += 4;
             }
             8 => {
                 // equals
-                let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
-                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
+                let output_position = computer.program[computer.current_position + 3] as usize;
+                let input1 = computer.get_value(0);
+                let input2 = computer.get_value(1);
                 let answer = if input1 == input2 { 1 } else { 0 };
-                program[output_position] = answer;
-                current_position += 4;
+                computer.program[output_position] = answer;
+                computer.current_position += 4;
             }
             9 => {
                 // relative base adjustment
-                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
-                relative_base += input1 as usize;
-                current_position += 2;
+                let input1 = computer.get_value(0);
+                computer.relative_base += input1 as usize;
+                computer.current_position += 2;
             }
             other => panic!("Unknown opcode: {}", other),
         }
-        current_inst = instruction(program[current_position]);
+        current_inst = computer.current_instruction();
     }
 
-    (program, output)
+    (computer.program, computer.output)
 }
 
 #[derive(Debug, PartialEq, Clone, Copy)]
