@@ -305,7 +305,7 @@ mod tests {
 
         let program = vec![109, 1, 204, -1];
         let inst = instruction(program[2]);
-        assert_eq!(get_value(&program, 2, &inst, 0, 0), 109);
+        assert_eq!(get_value(&program, 2, &inst, 0, 1), 109);
     }
 
     #[test]
@@ -337,10 +337,20 @@ fn get_value(
     relative_base: usize,
 ) -> i64 {
     let parameter_location = instruction_pointer + parameter_index + 1;
+    println!("parameter loc = {}", parameter_location);
 
     match inst.mode(parameter_index) {
         Mode::Position => program[program[parameter_location] as usize],
         Mode::Immediate => program[parameter_location],
-        Mode::Relative => program[program[parameter_location] as usize + relative_base],
+        Mode::Relative => {
+            let memory_location = program[parameter_location] + relative_base as i64;
+            if memory_location < 0 {
+                panic!("Cannot access memory at {}", memory_location);
+            }
+            println!("program[parameter_location] = {}", program[parameter_location]);
+            println!("relative_base = {}", relative_base);
+            println!("program[parameter_location] + relative_base as i64 = {}", memory_location);
+            program[memory_location as usize]
+        },
     }
 }
