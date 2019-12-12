@@ -20,21 +20,22 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
     let mut current_position = 0;
     let mut current_inst = instruction(program[current_position]);
     let mut output = vec![];
+    let mut relative_base = 0;
 
     while current_inst.opcode != 99 {
         match current_inst.opcode {
             1 => {
                 let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0);
-                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
                 let answer = input1 + input2;
                 program[output_position] = answer;
                 current_position += 4;
             }
             2 => {
                 let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0);
-                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
                 let answer = input1 * input2;
                 program[output_position] = answer;
                 current_position += 4;
@@ -45,15 +46,15 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
                 current_position += 2;
             }
             4 => {
-                let printing_value = get_value(&program, current_position, &current_inst, 0);
+                let printing_value = get_value(&program, current_position, &current_inst, 0, relative_base);
                 output.push(printing_value);
                 current_position += 2;
             }
             5 => {
                 // jump-if-true
-                let test_value = get_value(&program, current_position, &current_inst, 0);
+                let test_value = get_value(&program, current_position, &current_inst, 0, relative_base);
                 if test_value != 0 {
-                    let jump_location = get_value(&program, current_position, &current_inst, 1);
+                    let jump_location = get_value(&program, current_position, &current_inst, 1, relative_base);
                     current_position = jump_location as usize;
                 } else {
                     current_position += 3;
@@ -61,9 +62,9 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
             }
             6 => {
                 // jump-if-false
-                let test_value = get_value(&program, current_position, &current_inst, 0);
+                let test_value = get_value(&program, current_position, &current_inst, 0, relative_base);
                 if test_value == 0 {
-                    let jump_location = get_value(&program, current_position, &current_inst, 1);
+                    let jump_location = get_value(&program, current_position, &current_inst, 1, relative_base);
                     current_position = jump_location as usize;
                 } else {
                     current_position += 3;
@@ -72,8 +73,8 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
             7 => {
                 // less-than
                 let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0);
-                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
                 let answer = if input1 < input2 { 1 } else { 0 };
                 program[output_position] = answer;
                 current_position += 4;
@@ -81,11 +82,17 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
             8 => {
                 // equals
                 let output_position = program[current_position + 3] as usize;
-                let input1 = get_value(&program, current_position, &current_inst, 0);
-                let input2 = get_value(&program, current_position, &current_inst, 1);
+                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
+                let input2 = get_value(&program, current_position, &current_inst, 1, relative_base);
                 let answer = if input1 == input2 { 1 } else { 0 };
                 program[output_position] = answer;
                 current_position += 4;
+            }
+            9 => {
+                // relative base adjustment
+                let input1 = get_value(&program, current_position, &current_inst, 0, relative_base);
+                relative_base += input1 as usize;
+                current_position += 2;
             }
             other => panic!("Unknown opcode: {}", other),
         }
@@ -99,6 +106,7 @@ fn run_intcode(mut program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>
 enum Mode {
     Position,
     Immediate,
+    Relative,
 }
 
 #[derive(Debug, PartialEq)]
@@ -123,6 +131,7 @@ fn instruction(mut full_opcode: i64) -> Instruction {
         let mode = match full_opcode % 10 {
             0 => Mode::Position,
             1 => Mode::Immediate,
+            2 => Mode::Relative,
             other => panic!("Unexpected parameter mode: {}", other),
         };
         modes.push(mode);
@@ -269,6 +278,10 @@ mod tests {
         assert_eq!(inst.mode(0), Mode::Position);
         assert_eq!(inst.mode(1), Mode::Immediate);
         assert_eq!(inst.mode(2), Mode::Position);
+
+        let inst = instruction(204);
+        assert_eq!(inst.opcode, 4);
+        assert_eq!(inst.mode(0), Mode::Relative);
     }
 
     #[test]
@@ -284,11 +297,15 @@ mod tests {
         let inst = instruction(program[0]);
         let instruction_pointer = 0;
 
-        assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 1);
+        assert_eq!(get_value(&program, instruction_pointer, &inst, 0, 0), 1);
 
         let program = vec![104, 18, 99];
         let inst = instruction(program[0]);
-        assert_eq!(get_value(&program, instruction_pointer, &inst, 0), 18);
+        assert_eq!(get_value(&program, instruction_pointer, &inst, 0, 0), 18);
+
+        let program = vec![109, 1, 204, -1];
+        let inst = instruction(program[2]);
+        assert_eq!(get_value(&program, 2, &inst, 0, 0), 109);
     }
 
     #[test]
@@ -317,11 +334,13 @@ fn get_value(
     instruction_pointer: usize,
     inst: &Instruction,
     parameter_index: usize,
+    relative_base: usize,
 ) -> i64 {
     let parameter_location = instruction_pointer + parameter_index + 1;
 
     match inst.mode(parameter_index) {
         Mode::Position => program[program[parameter_location] as usize],
         Mode::Immediate => program[parameter_location],
+        Mode::Relative => program[program[parameter_location] as usize + relative_base],
     }
 }
