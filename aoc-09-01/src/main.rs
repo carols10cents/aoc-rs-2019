@@ -351,17 +351,17 @@ mod tests {
     #[test]
     fn stress_tests() {
         let program = vec![1102, 34915192, 34915192, 7, 4, 7, 99, 0];
-        let (answer, output) = run_intcode(program, None);
+        let (_answer, output) = run_intcode(program, None);
         assert_eq!(output, vec![1219070632396864]);
 
         let program = vec![104, 1125899906842624, 99];
-        let (answer, output) = run_intcode(program, None);
+        let (_answer, output) = run_intcode(program, None);
         assert_eq!(output, vec![1125899906842624]);
 
         let program = vec![
             109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
         ];
-        let (answer, output) = run_intcode(program, None);
+        let (_answer, output) = run_intcode(program, None);
         assert_eq!(
             output,
             vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]
