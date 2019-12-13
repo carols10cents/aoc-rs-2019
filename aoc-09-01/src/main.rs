@@ -10,7 +10,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let simulated_stdin = Some(5);
+    let simulated_stdin = Some(1);
     let (_answer, output) = run_intcode(program, simulated_stdin);
     println!("{:?}", output);
 
@@ -33,6 +33,11 @@ impl Computer {
         get_value(&self.program, self.current_position, &self.current_instruction(), parameter_index, self.relative_base)
     }
 
+    fn set_value(&mut self, parameter_index: usize, value: i64) {
+        let instruction = self.current_instruction();
+        set_value(&mut self.program, self.current_position, &instruction, parameter_index, self.relative_base, value);
+    }
+
     fn read_at(&self, index: usize) -> i64 {
         self.program.get(&index).copied().unwrap_or(0)
     }
@@ -53,25 +58,22 @@ fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (HashMap<usize, i64>, V
     while current_inst.opcode != 99 {
         match current_inst.opcode {
             1 => {
-                let output_position = computer.read_at(computer.current_position + 3) as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = input1 + input2;
-                computer.program.insert(output_position, answer);
+                computer.set_value(2, answer);
                 computer.current_position += 4;
             }
             2 => {
-                let output_position = computer.read_at(computer.current_position + 3) as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = input1 * input2;
-                computer.program.insert(output_position, answer);
+                computer.set_value(2, answer);
                 computer.current_position += 4;
             }
             3 => {
-                let output_position = computer.read_at(computer.current_position + 1) as usize;
                 let value = input.expect("Should have had input for opcode 3");
-                computer.program.insert(output_position, value);
+                computer.set_value(0, value);
                 computer.current_position += 2;
             }
             4 => {
@@ -101,20 +103,18 @@ fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (HashMap<usize, i64>, V
             }
             7 => {
                 // less-than
-                let output_position = computer.read_at(computer.current_position + 3) as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = if input1 < input2 { 1 } else { 0 };
-                computer.program.insert(output_position, answer);
+                computer.set_value(2, answer);
                 computer.current_position += 4;
             }
             8 => {
                 // equals
-                let output_position = computer.read_at(computer.current_position + 3) as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = if input1 == input2 { 1 } else { 0 };
-                computer.program.insert(output_position, answer);
+                computer.set_value(2, answer);
                 computer.current_position += 4;
             }
             9 => {
@@ -391,6 +391,33 @@ fn get_value(
                 panic!("Cannot access memory at {}", memory_location);
             }
             program.get(&(memory_location as usize)).copied().unwrap_or(0)
+        },
+    }
+}
+
+fn set_value(
+    program: &mut HashMap<usize, i64>,
+    instruction_pointer: usize,
+    inst: &Instruction,
+    parameter_index: usize,
+    relative_base: usize,
+    value: i64,
+) {
+    let parameter_location = instruction_pointer + parameter_index + 1;
+
+    match inst.mode(parameter_index) {
+        Mode::Position => {
+            let position = program.get(&parameter_location).copied().unwrap_or(0) as usize;
+            program.insert(position, value);
+        },
+        Mode::Immediate => unreachable!("Can't set values in immediate mode"),
+        Mode::Relative => {
+            let offset = program.get(&parameter_location).copied().unwrap_or(0);
+            let memory_location = offset + relative_base as i64;
+            if memory_location < 0 {
+                panic!("Cannot access memory at {}", memory_location);
+            }
+            program.insert(memory_location as usize, value);
         },
     }
 }
