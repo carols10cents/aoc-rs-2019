@@ -1,5 +1,6 @@
 use std::error::Error;
 use std::fs;
+use std::collections::HashMap;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -17,7 +18,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 
 struct Computer {
-    program: Vec<i64>,
+    program: HashMap<usize, i64>,
     output: Vec<i64>,
     current_position: usize,
     relative_base: usize,
@@ -25,7 +26,7 @@ struct Computer {
 
 impl Computer {
     fn current_instruction(&self) -> Instruction {
-        instruction(self.program[self.current_position])
+        instruction(self.program[&self.current_position])
     }
 
     fn get_value(&self, parameter_index: usize) -> i64 {
@@ -33,7 +34,9 @@ impl Computer {
     }
 }
 
-fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>) {
+fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (HashMap<usize, i64>, Vec<i64>) {
+    let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
+
     let mut computer = Computer {
         program,
         output: vec![],
@@ -46,24 +49,25 @@ fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>) {
     while current_inst.opcode != 99 {
         match current_inst.opcode {
             1 => {
-                let output_position = computer.program[computer.current_position + 3] as usize;
+                let output_position = computer.program[&(computer.current_position + 3)] as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = input1 + input2;
-                computer.program[output_position] = answer;
+                computer.program.insert(output_position, answer);
                 computer.current_position += 4;
             }
             2 => {
-                let output_position = computer.program[computer.current_position + 3] as usize;
+                let output_position = computer.program[&(computer.current_position + 3)] as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = input1 * input2;
-                computer.program[output_position] = answer;
+                computer.program.insert(output_position, answer);
                 computer.current_position += 4;
             }
             3 => {
-                let output_position = computer.program[computer.current_position + 1] as usize;
-                computer.program[output_position] = input.expect("Should have had input for opcode 3");
+                let output_position = computer.program[&(computer.current_position + 1)] as usize;
+                let value = input.expect("Should have had input for opcode 3");
+                computer.program.insert(output_position, value);
                 computer.current_position += 2;
             }
             4 => {
@@ -93,20 +97,20 @@ fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (Vec<i64>, Vec<i64>) {
             }
             7 => {
                 // less-than
-                let output_position = computer.program[computer.current_position + 3] as usize;
+                let output_position = computer.program[&(computer.current_position + 3)] as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = if input1 < input2 { 1 } else { 0 };
-                computer.program[output_position] = answer;
+                computer.program.insert(output_position, answer);
                 computer.current_position += 4;
             }
             8 => {
                 // equals
-                let output_position = computer.program[computer.current_position + 3] as usize;
+                let output_position = computer.program[&(computer.current_position + 3)] as usize;
                 let input1 = computer.get_value(0);
                 let input2 = computer.get_value(1);
                 let answer = if input1 == input2 { 1 } else { 0 };
-                computer.program[output_position] = answer;
+                computer.program.insert(output_position, answer);
                 computer.current_position += 4;
             }
             9 => {
@@ -170,42 +174,44 @@ mod tests {
     fn opcode_99_ends() {
         let program = vec![99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![99]);
+        assert_eq!(answer[&0], 99);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![2, 0, 0, 0, 99]);
+        assert_eq!(answer[&0], 2);
+        assert_eq!(answer[&4], 99);
     }
 
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![2, 3, 0, 6, 99]);
+        assert_eq!(answer[&3], 6);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![2, 4, 4, 5, 99, 9801]);
+        assert_eq!(answer[&5], 9801);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![30, 1, 1, 4, 2, 5, 6, 0, 99]);
+        assert_eq!(answer[&0], 30);
+        assert_eq!(answer[&4], 2);
     }
 
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
         let (answer, _output) = run_intcode(program, Some(7));
-        assert_eq!(answer, vec![7, 0, 99]);
+        assert_eq!(answer[&0], 7);
     }
 
     #[test]
@@ -245,22 +251,22 @@ mod tests {
     fn opcode_7_less_than() {
         let program = vec![1107, 4, 5, 3, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![1107, 4, 5, 1, 99]);
+        assert_eq!(answer[&3], 1);
 
         let program = vec![1107, 5, 4, 3, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![1107, 5, 4, 0, 99]);
+        assert_eq!(answer[&3], 0);
     }
 
     #[test]
     fn opcode_8_equals() {
         let program = vec![1108, 4, 4, 3, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![1108, 4, 4, 1, 99]);
+        assert_eq!(answer[&3], 1);
 
         let program = vec![1108, 5, 4, 3, 99];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![1108, 5, 4, 0, 99]);
+        assert_eq!(answer[&3], 0);
     }
 
     #[test]
@@ -309,23 +315,32 @@ mod tests {
     fn use_parameter_modes_in_programs() {
         let program = vec![1002, 4, 3, 4, 33];
         let (answer, _output) = run_intcode(program, None);
-        assert_eq!(answer, vec![1002, 4, 3, 4, 99]);
+        assert_eq!(answer[&4], 99);
     }
 
     #[test]
     fn get_value_helper_function() {
-        let program = vec![1, 0, 0, 0, 99];
-        let inst = instruction(program[0]);
+        let mut program = HashMap::new();
+        program.insert(0, 1);
+        program.insert(4, 99);
+        let inst = instruction(program[&0]);
         let instruction_pointer = 0;
 
         assert_eq!(get_value(&program, instruction_pointer, &inst, 0, 0), 1);
 
-        let program = vec![104, 18, 99];
-        let inst = instruction(program[0]);
+        let mut program = HashMap::new();
+        program.insert(0, 104);
+        program.insert(1, 18);
+        program.insert(2, 99);
+        let inst = instruction(program[&0]);
         assert_eq!(get_value(&program, instruction_pointer, &inst, 0, 0), 18);
 
-        let program = vec![109, 1, 204, -1];
-        let inst = instruction(program[2]);
+        let mut program = HashMap::new();
+        program.insert(0, 109);
+        program.insert(1, 1);
+        program.insert(2, 204);
+        program.insert(3, -1);
+        let inst = instruction(program[&2]);
         assert_eq!(get_value(&program, 2, &inst, 0, 1), 109);
     }
 
@@ -351,7 +366,7 @@ mod tests {
 }
 
 fn get_value(
-    program: &[i64],
+    program: &HashMap<usize, i64>,
     instruction_pointer: usize,
     inst: &Instruction,
     parameter_index: usize,
@@ -360,14 +375,14 @@ fn get_value(
     let parameter_location = instruction_pointer + parameter_index + 1;
 
     match inst.mode(parameter_index) {
-        Mode::Position => program[program[parameter_location] as usize],
-        Mode::Immediate => program[parameter_location],
+        Mode::Position => program[&(program[&parameter_location] as usize)],
+        Mode::Immediate => program[&parameter_location],
         Mode::Relative => {
-            let memory_location = program[parameter_location] + relative_base as i64;
+            let memory_location = program[&parameter_location] + relative_base as i64;
             if memory_location < 0 {
                 panic!("Cannot access memory at {}", memory_location);
             }
-            program[memory_location as usize]
+            program[&(memory_location as usize)]
         },
     }
 }
