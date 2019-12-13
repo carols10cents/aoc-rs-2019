@@ -120,7 +120,8 @@ fn run_intcode(program: Vec<i64>, input: Option<i64>) -> (HashMap<usize, i64>, V
             9 => {
                 // relative base adjustment
                 let input1 = computer.get_value(0);
-                computer.relative_base += input1 as usize;
+                let new_rel_base = computer.relative_base as i64 + input1;
+                computer.relative_base = new_rel_base as usize;
                 computer.current_position += 2;
             }
             other => panic!("Unknown opcode: {}", other),
