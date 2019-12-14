@@ -11,6 +11,16 @@ fn main() {
 //   - Otherwise go another interval along that angle
 // - Return asteroid with the max count
 
+struct Grid {
+
+}
+
+impl Grid {
+    fn new(text: &str) -> Grid {
+        Grid {}
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
