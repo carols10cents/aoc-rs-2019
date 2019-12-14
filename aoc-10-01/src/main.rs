@@ -64,4 +64,10 @@ mod tests {
         assert!(grid.asteroid_locations.contains_key(&(0, 0)));
         assert!(grid.asteroid_locations.contains_key(&(1, 2)));
     }
+
+    #[test]
+    fn cant_see_yourself() {
+        let grid = Grid::new("#");
+        assert!(!grid.can_see((0, 0), (0, 0)));
+    }
 }
