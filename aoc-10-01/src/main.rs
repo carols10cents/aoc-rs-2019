@@ -101,3 +101,11 @@ mod tests {
         assert_eq!(gcd(3, 2), 1);
     }
 }
+
+fn gcd(a: usize, b: usize) -> usize {
+    if b == 0 {
+        a
+    } else {
+        gcd(b, a % b)
+    }
+}
