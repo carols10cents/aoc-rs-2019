@@ -35,5 +35,6 @@ mod tests {
         let text = "...\n...";
         let grid = Grid::new(text);
         assert_eq!(grid.width, 3);
+        assert_eq!(grid.height, 2);
     }
 }
