@@ -74,4 +74,10 @@ mod tests {
         let grid = Grid::new("#");
         assert!(!grid.can_see((0, 0), (0, 0)));
     }
+
+    #[test]
+    fn can_see_horizontally() {
+        let grid = Grid::new("##");
+        assert!(grid.can_see((0, 0), (1, 0)));
+    }
 }
