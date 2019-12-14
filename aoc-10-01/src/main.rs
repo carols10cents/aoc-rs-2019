@@ -46,5 +46,6 @@ mod tests {
         let grid = Grid::new(text);
         assert_eq!(grid.width, 3);
         assert_eq!(grid.height, 2);
+        assert!(grid.asteroid_locations.is_empty());
     }
 }
