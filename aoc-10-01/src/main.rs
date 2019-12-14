@@ -25,11 +25,15 @@ impl Grid {
 
         for line in text.lines() {
             width = 0; // Yes this will figure out the width height times but idc
-            height += 1;
 
             for c in line.chars() {
+                if c == '#' {
+                    asteroid_locations.push((width, height));
+                }
                 width += 1;
             }
+
+            height += 1;
         }
 
         Grid {
