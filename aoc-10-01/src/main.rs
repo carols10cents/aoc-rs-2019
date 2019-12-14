@@ -49,5 +49,11 @@ mod tests {
         assert_eq!(grid.width, 3);
         assert_eq!(grid.height, 2);
         assert!(grid.asteroid_locations.is_empty());
+
+        let text = "#.\n..\n.#";
+        let grid = Grid::new(text);
+        assert_eq!(grid.width, 2);
+        assert_eq!(grid.height, 3);
+        assert_eq!(grid.asteroid_locations, vec![(0, 0), (1, 2)]);
     }
 }
