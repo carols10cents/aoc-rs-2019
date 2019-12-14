@@ -24,7 +24,7 @@ impl Grid {
         let mut asteroid_locations = vec![];
 
         for line in text.lines() {
-            width = 0; // Yes this will figure out the width height times but idc
+            width = 0;
 
             for c in line.chars() {
                 if c == '#' {
