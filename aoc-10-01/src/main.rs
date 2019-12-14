@@ -47,6 +47,9 @@ impl Grid {
         if from == to {
             false
         } else {
+            // let x_diff = to.0 as isize - from.0 as isize;
+            // let y_diff = to.1 as isize - from.1 as isize;
+            // let gcf = gcf(x)
             true
         }
     }
@@ -93,21 +96,21 @@ mod tests {
 
     #[test]
     fn greatest_common_factor() {
-        assert_eq!(gcd(48, 18), 6);
-        assert_eq!(gcd(18, 48), 6);
-        assert_eq!(gcd(2, 0), 2);
-        assert_eq!(gcd(0, 2), 2);
-        assert_eq!(gcd(2, 3), 1);
-        assert_eq!(gcd(3, 2), 1);
-        assert_eq!(gcd(-10, 5), 5);
-        assert_eq!(gcd(10, -5), 5);
+        assert_eq!(gcf(48, 18), 6);
+        assert_eq!(gcf(18, 48), 6);
+        assert_eq!(gcf(2, 0), 2);
+        assert_eq!(gcf(0, 2), 2);
+        assert_eq!(gcf(2, 3), 1);
+        assert_eq!(gcf(3, 2), 1);
+        assert_eq!(gcf(-10, 5), 5);
+        assert_eq!(gcf(10, -5), 5);
     }
 }
 
-fn gcd(a: isize, b: isize) -> isize {
+fn gcf(a: isize, b: isize) -> isize {
     if b == 0 {
         a.abs()
     } else {
-        gcd(b, a % b)
+        gcf(b, a % b)
     }
 }
