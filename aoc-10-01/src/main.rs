@@ -105,6 +105,34 @@ mod tests {
         assert_eq!(gcf(-10, 5), 5);
         assert_eq!(gcf(10, -5), 5);
     }
+
+    #[test]
+    fn reduced_angle_works() {
+        assert_eq!(reduced_angle((0, 0), (1, 0)), (1, 0));
+        assert_eq!(reduced_angle((0, 0), (2, 0)), (1, 0));
+
+        assert_eq!(reduced_angle((1, 0), (0, 0)), (-1, 0));
+        assert_eq!(reduced_angle((2, 0), (0, 0)), (-1, 0));
+
+        assert_eq!(reduced_angle((1, 1), (3, 3)), (1, 1));
+        assert_eq!(reduced_angle((3, 3), (1, 1)), (-1, -1));
+
+        assert_eq!(reduced_angle((0, 0), (48, 18)), (8, 3));
+
+        assert_eq!(reduced_angle((0, 0), (2, 3)), (2, 3));
+    }
+}
+
+fn reduced_angle(from: (usize, usize), to: (usize, usize)) -> (isize, isize) {
+    let from = (from.0 as isize, from.1 as isize);
+    let to = (to.0 as isize, to.1 as isize);
+
+    let x_diff = to.0 - from.0;
+    let y_diff = to.1 - from.1;
+
+    let gcf = gcf(x_diff, y_diff);
+
+    (x_diff / gcf, y_diff / gcf)
 }
 
 fn gcf(a: isize, b: isize) -> isize {
