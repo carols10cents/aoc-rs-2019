@@ -90,4 +90,14 @@ mod tests {
         let grid = Grid::new("###");
         assert!(!grid.can_see((0, 0), (2, 0)));
     }
+
+    #[test]
+    fn greatest_common_factor() {
+        assert_eq!(gcd(48, 18), 6);
+        assert_eq!(gcd(18, 48), 6);
+        assert_eq!(gcd(2, 0), 2);
+        assert_eq!(gcd(0, 2), 2);
+        assert_eq!(gcd(2, 3), 1);
+        assert_eq!(gcd(3, 2), 1);
+    }
 }
