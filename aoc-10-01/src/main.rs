@@ -12,12 +12,17 @@ fn main() {
 // - Return asteroid with the max count
 
 struct Grid {
-
+    width: usize,
 }
 
 impl Grid {
     fn new(text: &str) -> Grid {
-        Grid {}
+        let lines = text.lines();
+        let width = lines.first().expect("Must have at least one row").len();
+
+        Grid {
+            width
+        }
     }
 }
 
