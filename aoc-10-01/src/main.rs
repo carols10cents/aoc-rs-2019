@@ -44,7 +44,11 @@ impl Grid {
     }
 
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
-        false
+        if from == to {
+            false
+        } else {
+            true
+        }
     }
 }
 
