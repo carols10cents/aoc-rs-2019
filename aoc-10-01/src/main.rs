@@ -99,12 +99,14 @@ mod tests {
         assert_eq!(gcd(0, 2), 2);
         assert_eq!(gcd(2, 3), 1);
         assert_eq!(gcd(3, 2), 1);
+        assert_eq!(gcd(-10, 5), 5);
+        assert_eq!(gcd(10, -5), 5);
     }
 }
 
-fn gcd(a: usize, b: usize) -> usize {
+fn gcd(a: isize, b: isize) -> isize {
     if b == 0 {
-        a
+        a.abs()
     } else {
         gcd(b, a % b)
     }
