@@ -42,6 +42,10 @@ impl Grid {
             width, height, asteroid_locations
         }
     }
+
+    fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
+        false
+    }
 }
 
 #[cfg(test)]
