@@ -47,9 +47,22 @@ impl Grid {
         if from == to {
             false
         } else {
-            // let x_diff = to.0 as isize - from.0 as isize;
-            // let y_diff = to.1 as isize - from.1 as isize;
-            // let gcf = gcf(x)
+            let angle = reduced_angle(from, to);
+
+            let mut check_x = from.0 as isize + angle.0;
+            let mut check_y = from.1 as isize + angle.1;
+
+            while check_x != to.0 as isize && check_y != to.1 as isize {
+                if check_x < 0 || check_y < 0 {
+                    panic!("something when terribly wrong, tried to check ({}, {})", check_x, check_y);
+                }
+                if self.asteroid_locations.contains_key(&(check_x as usize, check_y as usize)) {
+                    return false;
+                }
+                check_x += angle.0;
+                check_y += angle.1;
+            }
+
             true
         }
     }
