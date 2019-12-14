@@ -48,21 +48,15 @@ impl Grid {
             false
         } else {
             let angle = reduced_angle(from, to);
-            dbg!(angle);
 
             let mut check_x = from.0 as isize + angle.0;
             let mut check_y = from.1 as isize + angle.1;
-
-            dbg!(check_x, check_y);
-            dbg!(to);
-            dbg!(&self.asteroid_locations);
 
             while !(check_x == to.0 as isize && check_y == to.1 as isize) {
                 if check_x < 0 || check_y < 0 {
                     panic!("something when terribly wrong, tried to check ({}, {})", check_x, check_y);
                 }
                 if self.asteroid_locations.contains_key(&(check_x as usize, check_y as usize)) {
-                    println!("i see youuuu");
                     return false;
                 }
                 check_x += angle.0;
