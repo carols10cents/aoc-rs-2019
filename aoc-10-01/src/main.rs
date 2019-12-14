@@ -10,3 +10,15 @@ fn main() {
 //   - If you get to the end of the graph, stop
 //   - Otherwise go another interval along that angle
 // - Return asteroid with the max count
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn can_read_text_into_a_list_of_asteroids() {
+        let text = "...\n...";
+        let grid = Grid::new(text);
+        assert_eq!(grid.width, 3);
+    }
+}
