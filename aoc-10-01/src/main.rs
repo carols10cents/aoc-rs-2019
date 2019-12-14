@@ -84,4 +84,10 @@ mod tests {
         let grid = Grid::new("##");
         assert!(grid.can_see((0, 0), (1, 0)));
     }
+
+    #[test]
+    fn cant_see_with_asteroid_in_the_way() {
+        let grid = Grid::new("###");
+        assert!(!grid.can_see((0, 0), (2, 0)));
+    }
 }
