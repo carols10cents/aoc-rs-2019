@@ -14,12 +14,14 @@ fn main() {
 struct Grid {
     width: usize,
     height: usize,
+    asteroid_locations: Vec<(usize, usize)>,
 }
 
 impl Grid {
     fn new(text: &str) -> Grid {
         let mut width = 0;
         let mut height = 0;
+        let mut asteroid_locations = vec![];
 
         for line in text.lines() {
             width = 0; // Yes this will figure out the width height times but idc
@@ -31,7 +33,7 @@ impl Grid {
         }
 
         Grid {
-            width, height
+            width, height, asteroid_locations
         }
     }
 }
