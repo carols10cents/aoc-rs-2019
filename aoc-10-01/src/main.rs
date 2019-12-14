@@ -13,15 +13,25 @@ fn main() {
 
 struct Grid {
     width: usize,
+    height: usize,
 }
 
 impl Grid {
     fn new(text: &str) -> Grid {
-        let mut lines = text.lines();
-        let width = lines.next().expect("Must have at least one row").len();
+        let mut width = 0;
+        let mut height = 0;
+
+        for line in text.lines() {
+            width = 0; // Yes this will figure out the width height times but idc
+            height += 1;
+
+            for c in line.chars() {
+                width += 1;
+            }
+        }
 
         Grid {
-            width
+            width, height
         }
     }
 }
