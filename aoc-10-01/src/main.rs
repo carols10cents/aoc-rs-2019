@@ -18,7 +18,7 @@ struct Grid {
 impl Grid {
     fn new(text: &str) -> Grid {
         let lines = text.lines();
-        let width = lines.first().expect("Must have at least one row").len();
+        let width = lines.next().expect("Must have at least one row").len();
 
         Grid {
             width
