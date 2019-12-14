@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 fn main() {
     println!("Hello, world!");
 }
@@ -14,21 +16,21 @@ fn main() {
 struct Grid {
     width: usize,
     height: usize,
-    asteroid_locations: Vec<(usize, usize)>,
+    asteroid_locations: HashMap<(usize, usize), usize>,
 }
 
 impl Grid {
     fn new(text: &str) -> Grid {
         let mut width = 0;
         let mut height = 0;
-        let mut asteroid_locations = vec![];
+        let mut asteroid_locations = HashMap::new();
 
         for line in text.lines() {
             width = 0;
 
             for c in line.chars() {
                 if c == '#' {
-                    asteroid_locations.push((width, height));
+                    asteroid_locations.insert((width, height), 0);
                 }
                 width += 1;
             }
@@ -58,6 +60,8 @@ mod tests {
         let grid = Grid::new(text);
         assert_eq!(grid.width, 2);
         assert_eq!(grid.height, 3);
-        assert_eq!(grid.asteroid_locations, vec![(0, 0), (1, 2)]);
+        assert_eq!(grid.asteroid_locations.len(), 2);
+        assert!(grid.asteroid_locations.contains_key(&(0, 0)));
+        assert!(grid.asteroid_locations.contains_key(&(1, 2)));
     }
 }
