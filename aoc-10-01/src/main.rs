@@ -36,6 +36,18 @@ impl Grid {
         }
     }
 
+    fn get_seeing_counts(&mut self) {
+        for &from_location in asteroid_locations.keys() {
+            let mut count = 0;
+            for &to_location in asteroid_locations.keys() {
+                if self.can_see(from_location, to_location) {
+                    count += 1;
+                }
+            }
+            asteroid_locations.insert(from_location, count);
+        }
+    }
+
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if from == to {
             false
@@ -104,6 +116,23 @@ mod tests {
     fn cant_see_with_asteroid_in_the_way() {
         let grid = Grid::new("###");
         assert!(!grid.can_see((0, 0), (2, 0)));
+    }
+
+    #[test]
+    fn example() {
+        let map = ".#..#\n.....\n#####\n....#\n...##";
+        let grid = Grid::new(map);
+        grid.get_seeing_counts();
+        assert_eq!(grid.asteroid_locations[&(3, 4)], Some(8));
+        assert_eq!(grid.asteroid_locations[&(1, 0)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(4, 0)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(0, 2)], Some(6));
+        assert_eq!(grid.asteroid_locations[&(1, 2)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(2, 2)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(3, 2)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(4, 2)], Some(5));
+        assert_eq!(grid.asteroid_locations[&(4, 3)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(4, 4)], Some(7));
     }
 
     #[test]
