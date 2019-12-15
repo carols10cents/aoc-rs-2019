@@ -52,6 +52,12 @@ impl Grid {
         }
     }
 
+    fn asteroids_sorted_by_angle(&self) -> Vec<&(usize, usize)> {
+        let mut vec: Vec<_> = self.asteroid_locations.iter().collect();
+        vec.sort_by_key(|&(_, angle)| angle);
+        vec.iter().map(|&(location, _)| location).collect()
+    }
+
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if from == to {
             false
@@ -97,7 +103,7 @@ mod tests {
 ..#.#.....#....##";
         let mut grid = Grid::new(input, (8, 3));
         grid.compute_angles();
-        dbg!(grid);
+        dbg!(grid.asteroids_sorted_by_angle());
         assert!(false);
     }
 
