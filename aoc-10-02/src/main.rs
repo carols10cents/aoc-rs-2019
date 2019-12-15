@@ -38,7 +38,7 @@ impl Grid {
             width,
             height,
             asteroid_locations,
-            laser_location
+            laser_location,
         }
     }
 
@@ -58,8 +58,20 @@ impl Grid {
         vec.iter().map(|&(location, _)| location).copied().collect()
     }
 
-    fn destroy_order(&self) -> Vec<(usize, usize)> {
-        self.asteroids_sorted_by_angle()
+    fn destroy_order(&mut self) -> Vec<(usize, usize)> {
+        let mut destroy_order = vec![];
+
+        while !self.asteroid_locations.is_empty() {
+            let candidates = self.asteroids_sorted_by_angle();
+            for &asteroid in candidates {
+                if can_see(self.laser_location, asteroid) {
+                    destroy_order.push(asteroid);
+                    self.asteroid_locations.remove(asteroid);
+                }
+            }
+        }
+
+        destroy_order
     }
 
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
