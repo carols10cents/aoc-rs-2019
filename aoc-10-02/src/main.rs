@@ -66,8 +66,11 @@ impl Grid {
             for asteroid in candidates {
                 if self.can_see(self.laser_location, asteroid) {
                     destroy_order.push(asteroid);
-                    self.asteroid_locations.remove(&asteroid);
                 }
+            }
+
+            for destroyed in &destroy_order {
+                self.asteroid_locations.remove(&destroyed);
             }
         }
 
