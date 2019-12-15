@@ -121,7 +121,7 @@ mod tests {
     #[test]
     fn example() {
         let map = ".#..#\n.....\n#####\n....#\n...##";
-        let grid = Grid::new(map);
+        let mut grid = Grid::new(map);
         grid.get_seeing_counts();
         assert_eq!(grid.asteroid_locations[&(3, 4)], 8);
         assert_eq!(grid.asteroid_locations[&(1, 0)], 7);
