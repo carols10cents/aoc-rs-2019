@@ -49,6 +49,13 @@ impl Grid {
         }
     }
 
+    fn best_location(&self) -> (&(usize, usize), &usize) {
+        self.asteroid_locations
+            .iter()
+            .max_by_key(|&(_k, v)| v)
+            .expect("Must have some locations and one of them must be best")
+    }
+
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if from == to {
             false
@@ -134,6 +141,7 @@ mod tests {
         assert_eq!(grid.asteroid_locations[&(4, 2)], 5);
         assert_eq!(grid.asteroid_locations[&(4, 3)], 7);
         assert_eq!(grid.asteroid_locations[&(4, 4)], 7);
+        assert_eq!(grid.best_location(), (&(3, 4), &8));
     }
 
     #[test]
