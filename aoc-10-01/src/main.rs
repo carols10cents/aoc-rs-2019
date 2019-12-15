@@ -39,7 +39,9 @@ impl Grid {
         }
 
         Grid {
-            width, height, asteroid_locations
+            width,
+            height,
+            asteroid_locations,
         }
     }
 
@@ -54,9 +56,15 @@ impl Grid {
 
             while !(check_x == to.0 as isize && check_y == to.1 as isize) {
                 if check_x < 0 || check_y < 0 {
-                    panic!("something when terribly wrong, tried to check ({}, {})", check_x, check_y);
+                    panic!(
+                        "something when terribly wrong, tried to check ({}, {})",
+                        check_x, check_y
+                    );
                 }
-                if self.asteroid_locations.contains_key(&(check_x as usize, check_y as usize)) {
+                if self
+                    .asteroid_locations
+                    .contains_key(&(check_x as usize, check_y as usize))
+                {
                     return false;
                 }
                 check_x += angle.0;
