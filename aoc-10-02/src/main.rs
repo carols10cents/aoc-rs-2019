@@ -32,6 +32,8 @@ impl Grid {
             height += 1;
         }
 
+        asteroid_locations.remove(&laser_location);
+
         Grid {
             width,
             height,
