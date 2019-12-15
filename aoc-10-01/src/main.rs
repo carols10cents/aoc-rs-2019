@@ -37,7 +37,8 @@ impl Grid {
     }
 
     fn get_seeing_counts(&mut self) {
-        for &from_location in self.asteroid_locations.keys() {
+        let locations: Vec<(usize, usize)> = self.asteroid_locations.keys().cloned().collect();
+        for from_location in locations {
             let mut count = 0;
             for &to_location in self.asteroid_locations.keys() {
                 if self.can_see(from_location, to_location) {
