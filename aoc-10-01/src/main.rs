@@ -37,14 +37,14 @@ impl Grid {
     }
 
     fn get_seeing_counts(&mut self) {
-        for &from_location in asteroid_locations.keys() {
+        for &from_location in self.asteroid_locations.keys() {
             let mut count = 0;
-            for &to_location in asteroid_locations.keys() {
+            for &to_location in self.asteroid_locations.keys() {
                 if self.can_see(from_location, to_location) {
                     count += 1;
                 }
             }
-            asteroid_locations.insert(from_location, count);
+            self.asteroid_locations.insert(from_location, count);
         }
     }
 
