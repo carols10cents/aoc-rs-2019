@@ -54,31 +54,30 @@ impl Grid {
         }
     }
 
-    fn asteroids_sorted_by_angle(&self) -> Vec<(&(usize, usize), &f64)> {
+    fn asteroids_sorted_by_angle(&self) -> Vec<(usize, usize)> {
         let mut vec: Vec<_> = self.asteroid_locations.iter().collect();
         vec.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap());
-        // vec.iter().map(|&(location, _)| location).copied().collect()
-        vec
+        vec.iter().map(|&(location, _)| location).copied().collect()
     }
 
-    // fn destroy_order(&mut self) -> Vec<(usize, usize)> {
-    //     let mut destroy_order = vec![];
-    //
-    //     while !self.asteroid_locations.is_empty() {
-    //         let candidates = self.asteroids_sorted_by_angle();
-    //         for asteroid in candidates {
-    //             if self.can_see(self.laser_location, asteroid) {
-    //                 destroy_order.push(asteroid);
-    //             }
-    //         }
-    //
-    //         for destroyed in &destroy_order {
-    //             self.asteroid_locations.remove(&destroyed);
-    //         }
-    //     }
-    //
-    //     destroy_order
-    // }
+    fn destroy_order(&mut self) -> Vec<(usize, usize)> {
+        let mut destroy_order = vec![];
+
+        while !self.asteroid_locations.is_empty() {
+            let candidates = self.asteroids_sorted_by_angle();
+            for asteroid in candidates {
+                if self.can_see(self.laser_location, asteroid) {
+                    destroy_order.push(asteroid);
+                }
+            }
+
+            for destroyed in &destroy_order {
+                self.asteroid_locations.remove(&destroyed);
+            }
+        }
+
+        destroy_order
+    }
 
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if from == to {
@@ -126,15 +125,15 @@ mod tests {
         let mut grid = Grid::new(input, (8, 3));
         grid.compute_angles();
 
-        dbg!(grid.asteroids_sorted_by_angle());
-        assert!(false);
+        // dbg!(grid.asteroids_sorted_by_angle());
+        // assert!(false);
 
-        // assert_eq!(grid.destroy_order(), vec![
-        //     (8, 1), (9, 0), (9, 1), (10, 0), (9, 2), (11, 1), (12, 1), (11, 2), (15, 1),
-        //     (12, 2), (13, 2), (14, 2), (15, 2), (12, 3), (16, 4), (15, 4), (10, 4), (4, 4),
-        //     (2, 4), (2, 3), (0, 2), (1, 2), (0, 1), (1, 1), (5, 2), (1, 0), (5, 1),
-        //     (6, 1), (6, 0), (7, 0), (8, 0), (10, 1), (14, 0), (16, 1), (13, 3), (14, 3)
-        // ]);
+        assert_eq!(grid.destroy_order(), vec![
+            (8, 1), (9, 0), (9, 1), (10, 0), (9, 2), (11, 1), (12, 1), (11, 2), (15, 1),
+            (12, 2), (13, 2), (14, 2), (15, 2), (12, 3), (16, 4), (15, 4), (10, 4), (4, 4),
+            (2, 4), (2, 3), (0, 2), (1, 2), (0, 1), (1, 1), (5, 2), (1, 0), (5, 1),
+            (6, 1), (6, 0), (7, 0), (8, 0), (10, 1), (14, 0), (16, 1), (13, 3), (14, 3)
+        ]);
     }
 
     #[test]
