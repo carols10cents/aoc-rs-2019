@@ -123,16 +123,16 @@ mod tests {
         let map = ".#..#\n.....\n#####\n....#\n...##";
         let grid = Grid::new(map);
         grid.get_seeing_counts();
-        assert_eq!(grid.asteroid_locations[&(3, 4)], Some(8));
-        assert_eq!(grid.asteroid_locations[&(1, 0)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(4, 0)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(0, 2)], Some(6));
-        assert_eq!(grid.asteroid_locations[&(1, 2)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(2, 2)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(3, 2)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(4, 2)], Some(5));
-        assert_eq!(grid.asteroid_locations[&(4, 3)], Some(7));
-        assert_eq!(grid.asteroid_locations[&(4, 4)], Some(7));
+        assert_eq!(grid.asteroid_locations[&(3, 4)], 8);
+        assert_eq!(grid.asteroid_locations[&(1, 0)], 7);
+        assert_eq!(grid.asteroid_locations[&(4, 0)], 7);
+        assert_eq!(grid.asteroid_locations[&(0, 2)], 6);
+        assert_eq!(grid.asteroid_locations[&(1, 2)], 7);
+        assert_eq!(grid.asteroid_locations[&(2, 2)], 7);
+        assert_eq!(grid.asteroid_locations[&(3, 2)], 7);
+        assert_eq!(grid.asteroid_locations[&(4, 2)], 5);
+        assert_eq!(grid.asteroid_locations[&(4, 3)], 7);
+        assert_eq!(grid.asteroid_locations[&(4, 4)], 7);
     }
 
     #[test]
