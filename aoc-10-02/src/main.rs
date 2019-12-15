@@ -63,7 +63,7 @@ impl Grid {
 
         while !self.asteroid_locations.is_empty() {
             let candidates = self.asteroids_sorted_by_angle();
-            for &asteroid in candidates {
+            for asteroid in candidates {
                 if self.can_see(self.laser_location, asteroid) {
                     destroy_order.push(asteroid);
                     self.asteroid_locations.remove(asteroid);
