@@ -5,10 +5,11 @@ fn main() {
     let mut grid = Grid::new(input.trim(), (37, 25));
 }
 
+#[derive(Debug)]
 struct Grid {
     width: usize,
     height: usize,
-    asteroid_locations: HashMap<(usize, usize), usize>,
+    asteroid_locations: HashMap<(usize, usize), f64>,
     laser_location: (usize, usize),
 }
 
@@ -41,22 +42,12 @@ impl Grid {
 
     fn get_seeing_counts(&mut self) {
         let locations: Vec<(usize, usize)> = self.asteroid_locations.keys().cloned().collect();
-        for from_location in locations {
-            let mut count = 0;
-            for &to_location in self.asteroid_locations.keys() {
-                if self.can_see(from_location, to_location) {
-                    count += 1;
-                }
-            }
-            self.asteroid_locations.insert(from_location, count);
+        for to_location in locations {
+            let x_diff = to.0 as f64 - from.0 as f64;
+            let y_diff = to.1 as f64 - from.1 as f64;
+            let angle = (y_diff / x_diff).atan();
+            self.asteroid_locations.insert(to_location, angle);
         }
-    }
-
-    fn best_location(&self) -> (&(usize, usize), &usize) {
-        self.asteroid_locations
-            .iter()
-            .max_by_key(|&(_k, v)| v)
-            .expect("Must have some locations and one of them must be best")
     }
 
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
@@ -93,6 +84,20 @@ impl Grid {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn example() {
+        let input = "\
+.#....#####...#..
+##...##.#####..##
+##...#...#.#####.
+..#.....#...###..
+..#.#.....#....##";
+        let mut grid = Grid::new(input, (8, 3));
+        grid.compute_angles();
+        dbg!(grid);
+        assert!(false);
+    }
 
     #[test]
     fn greatest_common_factor() {
