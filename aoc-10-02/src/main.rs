@@ -49,8 +49,8 @@ impl Grid {
             let x_diff = to.0 as f64 - self.laser_location.0 as f64;
             let y_diff = to.1 as f64 - self.laser_location.1 as f64;
 
-            // let angle = (y_diff / x_diff).atan();
-            self.asteroid_locations.insert(to, y_diff.atan2(x_diff));
+            let angle = (y_diff / x_diff).atan();
+            self.asteroid_locations.insert(to, angle);
         }
     }
 
