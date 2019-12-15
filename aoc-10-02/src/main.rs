@@ -24,7 +24,7 @@ impl Grid {
 
             for c in line.chars() {
                 if c == '#' {
-                    asteroid_locations.insert((width, height), 0);
+                    asteroid_locations.insert((width, height), 0.0);
                 }
                 width += 1;
             }
