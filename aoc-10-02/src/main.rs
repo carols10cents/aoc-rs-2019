@@ -54,7 +54,7 @@ impl Grid {
 
     fn asteroids_sorted_by_angle(&self) -> Vec<&(usize, usize)> {
         let mut vec: Vec<_> = self.asteroid_locations.iter().collect();
-        vec.sort_by_key(|&(_, angle)| angle);
+        vec.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap());
         vec.iter().map(|&(location, _)| location).collect()
     }
 
