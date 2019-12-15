@@ -2,19 +2,18 @@ use std::collections::HashMap;
 
 fn main() {
     let input = include_str!("../input");
-    let mut grid = Grid::new(input.trim());
-    grid.get_seeing_counts();
-    println!("Best location is: {:?}", grid.best_location());
+    let mut grid = Grid::new(input.trim(), (37, 25));
 }
 
 struct Grid {
     width: usize,
     height: usize,
     asteroid_locations: HashMap<(usize, usize), usize>,
+    laser_location: (usize, usize),
 }
 
 impl Grid {
-    fn new(text: &str) -> Grid {
+    fn new(text: &str, laser_location: (usize, usize)) -> Grid {
         let mut width = 0;
         let mut height = 0;
         let mut asteroid_locations = HashMap::new();
@@ -36,6 +35,7 @@ impl Grid {
             width,
             height,
             asteroid_locations,
+            laser_location
         }
     }
 
@@ -93,59 +93,6 @@ impl Grid {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn can_read_text_into_a_list_of_asteroids() {
-        let text = "...\n...";
-        let grid = Grid::new(text);
-        assert_eq!(grid.width, 3);
-        assert_eq!(grid.height, 2);
-        assert!(grid.asteroid_locations.is_empty());
-
-        let text = "#.\n..\n.#";
-        let grid = Grid::new(text);
-        assert_eq!(grid.width, 2);
-        assert_eq!(grid.height, 3);
-        assert_eq!(grid.asteroid_locations.len(), 2);
-        assert!(grid.asteroid_locations.contains_key(&(0, 0)));
-        assert!(grid.asteroid_locations.contains_key(&(1, 2)));
-    }
-
-    #[test]
-    fn cant_see_yourself() {
-        let grid = Grid::new("#");
-        assert!(!grid.can_see((0, 0), (0, 0)));
-    }
-
-    #[test]
-    fn can_see_horizontally() {
-        let grid = Grid::new("##");
-        assert!(grid.can_see((0, 0), (1, 0)));
-    }
-
-    #[test]
-    fn cant_see_with_asteroid_in_the_way() {
-        let grid = Grid::new("###");
-        assert!(!grid.can_see((0, 0), (2, 0)));
-    }
-
-    #[test]
-    fn example() {
-        let map = ".#..#\n.....\n#####\n....#\n...##";
-        let mut grid = Grid::new(map);
-        grid.get_seeing_counts();
-        assert_eq!(grid.asteroid_locations[&(3, 4)], 8);
-        assert_eq!(grid.asteroid_locations[&(1, 0)], 7);
-        assert_eq!(grid.asteroid_locations[&(4, 0)], 7);
-        assert_eq!(grid.asteroid_locations[&(0, 2)], 6);
-        assert_eq!(grid.asteroid_locations[&(1, 2)], 7);
-        assert_eq!(grid.asteroid_locations[&(2, 2)], 7);
-        assert_eq!(grid.asteroid_locations[&(3, 2)], 7);
-        assert_eq!(grid.asteroid_locations[&(4, 2)], 5);
-        assert_eq!(grid.asteroid_locations[&(4, 3)], 7);
-        assert_eq!(grid.asteroid_locations[&(4, 4)], 7);
-        assert_eq!(grid.best_location(), (&(3, 4), &8));
-    }
 
     #[test]
     fn greatest_common_factor() {
