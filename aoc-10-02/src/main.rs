@@ -54,31 +54,31 @@ impl Grid {
         }
     }
 
-    fn asteroids_sorted_by_angle(&self) -> Vec<((usize, usize), f64)> {
+    fn asteroids_sorted_by_angle(&self) -> Vec<(&(usize, usize), &f64)> {
         let mut vec: Vec<_> = self.asteroid_locations.iter().collect();
         vec.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap());
         // vec.iter().map(|&(location, _)| location).copied().collect()
-        vec.iter().copied().collect()
+        vec
     }
 
-    fn destroy_order(&mut self) -> Vec<(usize, usize)> {
-        let mut destroy_order = vec![];
-
-        while !self.asteroid_locations.is_empty() {
-            let candidates = self.asteroids_sorted_by_angle();
-            for asteroid in candidates {
-                if self.can_see(self.laser_location, asteroid) {
-                    destroy_order.push(asteroid);
-                }
-            }
-
-            for destroyed in &destroy_order {
-                self.asteroid_locations.remove(&destroyed);
-            }
-        }
-
-        destroy_order
-    }
+    // fn destroy_order(&mut self) -> Vec<(usize, usize)> {
+    //     let mut destroy_order = vec![];
+    //
+    //     while !self.asteroid_locations.is_empty() {
+    //         let candidates = self.asteroids_sorted_by_angle();
+    //         for asteroid in candidates {
+    //             if self.can_see(self.laser_location, asteroid) {
+    //                 destroy_order.push(asteroid);
+    //             }
+    //         }
+    //
+    //         for destroyed in &destroy_order {
+    //             self.asteroid_locations.remove(&destroyed);
+    //         }
+    //     }
+    //
+    //     destroy_order
+    // }
 
     fn can_see(&self, from: (usize, usize), to: (usize, usize)) -> bool {
         if from == to {
