@@ -1,7 +1,10 @@
 use std::collections::HashMap;
 
 fn main() {
-    println!("Hello, world!");
+    let input = include_str!("../input");
+    let mut grid = Grid::new(input.trim());
+    grid.get_seeing_counts();
+    println!("Best location is: {:?}", grid.best_location());
 }
 
 struct Grid {
