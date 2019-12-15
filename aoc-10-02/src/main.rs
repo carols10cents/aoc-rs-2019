@@ -42,11 +42,11 @@ impl Grid {
 
     fn get_seeing_counts(&mut self) {
         let locations: Vec<(usize, usize)> = self.asteroid_locations.keys().cloned().collect();
-        for to_location in locations {
-            let x_diff = to.0 as f64 - from.0 as f64;
-            let y_diff = to.1 as f64 - from.1 as f64;
+        for to in locations {
+            let x_diff = to.0 as f64 - self.laser_location.0 as f64;
+            let y_diff = to.1 as f64 - self.laser_location.1 as f64;
             let angle = (y_diff / x_diff).atan();
-            self.asteroid_locations.insert(to_location, angle);
+            self.asteroid_locations.insert(to, angle);
         }
     }
 
