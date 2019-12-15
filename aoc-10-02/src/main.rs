@@ -49,19 +49,16 @@ impl Grid {
             let x_diff = to.0 as f64 - self.laser_location.0 as f64;
             let y_diff = to.1 as f64 - self.laser_location.1 as f64;
 
-            if to == (4, 4) {
-                dbg!(x_diff, y_diff);
-            }
-
-            let angle = (y_diff / x_diff).atan();
-            self.asteroid_locations.insert(to, angle);
+            // let angle = (y_diff / x_diff).atan();
+            self.asteroid_locations.insert(to, y_diff.atan2(x_diff));
         }
     }
 
-    fn asteroids_sorted_by_angle(&self) -> Vec<(usize, usize)> {
+    fn asteroids_sorted_by_angle(&self) -> Vec<((usize, usize), f64)> {
         let mut vec: Vec<_> = self.asteroid_locations.iter().collect();
         vec.sort_by(|a, b| a.1.partial_cmp(b.1).unwrap());
-        vec.iter().map(|&(location, _)| location).copied().collect()
+        // vec.iter().map(|&(location, _)| location).copied().collect()
+        vec.iter().copied().collect()
     }
 
     fn destroy_order(&mut self) -> Vec<(usize, usize)> {
@@ -129,12 +126,15 @@ mod tests {
         let mut grid = Grid::new(input, (8, 3));
         grid.compute_angles();
 
-        assert_eq!(grid.destroy_order(), vec![
-            (8, 1), (9, 0), (9, 1), (10, 0), (9, 2), (11, 1), (12, 1), (11, 2), (15, 1),
-            (12, 2), (13, 2), (14, 2), (15, 2), (12, 3), (16, 4), (15, 4), (10, 4), (4, 4),
-            (2, 4), (2, 3), (0, 2), (1, 2), (0, 1), (1, 1), (5, 2), (1, 0), (5, 1),
-            (6, 1), (6, 0), (7, 0), (8, 0), (10, 1), (14, 0), (16, 1), (13, 3), (14, 3)
-        ]);
+        dbg!(grid.asteroids_sorted_by_angle());
+        assert!(false);
+
+        // assert_eq!(grid.destroy_order(), vec![
+        //     (8, 1), (9, 0), (9, 1), (10, 0), (9, 2), (11, 1), (12, 1), (11, 2), (15, 1),
+        //     (12, 2), (13, 2), (14, 2), (15, 2), (12, 3), (16, 4), (15, 4), (10, 4), (4, 4),
+        //     (2, 4), (2, 3), (0, 2), (1, 2), (0, 1), (1, 1), (5, 2), (1, 0), (5, 1),
+        //     (6, 1), (6, 0), (7, 0), (8, 0), (10, 1), (14, 0), (16, 1), (13, 3), (14, 3)
+        // ]);
     }
 
     #[test]
