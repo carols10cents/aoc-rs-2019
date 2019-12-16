@@ -13,6 +13,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut computer = Computer::new(program);
     computer.run();
 
+    println!("num painted: {}", computer.painted_panels.len());
+
     Ok(())
 }
 
