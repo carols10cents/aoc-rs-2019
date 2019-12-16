@@ -97,8 +97,8 @@ impl fmt::Display for Computer {
         let y_min = y_coords.min().expect("must be a min");
         let y_max = y_coords.max().expect("must be a max");
 
-        for y in (y_min..=y_max) {
-            for x in (x_min..=x_max) {
+        for y in y_min..=y_max {
+            for x in x_min..=x_max {
                 if self.white_panels.contains(&(x, y)) {
                     write!(f, "□");
                 } else {
