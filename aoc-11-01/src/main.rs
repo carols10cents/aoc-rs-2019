@@ -28,10 +28,38 @@ enum Direction {
     Down,
 }
 
+impl Direction {
+    fn next(&self, turn_direction: TurnDirection) -> Direction {
+        match turn_direction {
+            TurnDirection::Left => {
+                match self {
+                    Direction::Left => Direction::Down,
+                    Direction::Down => Direction::Right,
+                    Direction::Right => Direction::Up,
+                    Direction::Up => Direction::Left,
+                }
+            }
+            TurnDirection::Right => {
+                match self {
+                    Direction::Left => Direction::Up,
+                    Direction::Down => Direction::Left,
+                    Direction::Right => Direction::Down,
+                    Direction::Up => Direction::Right,
+                }
+            }
+        }
+    }
+}
+
 #[derive(PartialEq)]
 enum OutputMode {
     Paint,
     Turn,
+}
+
+enum TurnDirection {
+    Left = 0,
+    Right = 1,
 }
 
 struct Computer {
@@ -110,6 +138,15 @@ impl Computer {
                     let printing_value = self.get_value(0);
 
                     if self.output_mode == OutputMode::Paint {
+                        self.painted_panels.insert(&self.location);
+
+                        let paint_color = printing_value as Color;
+
+                        if paint_color == Color::White {
+                            self.white_panels.insert(&self.location);
+                        } else {
+                            self.white_panels.remove(&self.location);
+                        }
 
                         self.output_mode = OutputMode::Turn;
                     } else {
