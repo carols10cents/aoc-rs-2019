@@ -106,6 +106,8 @@ impl fmt::Display for Computer {
                 }
             }
         }
+
+        Ok(())
     }
 }
 
