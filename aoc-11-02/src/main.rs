@@ -100,7 +100,7 @@ impl fmt::Display for Computer {
         for y in y_min..=y_max {
             for x in x_min..=x_max {
                 if self.white_panels.contains(&(x, y)) {
-                    write!(f, "□")?;
+                    write!(f, "█")?;
                 } else {
                     write!(f, " ")?;
                 }
