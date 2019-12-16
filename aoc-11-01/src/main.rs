@@ -28,6 +28,7 @@ enum Direction {
     Down,
 }
 
+#[derive(PartialEq)]
 enum OutputMode {
     Paint,
     Turn,
