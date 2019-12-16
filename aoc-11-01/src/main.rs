@@ -22,6 +22,16 @@ enum Color {
     White = 1,
 }
 
+impl From<i64> for Color {
+    fn from(val: i64) -> Color {
+        match val {
+            0 => Color::Black,
+            1 => Color::White,
+            other => panic!("Unknown color: {}", other),
+        }
+    }
+}
+
 enum Direction {
     Left,
     Right,
@@ -141,7 +151,7 @@ impl Computer {
                     if self.output_mode == OutputMode::Paint {
                         self.painted_panels.insert(self.location);
 
-                        let paint_color = printing_value as Color;
+                        let paint_color: Color = printing_value.into();
 
                         if paint_color == Color::White {
                             self.white_panels.insert(self.location);
