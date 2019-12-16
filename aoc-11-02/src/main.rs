@@ -127,7 +127,7 @@ impl Computer {
         let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
 
         let mut white_panels = HashSet::new();
-        white_panels.insert(0, 0);
+        white_panels.insert((0, 0));
 
         Computer {
             program,
