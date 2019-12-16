@@ -89,11 +89,11 @@ impl From<i64> for TurnDirection {
 impl fmt::Display for Computer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 
-        let x_coords = white_panels.iter().map(|&(x, _)| x);
+        let x_coords = self.white_panels.iter().map(|&(x, _)| x);
         let x_min = x_coords.min();
         let x_max = x_coords.max();
 
-        let y_coords = white_panels.iter().map(|&(_, y)| y);
+        let y_coords = self.white_panels.iter().map(|&(_, y)| y);
         let y_min = y_coords.min();
         let y_max = y_coords.max();
 
