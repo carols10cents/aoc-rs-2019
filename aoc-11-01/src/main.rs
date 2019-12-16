@@ -73,6 +73,17 @@ enum TurnDirection {
     Right = 1,
 }
 
+impl From<i64> for TurnDirection {
+    fn from(val: i64) -> TurnDirection {
+        match val {
+            0 => TurnDirection::Left,
+            1 => TurnDirection::Right,
+            other => panic!("Unknown TurnDirection: {}", other),
+        }
+    }
+}
+
+
 struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
@@ -121,6 +132,17 @@ impl Computer {
         if self.white_panels.contains(&self.location) { Color::White } else { Color::Black }
     }
 
+    fn move_one(&mut self) {
+        let (mut current_x, mut current_y) = self.location;
+        match self.direction {
+            Direction::Up => current_y -= 1,
+            Direction::Down => current_y += 1,
+            Direction::Left => current_x -= 1,
+            Direction::Right => current_x += 1,
+        }
+        self.location = (current_x, current_y);
+    }
+
     fn run(&mut self) {
         let mut current_inst = self.current_instruction();
 
@@ -161,6 +183,11 @@ impl Computer {
 
                         self.output_mode = OutputMode::Turn;
                     } else {
+                        let turn_dir: TurnDirection = printing_value.into();
+                        let new_direction = self.direction.next(turn_dir);
+                        self.direction = new_direction;
+
+                        self.move_one();
 
                         self.output_mode = OutputMode::Paint;
                     }
