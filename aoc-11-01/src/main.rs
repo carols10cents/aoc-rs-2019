@@ -144,7 +144,7 @@ impl Computer {
                         let paint_color = printing_value as Color;
 
                         if paint_color == Color::White {
-                            self.white_panels.insert(&self.location);
+                            self.white_panels.insert(self.location);
                         } else {
                             self.white_panels.remove(&self.location);
                         }
