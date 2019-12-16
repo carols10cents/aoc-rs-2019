@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fs;
 use std::collections::{HashMap, HashSet};
+use std::fmt;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -13,7 +14,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut computer = Computer::new(program);
     computer.run();
 
-    println!("num painted: {}", computer.painted_panels.len());
+    println!("{}", computer);
 
     Ok(())
 }
@@ -85,6 +86,30 @@ impl From<i64> for TurnDirection {
     }
 }
 
+impl fmt::Display for Computer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
+        let x_coords = white_panels.iter().map(|&(x, _)| x);
+        let x_min = x_coords.min();
+        let x_max = x_coords.max();
+
+        let y_coords = white_panels.iter().map(|&(_, y)| y);
+        let y_min = y_coords.min();
+        let y_max = y_coords.max();
+
+        for y in (y_min..=y_max) {
+            for x in (x_min..=x_max) {
+                if self.white_panels.contains(&(x, y)) {
+                    write!(f, "□");
+                } else {
+                    write!(f, " ");
+                }
+            }
+        }
+
+        write!(f, )
+    }
+}
 
 struct Computer {
     program: HashMap<usize, i64>,
@@ -101,13 +126,16 @@ impl Computer {
     fn new(program: Vec<i64>) -> Computer {
         let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
 
+        let mut white_panels = HashSet::new();
+        white_panels.insert(0, 0);
+
         Computer {
             program,
             current_position: 0,
             relative_base: 0,
             direction: Direction::Up,
             location: (0, 0),
-            white_panels: HashSet::new(),
+            white_panels,
             painted_panels: HashSet::new(),
             output_mode: OutputMode::Paint,
         }
