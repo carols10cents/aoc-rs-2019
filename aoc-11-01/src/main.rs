@@ -171,6 +171,59 @@ fn instruction(mut full_opcode: i64) -> Instruction {
     Instruction { opcode, modes }
 }
 
+fn get_value(
+    program: &HashMap<usize, i64>,
+    instruction_pointer: usize,
+    inst: &Instruction,
+    parameter_index: usize,
+    relative_base: usize,
+) -> i64 {
+    let parameter_location = instruction_pointer + parameter_index + 1;
+
+    match inst.mode(parameter_index) {
+        Mode::Position => {
+            let position = program.get(&parameter_location).copied().unwrap_or(0) as usize;
+            program.get(&position).copied().unwrap_or(0)
+        },
+        Mode::Immediate => program.get(&parameter_location).copied().unwrap_or(0),
+        Mode::Relative => {
+            let offset = program.get(&parameter_location).copied().unwrap_or(0);
+            let memory_location = offset + relative_base as i64;
+            if memory_location < 0 {
+                panic!("Cannot access memory at {}", memory_location);
+            }
+            program.get(&(memory_location as usize)).copied().unwrap_or(0)
+        },
+    }
+}
+
+fn set_value(
+    program: &mut HashMap<usize, i64>,
+    instruction_pointer: usize,
+    inst: &Instruction,
+    parameter_index: usize,
+    relative_base: usize,
+    value: i64,
+) {
+    let parameter_location = instruction_pointer + parameter_index + 1;
+
+    match inst.mode(parameter_index) {
+        Mode::Position => {
+            let position = program.get(&parameter_location).copied().unwrap_or(0) as usize;
+            program.insert(position, value);
+        },
+        Mode::Immediate => unreachable!("Can't set values in immediate mode"),
+        Mode::Relative => {
+            let offset = program.get(&parameter_location).copied().unwrap_or(0);
+            let memory_location = offset + relative_base as i64;
+            if memory_location < 0 {
+                panic!("Cannot access memory at {}", memory_location);
+            }
+            program.insert(memory_location as usize, value);
+        },
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -367,58 +420,5 @@ mod tests {
             output,
             vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]
         );
-    }
-}
-
-fn get_value(
-    program: &HashMap<usize, i64>,
-    instruction_pointer: usize,
-    inst: &Instruction,
-    parameter_index: usize,
-    relative_base: usize,
-) -> i64 {
-    let parameter_location = instruction_pointer + parameter_index + 1;
-
-    match inst.mode(parameter_index) {
-        Mode::Position => {
-            let position = program.get(&parameter_location).copied().unwrap_or(0) as usize;
-            program.get(&position).copied().unwrap_or(0)
-        },
-        Mode::Immediate => program.get(&parameter_location).copied().unwrap_or(0),
-        Mode::Relative => {
-            let offset = program.get(&parameter_location).copied().unwrap_or(0);
-            let memory_location = offset + relative_base as i64;
-            if memory_location < 0 {
-                panic!("Cannot access memory at {}", memory_location);
-            }
-            program.get(&(memory_location as usize)).copied().unwrap_or(0)
-        },
-    }
-}
-
-fn set_value(
-    program: &mut HashMap<usize, i64>,
-    instruction_pointer: usize,
-    inst: &Instruction,
-    parameter_index: usize,
-    relative_base: usize,
-    value: i64,
-) {
-    let parameter_location = instruction_pointer + parameter_index + 1;
-
-    match inst.mode(parameter_index) {
-        Mode::Position => {
-            let position = program.get(&parameter_location).copied().unwrap_or(0) as usize;
-            program.insert(position, value);
-        },
-        Mode::Immediate => unreachable!("Can't set values in immediate mode"),
-        Mode::Relative => {
-            let offset = program.get(&parameter_location).copied().unwrap_or(0);
-            let memory_location = offset + relative_base as i64;
-            if memory_location < 0 {
-                panic!("Cannot access memory at {}", memory_location);
-            }
-            program.insert(memory_location as usize, value);
-        },
     }
 }
