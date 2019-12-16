@@ -10,8 +10,8 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let (_answer, output) = Computer::new(program).run();
-    println!("{:?}", output);
+    let computer = Computer::new(program);
+    computer.run();
 
     Ok(())
 }
@@ -30,7 +30,6 @@ enum Direction {
 
 struct Computer {
     program: HashMap<usize, i64>,
-    output: Vec<i64>,
     current_position: usize,
     relative_base: usize,
     direction: Direction,
@@ -45,7 +44,6 @@ impl Computer {
 
         Computer {
             program,
-            output: vec![],
             current_position: 0,
             relative_base: 0,
             direction: Direction::Up,
@@ -76,7 +74,7 @@ impl Computer {
         if self.white_panels.contains(&self.location) { Color::White } else { Color::Black }
     }
 
-    fn run(&mut self) -> (HashMap<usize, i64>, Vec<i64>) {
+    fn run(&mut self) {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -102,7 +100,7 @@ impl Computer {
                 }
                 4 => {
                     let printing_value = self.get_value(0);
-                    self.output.push(printing_value);
+
                     self.current_position += 2;
                 }
                 5 => {
@@ -152,8 +150,6 @@ impl Computer {
             }
             current_inst = self.current_instruction();
         }
-
-        (self.program.clone(), self.output.clone())
     }
 }
 
@@ -256,14 +252,18 @@ mod tests {
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&0], 99);
     }
 
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&0], 2);
         assert_eq!(answer[&4], 99);
     }
@@ -271,21 +271,27 @@ mod tests {
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&3], 6);
     }
 
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&5], 9801);
     }
 
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&0], 30);
         assert_eq!(answer[&4], 2);
     }
@@ -293,62 +299,39 @@ mod tests {
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&0], Color::Black as i64);
-    }
-
-    #[test]
-    fn opcode_4_returns_output() {
-        let program = vec![4, 2, 99];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![99]);
-    }
-
-    #[test]
-    fn opcode_5_jumps_if_true() {
-        // Test value is false; 42 gets printed
-        let program = vec![1005, 6, 5, 104, 42, 99, 0];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![42]);
-
-        // Test value is true; print gets jumped over
-        let program = vec![1005, 6, 5, 104, 42, 99, 3];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![]);
-    }
-
-    #[test]
-    fn opcode_6_jumps_if_false() {
-        // Test value is false; print gets jumped over
-        let program = vec![1006, 6, 5, 104, 42, 99, 0];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![]);
-
-        // Test value is true; 42 gets printed
-        let program = vec![1006, 6, 5, 104, 42, 99, 3];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![42]);
     }
 
     #[test]
     fn opcode_7_less_than() {
         let program = vec![1107, 4, 5, 3, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&3], 1);
 
         let program = vec![1107, 5, 4, 3, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&3], 0);
     }
 
     #[test]
     fn opcode_8_equals() {
         let program = vec![1108, 4, 4, 3, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&3], 1);
 
         let program = vec![1108, 5, 4, 3, 99];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&3], 0);
     }
 
@@ -397,7 +380,9 @@ mod tests {
     #[test]
     fn use_parameter_modes_in_programs() {
         let program = vec![1002, 4, 3, 4, 33];
-        let (answer, _output) = Computer::new(program).run();
+        let computer = Computer::new(program);
+        computer.run();
+        let answer = computer.program;
         assert_eq!(answer[&4], 99);
     }
 
@@ -425,25 +410,5 @@ mod tests {
         program.insert(3, -1);
         let inst = instruction(*program.get(&2).unwrap());
         assert_eq!(get_value(&program, 2, &inst, 0, 1), 109);
-    }
-
-    #[test]
-    fn stress_tests() {
-        let program = vec![1102, 34915192, 34915192, 7, 4, 7, 99, 0];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![1219070632396864]);
-
-        let program = vec![104, 1125899906842624, 99];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(output, vec![1125899906842624]);
-
-        let program = vec![
-            109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99,
-        ];
-        let (_answer, output) = Computer::new(program).run();
-        assert_eq!(
-            output,
-            vec![109, 1, 204, -1, 1001, 100, 1, 100, 1008, 100, 16, 101, 1006, 101, 0, 99]
-        );
     }
 }
