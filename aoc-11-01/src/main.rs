@@ -10,7 +10,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let computer = Computer::new(program);
+    let mut computer = Computer::new(program);
     computer.run();
 
     Ok(())
@@ -252,7 +252,7 @@ mod tests {
     #[test]
     fn opcode_99_ends() {
         let program = vec![99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&0], 99);
@@ -261,7 +261,7 @@ mod tests {
     #[test]
     fn opcode_1_adds() {
         let program = vec![1, 0, 0, 0, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&0], 2);
@@ -271,7 +271,7 @@ mod tests {
     #[test]
     fn opcode_2_multiplies() {
         let program = vec![2, 3, 0, 3, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&3], 6);
@@ -280,7 +280,7 @@ mod tests {
     #[test]
     fn multiply_and_store_after_program() {
         let program = vec![2, 4, 4, 5, 99, 0];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&5], 9801);
@@ -289,7 +289,7 @@ mod tests {
     #[test]
     fn program_keeps_going_if_an_instruction_changes() {
         let program = vec![1, 1, 1, 4, 99, 5, 6, 0, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&0], 30);
@@ -299,7 +299,7 @@ mod tests {
     #[test]
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&0], Color::Black as i64);
@@ -308,13 +308,13 @@ mod tests {
     #[test]
     fn opcode_7_less_than() {
         let program = vec![1107, 4, 5, 3, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&3], 1);
 
         let program = vec![1107, 5, 4, 3, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&3], 0);
@@ -323,13 +323,13 @@ mod tests {
     #[test]
     fn opcode_8_equals() {
         let program = vec![1108, 4, 4, 3, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&3], 1);
 
         let program = vec![1108, 5, 4, 3, 99];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&3], 0);
@@ -380,7 +380,7 @@ mod tests {
     #[test]
     fn use_parameter_modes_in_programs() {
         let program = vec![1002, 4, 3, 4, 33];
-        let computer = Computer::new(program);
+        let mut computer = Computer::new(program);
         computer.run();
         let answer = computer.program;
         assert_eq!(answer[&4], 99);
