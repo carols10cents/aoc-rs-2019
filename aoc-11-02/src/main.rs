@@ -105,6 +105,7 @@ impl fmt::Display for Computer {
                     write!(f, " ")?;
                 }
             }
+            write!(f, "\n")?;
         }
 
         Ok(())
