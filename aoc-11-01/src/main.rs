@@ -28,6 +28,11 @@ enum Direction {
     Down,
 }
 
+enum OutputMode {
+    Paint,
+    Turn,
+}
+
 struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
@@ -36,6 +41,7 @@ struct Computer {
     location: (i64, i64),
     white_panels: HashSet<(i64, i64)>,
     painted_panels: HashSet<(i64, i64)>,
+    output_mode: OutputMode,
 }
 
 impl Computer {
@@ -50,6 +56,7 @@ impl Computer {
             location: (0, 0),
             white_panels: HashSet::new(),
             painted_panels: HashSet::new(),
+            output_mode: OutputMode::Paint,
         }
     }
 
@@ -100,6 +107,14 @@ impl Computer {
                 }
                 4 => {
                     let printing_value = self.get_value(0);
+
+                    if self.output_mode == OutputMode::Paint {
+
+                        self.output_mode = OutputMode::Turn;
+                    } else {
+
+                        self.output_mode = OutputMode::Paint;
+                    }
 
                     self.current_position += 2;
                 }
