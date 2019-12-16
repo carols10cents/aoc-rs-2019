@@ -16,6 +16,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+#[derive(PartialEq)]
 enum Color {
     Black = 0,
     White = 1,
