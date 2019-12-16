@@ -17,6 +17,11 @@ fn main() -> Result<(), Box<dyn Error>> {
     Ok(())
 }
 
+enum Color {
+    Black = 0,
+    White = 1,
+}
+
 struct Computer {
     program: HashMap<usize, i64>,
     output: Vec<i64>,
@@ -55,6 +60,10 @@ impl Computer {
         self.program.get(&index).copied().unwrap_or(0)
     }
 
+    fn current_square_color(&self) -> Color {
+        Color::Black
+    }
+
     fn run(&mut self) -> (HashMap<usize, i64>, Vec<i64>) {
         let mut current_inst = self.current_instruction();
 
@@ -75,7 +84,7 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    let value = self.input.expect("Should have had input for opcode 3");
+                    let value = self.current_square_color() as i64;
                     self.set_value(0, value);
                     self.current_position += 2;
                 }
@@ -273,7 +282,7 @@ mod tests {
     fn opcode_3_takes_input() {
         let program = vec![3, 0, 99];
         let (answer, _output) = Computer::new(program, Some(7)).run();
-        assert_eq!(answer[&0], 7);
+        assert_eq!(answer[&0], Color::Black as i64);
     }
 
     #[test]
