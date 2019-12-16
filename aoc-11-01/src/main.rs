@@ -1,6 +1,6 @@
 use std::error::Error;
 use std::fs;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -21,11 +21,22 @@ enum Color {
     White = 1,
 }
 
+enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+
 struct Computer {
     program: HashMap<usize, i64>,
     output: Vec<i64>,
     current_position: usize,
     relative_base: usize,
+    direction: Direction,
+    location: (i64, i64),
+    white_panels: HashSet<(i64, i64)>,
+    painted_panels: HashSet<(i64, i64)>,
 }
 
 impl Computer {
@@ -37,6 +48,10 @@ impl Computer {
             output: vec![],
             current_position: 0,
             relative_base: 0,
+            direction: Direction::Up,
+            location: (0, 0),
+            white_panels: HashSet::new(),
+            painted_panels: HashSet::new(),
         }
     }
 
@@ -58,7 +73,7 @@ impl Computer {
     }
 
     fn current_square_color(&self) -> Color {
-        Color::Black
+        if self.white_panels.contains(&self.location) { Color::White } else { Color::Black }
     }
 
     fn run(&mut self) -> (HashMap<usize, i64>, Vec<i64>) {
