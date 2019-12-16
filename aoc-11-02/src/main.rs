@@ -106,8 +106,6 @@ impl fmt::Display for Computer {
                 }
             }
         }
-
-        write!(f, )
     }
 }
 
