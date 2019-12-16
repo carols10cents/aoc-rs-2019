@@ -138,7 +138,7 @@ impl Computer {
                     let printing_value = self.get_value(0);
 
                     if self.output_mode == OutputMode::Paint {
-                        self.painted_panels.insert(&self.location);
+                        self.painted_panels.insert(self.location);
 
                         let paint_color = printing_value as Color;
 
