@@ -2,6 +2,7 @@ fn main() {
     println!("Hello, world!");
 }
 
+#[derive(Clone)]
 struct Moon {
     x: i32,
     y: i32,
@@ -23,14 +24,19 @@ impl Moon {
         }
     }
 
-    fn apply_gravity(&mut self) {}
+    fn apply_gravity(&mut self, moons: &[Moon]) {
+        for moon in moons {
+        }
+    }
 
     fn apply_velocity(&mut self) {}
 }
 
 fn time_step(moons: &mut [Moon], time: i32) -> i32 {
+    let immutable_moons: Vec<_> = moons.iter().cloned().collect();
+
     for moon in moons.iter_mut() {
-        moon.apply_gravity();
+        moon.apply_gravity(&immutable_moons);
     }
 
     for moon in moons.iter_mut() {
