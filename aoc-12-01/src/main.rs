@@ -28,7 +28,7 @@ impl Moon {
     fn apply_velocity(&mut self) {}
 }
 
-fn time_step(moons: &mut [Moon]) {
+fn time_step(moons: &mut [Moon], time: i32) -> i32 {
     for moon in moons.iter_mut() {
         moon.apply_gravity();
     }
@@ -36,4 +36,6 @@ fn time_step(moons: &mut [Moon]) {
     for moon in moons.iter_mut() {
         moon.apply_velocity();
     }
+
+    time + 1
 }
