@@ -194,5 +194,9 @@ mod tests {
         }
 
         assert_eq!(moons, expected_moons);
+
+        assert_eq!(moons[0].potential_energy(), 6);
+        assert_eq!(moons[0].kinetic_energy(), 6);
+        assert_eq!(moons[0].total_energy(), 36);
     }
 }
