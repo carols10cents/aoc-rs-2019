@@ -26,6 +26,9 @@ impl Moon {
 
     fn apply_gravity(&mut self, moons: &[Moon]) {
         for moon in moons {
+            self.dx =
+            self.dy =
+            self.dz =
         }
     }
 
