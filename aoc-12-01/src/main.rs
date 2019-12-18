@@ -142,4 +142,21 @@ mod tests {
 
         assert_eq!(moons, expected_moons);
     }
+
+    #[test]
+    fn one_step() {
+        let mut moons = parse_moons(
+            "<x=-1, y=0, z=2>\n<x=2, y=-10, z=-7>\n<x=4, y=-8, z=8>\n<x=3, y=5, z=-1>\n",
+        );
+        let expected_moons = vec![
+            Moon { x: 2, y: -1, z: 1, dx: 3, dy: -1, dz: -1 },
+            Moon { x: 3, y: -7, z: -4, dx: 1, dy: 3, dz: 3 },
+            Moon { x: 1, y: -7, z: 5, dx: -3, dy: 1, dz: -3 },
+            Moon { x: 2, y: 2, z: 0, dx: -1, dy: -3, dz: 1 },
+        ];
+
+        time_step(&mut moons, 0);
+
+        assert_eq!(moons, expected_moons);
+    }
 }
