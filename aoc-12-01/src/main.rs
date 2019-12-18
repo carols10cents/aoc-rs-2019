@@ -103,7 +103,7 @@ impl Moon {
     }
 
     fn kinetic_energy(&self) -> i32 {
-        0
+        self.dx.abs() + self.dy.abs() + self.dz.abs()
     }
 }
 
