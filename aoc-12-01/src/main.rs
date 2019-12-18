@@ -1,7 +1,16 @@
 use std::cmp::Ordering;
 
 fn main() {
-    println!("Hello, world!");
+    let mut moons = parse_moons(include_str!("../input"));
+
+    let mut time = 0;
+    while time < 1000 {
+        time = time_step(&mut moons, time);
+    }
+
+    let total = total_energy(&moons);
+
+    println!("Total energy = {}", total);
 }
 
 #[derive(Clone, Debug, PartialEq)]
