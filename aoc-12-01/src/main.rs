@@ -137,7 +137,7 @@ fn parse_moons(text: &str) -> Vec<Moon> {
 }
 
 fn total_energy(moons: &[Moon]) -> i32 {
-    0
+    moons.iter().map(|moon| moon.total_energy()).sum()
 }
 
 #[cfg(test)]
@@ -198,5 +198,7 @@ mod tests {
         assert_eq!(moons[0].potential_energy(), 6);
         assert_eq!(moons[0].kinetic_energy(), 6);
         assert_eq!(moons[0].total_energy(), 36);
+
+        assert_eq!(total_energy(&moons), 179);
     }
 }
