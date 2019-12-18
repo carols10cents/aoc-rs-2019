@@ -99,7 +99,7 @@ impl Moon {
     }
 
     fn potential_energy(&self) -> i32 {
-        0
+        self.x.abs() + self.y.abs() + self.z.abs()
     }
 
     fn kinetic_energy(&self) -> i32 {
