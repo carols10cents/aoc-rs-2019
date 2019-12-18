@@ -34,7 +34,11 @@ impl Moon {
         }
     }
 
-    fn apply_velocity(&mut self) {}
+    fn apply_velocity(&mut self) {
+        self.x += self.dx;
+        self.y += self.dy;
+        self.z += self.dz;
+    }
 }
 
 fn gravity_adjustment(current_coordinate: i32, other_coordinate: i32) -> i32 {
