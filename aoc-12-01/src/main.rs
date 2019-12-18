@@ -93,6 +93,18 @@ impl Moon {
         self.y += self.dy;
         self.z += self.dz;
     }
+
+    fn total_energy(&self) -> i32 {
+        self.potential_energy() * self.kinetic_energy()
+    }
+
+    fn potential_energy(&self) -> i32 {
+        0
+    }
+
+    fn kinetic_energy(&self) -> i32 {
+        0
+    }
 }
 
 fn gravity_adjustment(current_coordinate: i32, other_coordinate: i32) -> i32 {
