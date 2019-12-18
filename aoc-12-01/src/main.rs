@@ -124,6 +124,10 @@ fn parse_moons(text: &str) -> Vec<Moon> {
         .collect()
 }
 
+fn total_energy(moons: &[Moon]) -> i32 {
+    0
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
