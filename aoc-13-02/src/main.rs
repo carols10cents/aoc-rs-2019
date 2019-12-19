@@ -14,11 +14,12 @@ fn main() -> Result<(), Box<dyn Error>> {
     computer.run();
 
     println!("{}", computer.num_blocks());
+    println!("{:?}", computer.screen);
 
     Ok(())
 }
 
-#[derive(PartialEq, Copy, Clone)]
+#[derive(PartialEq, Copy, Clone, Debug)]
 enum Tile {
     Empty = 0,
     Wall = 1,
