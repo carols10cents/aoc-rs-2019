@@ -1,6 +1,7 @@
 use std::error::Error;
 use std::fs;
 use std::collections::HashMap;
+use std::fmt;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -14,7 +15,6 @@ fn main() -> Result<(), Box<dyn Error>> {
     computer.run();
 
     println!("{}", computer.num_blocks());
-    println!("{:?}", computer.screen);
 
     Ok(())
 }
@@ -80,7 +80,7 @@ impl Computer {
             screen: HashMap::new(),
             output_x: None,
             output_y: None,
-            joystick: Joystick::Right,
+            joystick: Joystick::Neutral,
         }
     }
 
@@ -125,6 +125,7 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
+                    println!("{}\n\n", self);
                     let value = self.joystick as i64;
                     self.set_value(0, value);
                     self.current_position += 2;
@@ -202,6 +203,34 @@ impl Computer {
             }
             current_inst = self.current_instruction();
         }
+    }
+}
+
+impl fmt::Display for Computer {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+
+        let x_coords = self.screen.keys().map(|&(x, _)| x);
+        let x_min = x_coords.clone().min().expect("must be a min");
+        let x_max = x_coords.max().expect("must be a max");
+
+        let y_coords = self.screen.keys().map(|&(_, y)| y);
+        let y_min = y_coords.clone().min().expect("must be a min");
+        let y_max = y_coords.max().expect("must be a max");
+
+        for y in y_min..=y_max {
+            for x in x_min..=x_max {
+                match self.screen.get(&(x, y)) {
+                    None | Some(Tile::Empty) => write!(f, " ")?,
+                    Some(Tile::Wall) => write!(f, "█")?,
+                    Some(Tile::Block) => write!(f, "□")?,
+                    Some(Tile::Paddle) => write!(f, "_")?,
+                    Some(Tile::Ball) => write!(f, "o")?,
+                }
+            }
+            write!(f, "\n")?;
+        }
+
+        Ok(())
     }
 }
 
