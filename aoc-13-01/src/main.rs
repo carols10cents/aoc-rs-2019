@@ -1,7 +1,6 @@
 use std::error::Error;
 use std::fs;
-use std::collections::{HashMap, HashSet};
-use std::fmt;
+use std::collections::HashMap;
 
 fn main() -> Result<(), Box<dyn Error>> {
     let program_input = fs::read_to_string("input")?;
@@ -14,101 +13,30 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut computer = Computer::new(program);
     computer.run();
 
-    println!("{}", computer);
+    println!("{}", computer.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count());
 
     Ok(())
 }
 
-#[derive(PartialEq)]
-enum Color {
-    Black = 0,
-    White = 1,
+#[derive(PartialEq, Copy, Clone)]
+enum Tile {
+    Empty = 0,
+    Wall = 1,
+    Block = 2,
+    Paddle = 3,
+    Ball = 4,
 }
 
-impl From<i64> for Color {
-    fn from(val: i64) -> Color {
+impl From<i64> for Tile {
+    fn from(val: i64) -> Self {
         match val {
-            0 => Color::Black,
-            1 => Color::White,
-            other => panic!("Unknown color: {}", other),
+            0 => Tile::Empty,
+            1 => Tile::Wall,
+            2 => Tile::Block,
+            3 => Tile::Paddle,
+            4 => Tile::Ball,
+            other => panic!("Unknown tile: {}", other),
         }
-    }
-}
-
-enum Direction {
-    Left,
-    Right,
-    Up,
-    Down,
-}
-
-impl Direction {
-    fn next(&self, turn_direction: TurnDirection) -> Direction {
-        match turn_direction {
-            TurnDirection::Left => {
-                match self {
-                    Direction::Left => Direction::Down,
-                    Direction::Down => Direction::Right,
-                    Direction::Right => Direction::Up,
-                    Direction::Up => Direction::Left,
-                }
-            }
-            TurnDirection::Right => {
-                match self {
-                    Direction::Left => Direction::Up,
-                    Direction::Down => Direction::Left,
-                    Direction::Right => Direction::Down,
-                    Direction::Up => Direction::Right,
-                }
-            }
-        }
-    }
-}
-
-#[derive(PartialEq)]
-enum OutputMode {
-    Paint,
-    Turn,
-}
-
-enum TurnDirection {
-    Left = 0,
-    Right = 1,
-}
-
-impl From<i64> for TurnDirection {
-    fn from(val: i64) -> TurnDirection {
-        match val {
-            0 => TurnDirection::Left,
-            1 => TurnDirection::Right,
-            other => panic!("Unknown TurnDirection: {}", other),
-        }
-    }
-}
-
-impl fmt::Display for Computer {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-
-        let x_coords = self.white_panels.iter().map(|&(x, _)| x);
-        let x_min = x_coords.clone().min().expect("must be a min");
-        let x_max = x_coords.max().expect("must be a max");
-
-        let y_coords = self.white_panels.iter().map(|&(_, y)| y);
-        let y_min = y_coords.clone().min().expect("must be a min");
-        let y_max = y_coords.max().expect("must be a max");
-
-        for y in y_min..=y_max {
-            for x in x_min..=x_max {
-                if self.white_panels.contains(&(x, y)) {
-                    write!(f, "█")?;
-                } else {
-                    write!(f, " ")?;
-                }
-            }
-            write!(f, "\n")?;
-        }
-
-        Ok(())
     }
 }
 
@@ -116,29 +44,18 @@ struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
     relative_base: usize,
-    direction: Direction,
-    location: (i64, i64),
-    white_panels: HashSet<(i64, i64)>,
-    painted_panels: HashSet<(i64, i64)>,
-    output_mode: OutputMode,
+    screen: HashMap<(i64, i64), Tile>,
 }
 
 impl Computer {
     fn new(program: Vec<i64>) -> Computer {
         let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
 
-        let mut white_panels = HashSet::new();
-        white_panels.insert((0, 0));
-
         Computer {
             program,
             current_position: 0,
             relative_base: 0,
-            direction: Direction::Up,
-            location: (0, 0),
-            white_panels,
-            painted_panels: HashSet::new(),
-            output_mode: OutputMode::Paint,
+            screen: HashMap::new(),
         }
     }
 
@@ -157,21 +74,6 @@ impl Computer {
 
     fn read_at(&self, index: usize) -> i64 {
         self.program.get(&index).copied().unwrap_or(0)
-    }
-
-    fn current_square_color(&self) -> Color {
-        if self.white_panels.contains(&self.location) { Color::White } else { Color::Black }
-    }
-
-    fn move_one(&mut self) {
-        let (mut current_x, mut current_y) = self.location;
-        match self.direction {
-            Direction::Up => current_y -= 1,
-            Direction::Down => current_y += 1,
-            Direction::Left => current_x -= 1,
-            Direction::Right => current_x += 1,
-        }
-        self.location = (current_x, current_y);
     }
 
     fn run(&mut self) {
@@ -194,34 +96,13 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    let value = self.current_square_color() as i64;
-                    self.set_value(0, value);
-                    self.current_position += 2;
+                    // let value = self.current_square_color() as i64;
+                    // self.set_value(0, value);
+                    // self.current_position += 2;
+                    unreachable!("The problem didn't specify what input should be!");
                 }
                 4 => {
-                    let printing_value = self.get_value(0);
-
-                    if self.output_mode == OutputMode::Paint {
-                        self.painted_panels.insert(self.location);
-
-                        let paint_color: Color = printing_value.into();
-
-                        if paint_color == Color::White {
-                            self.white_panels.insert(self.location);
-                        } else {
-                            self.white_panels.remove(&self.location);
-                        }
-
-                        self.output_mode = OutputMode::Turn;
-                    } else {
-                        let turn_dir: TurnDirection = printing_value.into();
-                        let new_direction = self.direction.next(turn_dir);
-                        self.direction = new_direction;
-
-                        self.move_one();
-
-                        self.output_mode = OutputMode::Paint;
-                    }
+                    let value = self.get_value(0);
 
                     self.current_position += 2;
                 }
@@ -416,15 +297,6 @@ mod tests {
         let answer = computer.program;
         assert_eq!(answer[&0], 30);
         assert_eq!(answer[&4], 2);
-    }
-
-    #[test]
-    fn opcode_3_takes_input() {
-        let program = vec![3, 0, 99];
-        let mut computer = Computer::new(program);
-        computer.run();
-        let answer = computer.program;
-        assert_eq!(answer[&0], Color::Black as i64);
     }
 
     #[test]
