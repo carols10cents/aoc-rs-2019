@@ -40,6 +40,7 @@ impl From<i64> for Tile {
     }
 }
 
+#[derive(Copy, Clone)]
 enum Joystick {
     Neutral = 0,
     Left = -1,
@@ -64,6 +65,7 @@ struct Computer {
     screen: HashMap<(i64, i64), Tile>,
     output_x: Option<i64>,
     output_y: Option<i64>,
+    joystick: Joystick,
 }
 
 impl Computer {
@@ -77,6 +79,7 @@ impl Computer {
             screen: HashMap::new(),
             output_x: None,
             output_y: None,
+            joystick: Joystick::Neutral,
         }
     }
 
@@ -117,10 +120,9 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    // let value = self.current_square_color() as i64;
-                    // self.set_value(0, value);
-                    // self.current_position += 2;
-                    unreachable!("The problem didn't specify what input should be!");
+                    let value = self.joystick as i64;
+                    self.set_value(0, value);
+                    self.current_position += 2;
                 }
                 4 => {
                     let value = self.get_value(0);
