@@ -45,6 +45,8 @@ struct Computer {
     current_position: usize,
     relative_base: usize,
     screen: HashMap<(i64, i64), Tile>,
+    output_x: Option<i64>,
+    output_y: Option<i64>,
 }
 
 impl Computer {
@@ -56,6 +58,8 @@ impl Computer {
             current_position: 0,
             relative_base: 0,
             screen: HashMap::new(),
+            output_x: None,
+            output_y: None,
         }
     }
 
@@ -103,6 +107,21 @@ impl Computer {
                 }
                 4 => {
                     let value = self.get_value(0);
+
+                    match (self.output_x, self.output_y) {
+                        (None, None) => {
+                            self.output_x = Some(value);
+                        }
+                        (Some(_), None) => {
+                            self.output_y = Some(value);
+                        }
+                        (Some(x), Some(y)) => {
+                            self.screen.insert((x, y), value.into());
+                            self.output_x = None;
+                            self.output_y = None;
+                        }
+                        _ => unreachable!(),
+                    }
 
                     self.current_position += 2;
                 }
