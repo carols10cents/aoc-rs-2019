@@ -40,6 +40,23 @@ impl From<i64> for Tile {
     }
 }
 
+enum Joystick {
+    Neutral = 0,
+    Left = -1,
+    Right = 1,
+}
+
+impl From<i64> for Joystick {
+    fn from(val: i64) -> Self {
+        match val {
+            0 => Joystick::Neutral,
+            -1 => Joystick::Left,
+            1 => Joystick::Right,
+            other => panic!("Unknown joystick: {}", other),
+        }
+    }
+}
+
 struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
