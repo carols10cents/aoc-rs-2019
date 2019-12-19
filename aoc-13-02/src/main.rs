@@ -134,6 +134,11 @@ impl Computer {
                         (Some(_), None) => {
                             self.output_y = Some(value);
                         }
+                        (Some(-1), Some(0)) => {
+                            println!("score = {}", value);
+                            self.output_x = None;
+                            self.output_y = None;
+                        }
                         (Some(x), Some(y)) => {
                             self.screen.insert((x, y), value.into());
                             self.output_x = None;
