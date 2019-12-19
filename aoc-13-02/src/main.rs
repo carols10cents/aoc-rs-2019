@@ -13,7 +13,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut computer = Computer::new(program);
     computer.run();
 
-    println!("{}", computer.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count());
+    println!("{}", computer.num_blocks());
 
     Ok(())
 }
@@ -100,6 +100,10 @@ impl Computer {
         self.program.get(&index).copied().unwrap_or(0)
     }
 
+    fn num_blocks(&self) -> usize {
+        self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
+    }
+
     fn run(&mut self) {
         let mut current_inst = self.current_instruction();
 
@@ -136,6 +140,7 @@ impl Computer {
                         }
                         (Some(-1), Some(0)) => {
                             println!("score = {}", value);
+                            println!("blocks = {}", self.num_blocks());
                             self.output_x = None;
                             self.output_y = None;
                         }
