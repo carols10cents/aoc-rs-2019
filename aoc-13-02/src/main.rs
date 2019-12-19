@@ -79,7 +79,7 @@ impl Computer {
             screen: HashMap::new(),
             output_x: None,
             output_y: None,
-            joystick: Joystick::Left,
+            joystick: Joystick::Right,
         }
     }
 
