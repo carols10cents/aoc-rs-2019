@@ -2,8 +2,20 @@ use std::error::Error;
 use std::fs;
 use std::collections::HashMap;
 use std::fmt;
+use std::convert::TryInto;
+use std::{thread, time::Duration};
+
+use ncurses::*;
 
 fn main() -> Result<(), Box<dyn Error>> {
+    initscr();
+    raw();
+    keypad(stdscr(), true);
+    noecho();
+    clear();
+    curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
+    refresh();
+
     let program_input = fs::read_to_string("input")?;
     let program: Vec<_> = program_input
         .trim()
@@ -14,7 +26,8 @@ fn main() -> Result<(), Box<dyn Error>> {
     let mut computer = Computer::new(program);
     computer.run();
 
-    println!("{}", computer.num_blocks());
+    println!("blocks remaining: {}", computer.num_blocks());
+    println!("score: {}", computer.score);
 
     Ok(())
 }
@@ -26,6 +39,18 @@ enum Tile {
     Block = 2,
     Paddle = 3,
     Ball = 4,
+}
+
+impl Tile {
+    fn as_char(&self) -> char {
+        match self {
+            Tile::Empty => ' ',
+            Tile::Wall => '#',
+            Tile::Block => '*',
+            Tile::Paddle => 'T',
+            Tile::Ball => 'o',
+        }
+    }
 }
 
 impl From<i64> for Tile {
@@ -66,7 +91,7 @@ struct Computer {
     screen: HashMap<(i64, i64), Tile>,
     output_x: Option<i64>,
     output_y: Option<i64>,
-    joystick: Joystick,
+    score: i64,
 }
 
 impl Computer {
@@ -80,7 +105,7 @@ impl Computer {
             screen: HashMap::new(),
             output_x: None,
             output_y: None,
-            joystick: Joystick::Neutral,
+            score: 0,
         }
     }
 
@@ -125,9 +150,30 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    println!("{}\n\n", self);
-                    let value = self.joystick as i64;
-                    self.set_value(0, value);
+                    let direction = getch();
+
+                    // let (mut cx, cy) = self.paddle_location;
+                    // mvaddch(cy.try_into().unwrap(), cx.try_into().unwrap(), ' ' as chtype);
+
+                    let value = match direction {
+                        KEY_LEFT => {
+                            // cx -= 1;
+                            Joystick::Left
+                        },
+                        KEY_RIGHT => {
+                            // cx += 1;
+                            Joystick::Right
+                        },
+                        other => {
+                            Joystick::Neutral
+                        },
+                    };
+
+                    // self.paddle_location = (cx, cy);
+                    // mvaddch(cy.try_into().unwrap(), cx.try_into().unwrap(), Tile::Paddle.as_char() as chtype);
+                    // refresh();
+
+                    self.set_value(0, value as i64);
                     self.current_position += 2;
                 }
                 4 => {
@@ -141,13 +187,25 @@ impl Computer {
                             self.output_y = Some(value);
                         }
                         (Some(-1), Some(0)) => {
-                            println!("score = {}", value);
-                            println!("blocks = {}", self.num_blocks());
+                            self.score = value;
+                            mvprintw(LINES() - 1, 0, format!("score = {}", value).as_ref());
+                            refresh();
+
                             self.output_x = None;
                             self.output_y = None;
                         }
                         (Some(x), Some(y)) => {
-                            self.screen.insert((x, y), value.into());
+                            let tile_value: Tile = value.into();
+                            self.screen.insert((x, y), tile_value);
+                            mvaddch(y.try_into().unwrap(), x.try_into().unwrap(), tile_value.as_char() as chtype);
+                            refresh();
+                            if tile_value == Tile::Ball {
+                                thread::sleep(Duration::from_millis(50));
+                            }
+                            // if tile_value == Tile::Paddle {
+                            //     self.paddle_location = (x, y);
+                            // }
+
                             self.output_x = None;
                             self.output_y = None;
                         }
@@ -203,6 +261,8 @@ impl Computer {
             }
             current_inst = self.current_instruction();
         }
+
+        endwin();
     }
 }
 
