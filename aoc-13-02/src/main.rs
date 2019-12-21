@@ -164,7 +164,7 @@ impl Computer {
                             // cx += 1;
                             Joystick::Right
                         },
-                        other => {
+                        _ => {
                             Joystick::Neutral
                         },
                     };
