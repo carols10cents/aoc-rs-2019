@@ -152,26 +152,17 @@ impl Computer {
                 3 => {
                     let direction = getch();
 
-                    // let (mut cx, cy) = self.paddle_location;
-                    // mvaddch(cy.try_into().unwrap(), cx.try_into().unwrap(), ' ' as chtype);
-
                     let value = match direction {
                         KEY_LEFT => {
-                            // cx -= 1;
                             Joystick::Left
                         },
                         KEY_RIGHT => {
-                            // cx += 1;
                             Joystick::Right
                         },
                         _ => {
                             Joystick::Neutral
                         },
                     };
-
-                    // self.paddle_location = (cx, cy);
-                    // mvaddch(cy.try_into().unwrap(), cx.try_into().unwrap(), Tile::Paddle.as_char() as chtype);
-                    // refresh();
 
                     self.set_value(0, value as i64);
                     self.current_position += 2;
@@ -202,9 +193,6 @@ impl Computer {
                             if tile_value == Tile::Ball {
                                 thread::sleep(Duration::from_millis(50));
                             }
-                            // if tile_value == Tile::Paddle {
-                            //     self.paddle_location = (x, y);
-                            // }
 
                             self.output_x = None;
                             self.output_y = None;
