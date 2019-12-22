@@ -12,6 +12,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     raw();
     keypad(stdscr(), true);
     noecho();
+    halfdelay(2);
     clear();
     curs_set(CURSOR_VISIBILITY::CURSOR_INVISIBLE);
     refresh();
