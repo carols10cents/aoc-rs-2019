@@ -1,11 +1,11 @@
-import { Computer } from "aoc-13-02";
+import { Screen } from "aoc-13-02";
 
 const pre = document.getElementById("breakout-canvas");
-const computer = Computer.new();
+const screen = Screen.new();
 
 const renderLoop = () => {
-  pre.textContent = computer.render();
-  computer.run();
+  pre.textContent = screen.render();
+  screen.run();
 
   requestAnimationFrame(renderLoop);
 };

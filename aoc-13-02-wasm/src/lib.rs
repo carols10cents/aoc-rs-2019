@@ -59,23 +59,74 @@ impl From<i64> for Joystick {
     }
 }
 
+const SCREEN_WIDTH: usize = 36;
+const SCREEN_HEIGHT: usize = 24;
+
 #[wasm_bindgen]
-pub struct Computer {
-    program: HashMap<usize, i64>,
-    current_position: usize,
-    relative_base: usize,
-    screen: HashMap<(i64, i64), Tile>,
-    output_x: Option<i64>,
-    output_y: Option<i64>,
-    pub score: i64,
-    screen_width: usize,
-    screen_height: usize,
-    initial_render_complete: bool,
+pub struct Screen {
+    width: usize,
+    height: usize,
+    data: Vec<Tile>,
+    intcode_computer: Computer,
 }
 
 #[wasm_bindgen]
+impl Screen {
+    pub fn new() -> Screen {
+        Screen {
+            width: SCREEN_WIDTH,
+            height: SCREEN_HEIGHT,
+            data: vec![Tile::Empty; 36 * 24],
+            intcode_computer: Computer::new(),
+        }
+    }
+
+    pub fn run(&mut self) -> bool {
+        self.intcode_computer.run(&mut self.data)
+    }
+
+    pub fn render(&self) -> String {
+        self.to_string()
+    }
+
+    pub fn score(&self) -> i64 {
+        self.intcode_computer.score
+    }
+}
+
+impl fmt::Display for Screen {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        for line in self.data.as_slice().chunks(self.width as usize) {
+            for &tile in line {
+                let symbol = match tile {
+                    Tile::Empty => " ",
+                    Tile::Wall => "█",
+                    Tile::Block => "□",
+                    Tile::Paddle => "_",
+                    Tile::Ball => "o",
+                };
+                write!(f, "{}", symbol)?;
+            }
+            write!(f, "\n")?;
+        }
+
+        Ok(())
+    }
+}
+
+
+struct Computer {
+    program: HashMap<usize, i64>,
+    current_position: usize,
+    relative_base: usize,
+    output_x: Option<i64>,
+    output_y: Option<i64>,
+    score: i64,
+    initial_render_complete: bool,
+}
+
 impl Computer {
-    pub fn new() -> Computer {
+    fn new() -> Computer {
         let program_input = include_str!("../input");
         let program: HashMap<usize, i64> = program_input
             .trim()
@@ -88,17 +139,14 @@ impl Computer {
             program,
             current_position: 0,
             relative_base: 0,
-            screen: HashMap::new(),
             output_x: None,
             output_y: None,
             score: 0,
-            screen_width: 36,
-            screen_height: 24,
             initial_render_complete: false,
         }
     }
 
-    pub fn run(&mut self) -> bool {
+    fn run(&mut self, data: &mut [Tile]) -> bool {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -157,7 +205,10 @@ impl Computer {
                         }
                         (Some(x), Some(y)) => {
                             let tile_value: Tile = value.into();
-                            self.screen.insert((x, y), tile_value);
+
+                            let index = y as usize * SCREEN_WIDTH + x as usize;
+                            data[index] = tile_value;
+
                             self.output_x = None;
                             self.output_y = None;
 
@@ -222,12 +273,7 @@ impl Computer {
 
         return true;
     }
-
-    pub fn render(&self) -> String {
-        self.to_string()
-    }
 }
-
 
 impl Computer {
     fn current_instruction(&self) -> Instruction {
@@ -245,29 +291,6 @@ impl Computer {
 
     fn read_at(&self, index: usize) -> i64 {
         self.program.get(&index).copied().unwrap_or(0)
-    }
-
-    pub fn num_blocks(&self) -> usize {
-        self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
-    }
-}
-
-impl fmt::Display for Computer {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        for y in 0..(self.screen_height as i64) {
-            for x in 0..(self.screen_width as i64) {
-                match self.screen.get(&(x, y)) {
-                    None | Some(Tile::Empty) => write!(f, " ")?,
-                    Some(Tile::Wall) => write!(f, "█")?,
-                    Some(Tile::Block) => write!(f, "□")?,
-                    Some(Tile::Paddle) => write!(f, "_")?,
-                    Some(Tile::Ball) => write!(f, "o")?,
-                }
-            }
-            write!(f, "\n")?;
-        }
-
-        Ok(())
     }
 }
 

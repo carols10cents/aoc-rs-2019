@@ -1,12 +1,11 @@
 fn main() {
-    let mut computer = aoc_13_02::Computer::new();
-    let mut game_over = computer.run();
+    let mut screen = aoc_13_02::Screen::new();
+    let mut game_over = screen.run();
 
     while !game_over {
-        println!("{}", computer);
-        game_over = computer.run();
+        println!("{}", screen);
+        game_over = screen.run();
     }
 
-    println!("blocks remaining: {}", computer.num_blocks());
-    println!("score: {}", computer.score);
+    println!("score: {}", screen.score());
 }
