@@ -74,7 +74,7 @@ pub struct Computer {
 
 #[wasm_bindgen]
 impl Computer {
-    pub fn new(screen_width: usize, screen_height: usize) -> Computer {
+    pub fn new() -> Computer {
         let program_input = include_str!("../input");
         let program: HashMap<usize, i64> = program_input
             .trim()
@@ -91,8 +91,8 @@ impl Computer {
             output_x: None,
             output_y: None,
             score: 0,
-            screen_width,
-            screen_height,
+            screen_width: 36,
+            screen_height: 24,
         }
     }
 

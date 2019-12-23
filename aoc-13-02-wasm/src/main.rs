@@ -1,5 +1,5 @@
 fn main() {
-    let mut computer = aoc_13_02::Computer::new(36, 24);
+    let mut computer = aoc_13_02::Computer::new();
     let mut game_over = computer.run();
 
     while !game_over {
