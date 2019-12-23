@@ -5,8 +5,10 @@ use wasm_bindgen::prelude::*;
 use std::collections::HashMap;
 use std::fmt;
 
-#[derive(PartialEq, Copy, Clone, Debug)]
-enum Tile {
+#[wasm_bindgen]
+#[repr(u8)]
+#[derive(PartialEq, Copy, Clone, Debug, Eq)]
+pub enum Tile {
     Empty = 0,
     Wall = 1,
     Block = 2,
