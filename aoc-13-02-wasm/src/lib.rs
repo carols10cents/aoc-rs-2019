@@ -2,27 +2,8 @@ mod utils;
 
 use wasm_bindgen::prelude::*;
 
-use std::error::Error;
-use std::fs;
 use std::collections::HashMap;
 use std::fmt;
-
-fn main() -> Result<(), Box<dyn Error>> {
-    let program_input = fs::read_to_string("input")?;
-    let program: Vec<_> = program_input
-        .trim()
-        .split(",")
-        .map(|n| n.parse().expect("input should have been a number"))
-        .collect();
-
-    let mut computer = Computer::new(program);
-    computer.run();
-
-    println!("blocks remaining: {}", computer.num_blocks());
-    println!("score: {}", computer.score);
-
-    Ok(())
-}
 
 #[derive(PartialEq, Copy, Clone, Debug)]
 enum Tile {
@@ -76,18 +57,18 @@ impl From<i64> for Joystick {
     }
 }
 
-struct Computer {
+pub struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
     relative_base: usize,
     screen: HashMap<(i64, i64), Tile>,
     output_x: Option<i64>,
     output_y: Option<i64>,
-    score: i64,
+    pub score: i64,
 }
 
 impl Computer {
-    fn new(program: Vec<i64>) -> Computer {
+    pub fn new(program: Vec<i64>) -> Computer {
         let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
 
         Computer {
@@ -118,11 +99,11 @@ impl Computer {
         self.program.get(&index).copied().unwrap_or(0)
     }
 
-    fn num_blocks(&self) -> usize {
+    pub fn num_blocks(&self) -> usize {
         self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
     }
 
-    fn run(&mut self) {
+    pub fn run(&mut self) {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -254,6 +235,8 @@ impl fmt::Display for Computer {
         let y_coords = self.screen.keys().map(|&(_, y)| y);
         let y_min = y_coords.clone().min().expect("must be a min");
         let y_max = y_coords.max().expect("must be a max");
+
+        println!("x min = {}, max = {}. y min = {}, max = {}", x_min, x_max, y_min, y_max);
 
         for y in y_min..=y_max {
             for x in x_min..=x_max {
