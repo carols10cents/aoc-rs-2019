@@ -72,8 +72,14 @@ pub struct Computer {
 }
 
 impl Computer {
-    pub fn new(program: Vec<i64>, screen_width: usize, screen_height: usize) -> Computer {
-        let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
+    pub fn new(screen_width: usize, screen_height: usize) -> Computer {
+        let program_input = include_str!("../input");
+        let program: HashMap<usize, i64> = program_input
+            .trim()
+            .split(",")
+            .map(|n| n.parse().expect("input should have been a number"))
+            .enumerate()
+            .collect();
 
         Computer {
             program,
