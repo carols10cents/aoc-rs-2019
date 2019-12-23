@@ -70,6 +70,7 @@ pub struct Computer {
     pub score: i64,
     screen_width: usize,
     screen_height: usize,
+    initial_render_complete: bool,
 }
 
 #[wasm_bindgen]
@@ -93,6 +94,7 @@ impl Computer {
             score: 0,
             screen_width: 36,
             screen_height: 24,
+            initial_render_complete: false,
         }
     }
 
@@ -159,12 +161,13 @@ impl Computer {
                             self.output_x = None;
                             self.output_y = None;
 
-                            return false;
-
-                            // if tile_value == Tile::Ball {
-                            //     thread::sleep(Duration::from_millis(50));
-                            // }
-
+                            if self.initial_render_complete {
+                                return false;
+                            } else {
+                                if tile_value == Tile::Paddle {
+                                    self.initial_render_complete = true;
+                                }
+                            }
                         }
                         _ => unreachable!(),
                     }
