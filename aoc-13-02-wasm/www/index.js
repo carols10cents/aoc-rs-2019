@@ -1,3 +1,13 @@
-import * as wasm from "aoc-13-02";
+import { Computer } from "aoc-13-02";
 
-wasm.greet();
+const pre = document.getElementById("breakout-canvas");
+const computer = Computer.new();
+
+const renderLoop = () => {
+  pre.textContent = computer.render();
+  computer.run();
+
+  requestAnimationFrame(renderLoop);
+};
+
+requestAnimationFrame(renderLoop);
