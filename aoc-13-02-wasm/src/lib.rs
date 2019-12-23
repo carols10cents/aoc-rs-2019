@@ -59,6 +59,7 @@ impl From<i64> for Joystick {
     }
 }
 
+#[wasm_bindgen]
 pub struct Computer {
     program: HashMap<usize, i64>,
     current_position: usize,
@@ -71,6 +72,7 @@ pub struct Computer {
     screen_height: usize,
 }
 
+#[wasm_bindgen]
 impl Computer {
     pub fn new(screen_width: usize, screen_height: usize) -> Computer {
         let program_input = include_str!("../input");
@@ -92,27 +94,6 @@ impl Computer {
             screen_width,
             screen_height,
         }
-    }
-
-    fn current_instruction(&self) -> Instruction {
-        instruction(self.read_at(self.current_position))
-    }
-
-    fn get_value(&self, parameter_index: usize) -> i64 {
-        get_value(&self.program, self.current_position, &self.current_instruction(), parameter_index, self.relative_base)
-    }
-
-    fn set_value(&mut self, parameter_index: usize, value: i64) {
-        let instruction = self.current_instruction();
-        set_value(&mut self.program, self.current_position, &instruction, parameter_index, self.relative_base, value);
-    }
-
-    fn read_at(&self, index: usize) -> i64 {
-        self.program.get(&index).copied().unwrap_or(0)
-    }
-
-    pub fn num_blocks(&self) -> usize {
-        self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
     }
 
     pub fn run(&mut self) -> bool {
@@ -237,6 +218,34 @@ impl Computer {
         }
 
         return true;
+    }
+
+    pub fn render(&self) -> String {
+        self.to_string()
+    }
+}
+
+
+impl Computer {
+    fn current_instruction(&self) -> Instruction {
+        instruction(self.read_at(self.current_position))
+    }
+
+    fn get_value(&self, parameter_index: usize) -> i64 {
+        get_value(&self.program, self.current_position, &self.current_instruction(), parameter_index, self.relative_base)
+    }
+
+    fn set_value(&mut self, parameter_index: usize, value: i64) {
+        let instruction = self.current_instruction();
+        set_value(&mut self.program, self.current_position, &instruction, parameter_index, self.relative_base, value);
+    }
+
+    fn read_at(&self, index: usize) -> i64 {
+        self.program.get(&index).copied().unwrap_or(0)
+    }
+
+    pub fn num_blocks(&self) -> usize {
+        self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
     }
 }
 
