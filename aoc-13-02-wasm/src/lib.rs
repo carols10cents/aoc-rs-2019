@@ -67,10 +67,12 @@ pub struct Computer {
     output_x: Option<i64>,
     output_y: Option<i64>,
     pub score: i64,
+    screen_width: usize,
+    screen_height: usize,
 }
 
 impl Computer {
-    pub fn new(program: Vec<i64>) -> Computer {
+    pub fn new(program: Vec<i64>, screen_width: usize, screen_height: usize) -> Computer {
         let program: HashMap<usize, i64> = program.into_iter().enumerate().collect();
 
         Computer {
@@ -81,6 +83,8 @@ impl Computer {
             output_x: None,
             output_y: None,
             score: 0,
+            screen_width,
+            screen_height,
         }
     }
 
@@ -229,19 +233,8 @@ impl Computer {
 
 impl fmt::Display for Computer {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-
-        let x_coords = self.screen.keys().map(|&(x, _)| x);
-        let x_min = x_coords.clone().min().expect("must be a min");
-        let x_max = x_coords.max().expect("must be a max");
-
-        let y_coords = self.screen.keys().map(|&(_, y)| y);
-        let y_min = y_coords.clone().min().expect("must be a min");
-        let y_max = y_coords.max().expect("must be a max");
-
-        println!("x min = {}, max = {}. y min = {}, max = {}", x_min, x_max, y_min, y_max);
-
-        for y in y_min..=y_max {
-            for x in x_min..=x_max {
+        for y in 0..(self.screen_height as i64) {
+            for x in 0..(self.screen_width as i64) {
                 match self.screen.get(&(x, y)) {
                     None | Some(Tile::Empty) => write!(f, " ")?,
                     Some(Tile::Wall) => write!(f, "█")?,

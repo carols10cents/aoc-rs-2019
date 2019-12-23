@@ -9,7 +9,7 @@ fn main() -> Result<(), Box<dyn Error>> {
         .map(|n| n.parse().expect("input should have been a number"))
         .collect();
 
-    let mut computer = aoc_13_02::Computer::new(program);
+    let mut computer = aoc_13_02::Computer::new(program, 36, 24);
     computer.run();
     println!("{}", computer);
 
