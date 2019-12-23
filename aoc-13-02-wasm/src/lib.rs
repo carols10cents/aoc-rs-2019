@@ -2,16 +2,6 @@ mod utils;
 
 use wasm_bindgen::prelude::*;
 
-#[wasm_bindgen]
-extern {
-    fn alert(s: &str);
-}
-
-#[wasm_bindgen]
-pub fn greet() {
-    alert("Hello, Advent of Code!");
-}
-
 use std::error::Error;
 use std::fs;
 use std::collections::HashMap;
