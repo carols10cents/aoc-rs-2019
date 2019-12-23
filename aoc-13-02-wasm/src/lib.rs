@@ -115,7 +115,7 @@ impl Computer {
         self.screen.iter().filter(|&(_key, &value)| value == Tile::Block).count()
     }
 
-    pub fn run(&mut self) {
+    pub fn run(&mut self) -> bool {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -156,6 +156,7 @@ impl Computer {
                 }
                 4 => {
                     let value = self.get_value(0);
+                    self.current_position += 2;
 
                     match (self.output_x, self.output_y) {
                         (None, None) => {
@@ -174,18 +175,18 @@ impl Computer {
                         (Some(x), Some(y)) => {
                             let tile_value: Tile = value.into();
                             self.screen.insert((x, y), tile_value);
+                            self.output_x = None;
+                            self.output_y = None;
+
+                            return false;
 
                             // if tile_value == Tile::Ball {
                             //     thread::sleep(Duration::from_millis(50));
                             // }
 
-                            self.output_x = None;
-                            self.output_y = None;
                         }
                         _ => unreachable!(),
                     }
-
-                    self.current_position += 2;
                 }
                 5 => {
                     // jump-if-true
@@ -234,6 +235,8 @@ impl Computer {
             }
             current_inst = self.current_instruction();
         }
+
+        return true;
     }
 }
 
