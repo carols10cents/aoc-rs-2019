@@ -89,6 +89,18 @@ impl Screen {
         self.to_string()
     }
 
+    pub fn width(&self) -> u32 {
+        self.width as u32
+    }
+
+    pub fn height(&self) -> u32 {
+        self.height as u32
+    }
+
+    pub fn tiles(&self) -> *const Tile {
+        self.data.as_ptr()
+    }
+
     pub fn score(&self) -> i64 {
         self.intcode_computer.score
     }
