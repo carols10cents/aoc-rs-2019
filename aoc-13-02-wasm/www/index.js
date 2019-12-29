@@ -10,7 +10,7 @@ const PADDLE_COLOR = "#00CCCC";
 const BALL_COLOR = "#CCCC00";
 
 // Construct the game screen, and get its width and height.
-const game_screen = Screen.new();
+let game_screen = Screen.new();
 const width = game_screen.width();
 const height = game_screen.height();
 
@@ -22,9 +22,9 @@ canvas.width = (CELL_SIZE + 1) * width + 1;
 const ctx = canvas.getContext('2d');
 
 const game_status = document.getElementById("breakout-status");
-var game_started = false;
-var game_over = false;
-var speed = 20;
+let game_started = false;
+let game_over = false;
+let speed = 20;
 
 const renderLoop = () => {
   setTimeout(function () {
@@ -109,6 +109,17 @@ const keyDownHandler = (event) => {
     } else if (event.keyCode === 32 && !game_started) { // space
         game_started = true;
         requestAnimationFrame(renderLoop);
+    } else if (event.keyCode === 32 && game_over) {
+        game_screen = Screen.new();
+        game_started = false;
+        game_over = false;
+
+        game_over = game_screen.run(joystick);
+
+        drawGrid();
+        drawCells();
+        game_status.textContent = "Press space to start";
+
     } else {
         joystick = Joystick.Neutral;
     }
