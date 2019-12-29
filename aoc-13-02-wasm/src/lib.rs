@@ -78,8 +78,8 @@ impl Screen {
         }
     }
 
-    pub fn run(&mut self, joystick: Joystick) -> bool {
-        self.intcode_computer.run(&mut self.data, joystick)
+    pub fn run(&mut self) -> bool {
+        self.intcode_computer.run(&mut self.data)
     }
 
     pub fn render(&self) -> String {
@@ -100,6 +100,10 @@ impl Screen {
 
     pub fn score(&self) -> i64 {
         self.intcode_computer.score
+    }
+
+    pub fn set_joystick(&mut self, joystick: Joystick) {
+        self.intcode_computer.set_joystick(joystick);
     }
 }
 
@@ -132,6 +136,7 @@ struct Computer {
     output_y: Option<i64>,
     score: i64,
     initial_render_complete: bool,
+    joystick: Joystick,
 }
 
 impl Computer {
@@ -152,10 +157,15 @@ impl Computer {
             output_y: None,
             score: 0,
             initial_render_complete: false,
+            joystick: Joystick::Neutral,
         }
     }
 
-    fn run(&mut self, data: &mut [Tile], joystick: Joystick) -> bool {
+    fn set_joystick(&mut self, joystick: Joystick) {
+        self.joystick = joystick;
+    }
+
+    fn run(&mut self, data: &mut [Tile]) -> bool {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -175,7 +185,7 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    self.set_value(0, joystick.as_intcode_value());
+                    self.set_value(0, self.joystick.as_intcode_value());
                     self.current_position += 2;
                 }
                 4 => {

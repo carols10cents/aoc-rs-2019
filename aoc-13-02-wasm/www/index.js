@@ -24,11 +24,11 @@ const ctx = canvas.getContext('2d');
 const game_status = document.getElementById("breakout-status");
 let game_started = false;
 let game_over = false;
-let speed = 20;
+let speed = 10;
 
 const renderLoop = () => {
   setTimeout(function () {
-    game_over = game_screen.run(joystick);
+    game_over = game_screen.run();
     game_status.textContent = "Score: " + game_screen.score();
 
     if (game_over) {
@@ -99,34 +99,33 @@ const drawCells = () => {
   ctx.stroke();
 };
 
-let joystick = Joystick.Neutral;
-
 const keyDownHandler = (event) => {
     if (event.keyCode === 39) { // right
-        joystick = Joystick.Right;
+        game_screen.set_joystick(Joystick.Right);
     } else if (event.keyCode === 37) { // left
-        joystick = Joystick.Left;
+        game_screen.set_joystick(Joystick.Left);
     } else if (event.keyCode === 32 && !game_started) { // space
         game_started = true;
+        game_screen.set_joystick(Joystick.Neutral);
         requestAnimationFrame(renderLoop);
     } else if (event.keyCode === 32 && game_over) {
         game_screen = Screen.new();
         game_started = false;
         game_over = false;
 
-        game_over = game_screen.run(joystick);
+        game_over = game_screen.run();
 
         drawGrid();
         drawCells();
         game_status.textContent = "Press space to start";
 
     } else {
-        joystick = Joystick.Neutral;
+        game_screen.set_joystick(Joystick.Neutral);
     }
 };
 
 const keyUpHandler = (event) => {
-    joystick = Joystick.Neutral;
+    game_screen.set_joystick(Joystick.Neutral);
 };
 
 document.addEventListener('keydown', keyDownHandler, false);
@@ -135,7 +134,7 @@ document.addEventListener('keyup', keyUpHandler, false);
 drawGrid();
 drawCells();
 
-game_over = game_screen.run(joystick);
+game_over = game_screen.run();
 
 drawGrid();
 drawCells();
