@@ -31,6 +31,7 @@ const renderLoop = () => {
 
     drawGrid();
     drawCells();
+    game_status.textContent = "Score: " + game_screen.score();
 
     requestAnimationFrame(renderLoop);
   }, 1000/speed);
@@ -103,7 +104,6 @@ const keyDownHandler = (event) => {
         joystick = Joystick.Left;
     } else if (event.keyCode === 32 && !game_started) { // space
         game_started = true;
-        game_status.textContent = "";
         requestAnimationFrame(renderLoop);
     } else {
         joystick = Joystick.Neutral;

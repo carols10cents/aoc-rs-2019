@@ -191,7 +191,6 @@ impl Computer {
                         }
                         (Some(-1), Some(0)) => {
                             self.score = value;
-                            // mvprintw(LINES() - 1, 0, format!("score = {}", value).as_ref());
 
                             self.output_x = None;
                             self.output_y = None;
