@@ -19,9 +19,10 @@ const height = game_screen.height();
 const canvas = document.getElementById("breakout-canvas");
 canvas.height = (CELL_SIZE + 1) * height + 1;
 canvas.width = (CELL_SIZE + 1) * width + 1;
-
 const ctx = canvas.getContext('2d');
 
+const game_status = document.getElementById("breakout-status");
+var game_started = false;
 var speed = 20;
 
 const renderLoop = () => {
@@ -100,6 +101,10 @@ const keyDownHandler = (event) => {
         joystick = Joystick.Right;
     } else if (event.keyCode === 37) { // left
         joystick = Joystick.Left;
+    } else if (event.keyCode === 32 && !game_started) { // space
+        game_started = true;
+        game_status.textContent = "";
+        requestAnimationFrame(renderLoop);
     } else {
         joystick = Joystick.Neutral;
     }
@@ -114,4 +119,9 @@ document.addEventListener('keyup', keyUpHandler, false);
 
 drawGrid();
 drawCells();
-requestAnimationFrame(renderLoop);
+
+game_screen.run(joystick);
+
+drawGrid();
+drawCells();
+game_status.textContent = "Press space to start";
