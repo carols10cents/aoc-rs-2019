@@ -73,7 +73,7 @@ impl Screen {
         Screen {
             width: SCREEN_WIDTH,
             height: SCREEN_HEIGHT,
-            data: vec![Tile::Empty; 36 * 24],
+            data: vec![Tile::Empty; SCREEN_WIDTH * SCREEN_HEIGHT],
             intcode_computer: Computer::new(),
         }
     }
@@ -208,7 +208,7 @@ impl Computer {
                             if self.initial_render_complete {
                                 return false;
                             } else {
-                                if tile_value == Tile::Paddle {
+                                if index == data.len() - 1 {
                                     self.initial_render_complete = true;
                                 }
                             }
