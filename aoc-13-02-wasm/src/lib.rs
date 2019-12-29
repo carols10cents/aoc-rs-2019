@@ -41,21 +41,18 @@ impl From<i64> for Tile {
     }
 }
 
-#[derive(Copy, Clone)]
-enum Joystick {
-    Neutral = 0,
-    Left = -1,
-    Right = 1,
+#[wasm_bindgen]
+#[repr(u8)]
+#[derive(Copy, Clone, PartialEq, Debug, Eq)]
+pub enum Joystick {
+    Left = 0,
+    Neutral = 1,
+    Right = 2,
 }
 
-impl From<i64> for Joystick {
-    fn from(val: i64) -> Self {
-        match val {
-            0 => Joystick::Neutral,
-            -1 => Joystick::Left,
-            1 => Joystick::Right,
-            other => panic!("Unknown joystick: {}", other),
-        }
+impl Joystick {
+    fn as_intcode_value(&self) -> i64 {
+        *self as i64 - 1
     }
 }
 
@@ -81,8 +78,8 @@ impl Screen {
         }
     }
 
-    pub fn run(&mut self) -> bool {
-        self.intcode_computer.run(&mut self.data)
+    pub fn run(&mut self, joystick: Joystick) -> bool {
+        self.intcode_computer.run(&mut self.data, joystick)
     }
 
     pub fn render(&self) -> String {
@@ -158,7 +155,7 @@ impl Computer {
         }
     }
 
-    fn run(&mut self, data: &mut [Tile]) -> bool {
+    fn run(&mut self, data: &mut [Tile], joystick: Joystick) -> bool {
         let mut current_inst = self.current_instruction();
 
         while current_inst.opcode != 99 {
@@ -178,23 +175,7 @@ impl Computer {
                     self.current_position += 4;
                 }
                 3 => {
-                    // let direction = getch();
-                    //
-                    // let value = match direction {
-                    //     KEY_LEFT => {
-                    //         Joystick::Left
-                    //     },
-                    //     KEY_RIGHT => {
-                    //         Joystick::Right
-                    //     },
-                    //     _ => {
-                    //         Joystick::Neutral
-                    //     },
-                    // };
-
-                    let value = Joystick::Neutral;
-
-                    self.set_value(0, value as i64);
+                    self.set_value(0, joystick.as_intcode_value());
                     self.current_position += 2;
                 }
                 4 => {

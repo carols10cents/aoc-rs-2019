@@ -1,7 +1,7 @@
-import { Screen, Tile } from "aoc-13-02";
+import { Screen, Tile, Joystick } from "aoc-13-02";
 import { memory } from "aoc-13-02/aoc_13_02_bg";
 
-const CELL_SIZE = 12; // px
+const CELL_SIZE = 10; // px
 const GRID_COLOR = "#CCCCCC";
 const EMPTY_COLOR = "#FFFFFF";
 const WALL_COLOR = "#000000";
@@ -22,13 +22,17 @@ canvas.width = (CELL_SIZE + 1) * width + 1;
 
 const ctx = canvas.getContext('2d');
 
+var speed = 20;
+
 const renderLoop = () => {
-  game_screen.run();
+  setTimeout(function () {
+    game_screen.run(joystick);
 
-  drawGrid();
-  drawCells();
+    drawGrid();
+    drawCells();
 
-  requestAnimationFrame(renderLoop);
+    requestAnimationFrame(renderLoop);
+  }, 1000/speed);
 };
 
 const drawGrid = () => {
@@ -88,6 +92,25 @@ const drawCells = () => {
 
   ctx.stroke();
 };
+
+let joystick = Joystick.Neutral;
+
+const keyDownHandler = (event) => {
+    if (event.keyCode === 39) { // right
+        joystick = Joystick.Right;
+    } else if (event.keyCode === 37) { // left
+        joystick = Joystick.Left;
+    } else {
+        joystick = Joystick.Neutral;
+    }
+};
+
+const keyUpHandler = (event) => {
+    joystick = Joystick.Neutral;
+};
+
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
 
 drawGrid();
 drawCells();
