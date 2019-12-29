@@ -23,17 +23,21 @@ const ctx = canvas.getContext('2d');
 
 const game_status = document.getElementById("breakout-status");
 var game_started = false;
+var game_over = false;
 var speed = 20;
 
 const renderLoop = () => {
   setTimeout(function () {
-    game_screen.run(joystick);
-
-    drawGrid();
-    drawCells();
+    game_over = game_screen.run(joystick);
     game_status.textContent = "Score: " + game_screen.score();
 
-    requestAnimationFrame(renderLoop);
+    if (game_over) {
+        game_status.textContent += ". Press space to play again";
+    } else {
+        drawGrid();
+        drawCells();
+        requestAnimationFrame(renderLoop);
+    }
   }, 1000/speed);
 };
 
@@ -120,7 +124,7 @@ document.addEventListener('keyup', keyUpHandler, false);
 drawGrid();
 drawCells();
 
-game_screen.run(joystick);
+game_over = game_screen.run(joystick);
 
 drawGrid();
 drawCells();
