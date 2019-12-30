@@ -99,14 +99,23 @@ const drawCells = () => {
   ctx.stroke();
 };
 
+let joystick = Joystick.Neutral;
+
+const setJoystick = (value) => {
+    if (joystick !== value) {
+        joystick = value;
+        game_screen.set_joystick(value);
+    }
+}
+
 const keyDownHandler = (event) => {
     if (event.keyCode === 39) { // right
-        game_screen.set_joystick(Joystick.Right);
+        setJoystick(Joystick.Right);
     } else if (event.keyCode === 37) { // left
-        game_screen.set_joystick(Joystick.Left);
+        setJoystick(Joystick.Left);
     } else if (event.keyCode === 32 && !game_started) { // space
         game_started = true;
-        game_screen.set_joystick(Joystick.Neutral);
+        setJoystick(Joystick.Neutral);
         requestAnimationFrame(renderLoop);
     } else if (event.keyCode === 32 && game_over) {
         game_screen = Screen.new();
@@ -120,12 +129,12 @@ const keyDownHandler = (event) => {
         game_status.textContent = "Press space to start";
 
     } else {
-        game_screen.set_joystick(Joystick.Neutral);
+        setJoystick(Joystick.Neutral);
     }
 };
 
 const keyUpHandler = (event) => {
-    game_screen.set_joystick(Joystick.Neutral);
+    setJoystick(Joystick.Neutral);
 };
 
 document.addEventListener('keydown', keyDownHandler, false);
