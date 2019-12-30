@@ -1,7 +1,4 @@
-mod utils;
-
 use wasm_bindgen::prelude::*;
-
 use std::collections::HashMap;
 use std::fmt;
 
